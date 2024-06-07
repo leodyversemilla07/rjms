@@ -23,7 +23,7 @@ $isLoggedIn = isset($_SESSION['username']) && isset($_SESSION['role']);
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS Styles -->
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 
 <body>
