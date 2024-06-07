@@ -1,0 +1,207 @@
+/* Custom styles using provided color palette and Poppins font */
+body {
+  background-color: #ebede6; /* Light grayish background */
+  color: #593d2c; /* Dark brown text */
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #0e5c2d; /* Dark green */
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section {
+  background-image: url("https://www.minsu.edu.ph/template/images/slides/slides_1.jpg"); /* Placeholder image */
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero-section h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-section p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+footer {
+  background-color: #0e5c2d; /* Dark green */
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.navbar {
+  background-color: #f0c02f; /* Yellow */
+}
+
+.nav-link {
+  color: #593d2c !important; /* Dark brown */
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  color: #000 !important; /* Black */
+}
+
+.nav-item.active .nav-link {
+  color: #0e5c2d !important; /* Dark green */
+  font-weight: bold;
+}
+
+.dropdown-menu {
+  background-color: #f0c02f; /* Yellow */
+  border: none;
+}
+
+.dropdown-item {
+  color: #593d2c !important; /* Dark brown */
+}
+
+.dropdown-item:hover {
+  color: #fff !important; /* Black */
+  background-color: #0e5c2d !important;
+}
+
+.dropdown-item.active {
+  color: #fff !important; /* Dark green */
+  font-weight: bold;
+  background-color: #0e5c2d !important;
+}
+
+section {
+  margin-top: 100px;
+  margin-bottom: 100px;
+  padding: 40px 0;
+  background-color: #ebede6; /* Light grayish background */
+  font-size: larger;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.article {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #399f3a; /* Bright green */
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.article-title {
+  font-weight: bold;
+  color: #0e5c2d; /* Dark green */
+}
+
+.article-summary {
+  color: #ebede6; /* Light grayish text */
+}
+
+.footer-social {
+  margin-top: 20px;
+}
+
+.footer-social a {
+  color: #fff;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.footer-social a:hover {
+  color: #ccc; /* Light gray */
+}
+
+.contact {
+  max-width: 500px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0e5c2d;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #0e5c2d;
+}
+
+.form-control:focus {
+  border-color: #0e5c2d;
+  box-shadow: none;
+}
+
+button {
+  background-color: #399f3a;
+  border: none;
+  color: #ffffff;
+}
+
+button:hover {
+  background-color: #0e5c2d;
+  color: #ffffff;
+}
+
+.faq {
+  max-width: 1000px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.faq-section {
+  margin-bottom: 30px;
+}
+
+.faq-item {
+  margin-bottom: 30px;
+}
+
+.question {
+  font-weight: 600;
+  color: #0e5c2d;
+  font-size: 1.2em;
+}
+
+.answer {
+  margin-top: 10px;
+  color: #593d2c;
+  font-size: 1em;
+}
+
+.question::before {
+  content: "Q: ";
+  font-weight: bold;
+}
+
+.answer::before {
+  content: "A: ";
+  font-weight: bold;
+}

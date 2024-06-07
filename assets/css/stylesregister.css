@@ -1,0 +1,87 @@
+body {
+  background-color: #ebede6;
+  color: #593d2c;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+  margin-bottom: 50px;
+  max-width: 600px;
+  position: relative;
+}
+
+.form-control {
+  border-color: #399f3a;
+}
+
+.form-control:focus {
+  border-color: #0e5c2d;
+  box-shadow: none;
+}
+
+.btn-register {
+  background-color: #399f3a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #ffffff;
+}
+
+.btn-register:hover {
+  background-color: #0e5c2d;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #399f3a;
+  color: #ebede6;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #0e5c2d;
+  color: #ffffff;
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+.login-link {
+  color: #399f3a;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.form-header {
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  /* Center the header text */
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #0e5c2d;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.back-button img {
+  margin-right: 8px;
+}
