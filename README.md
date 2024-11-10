@@ -1,1 +1,1 @@
-# research-journal-management-system
+# Research Journal Management System
