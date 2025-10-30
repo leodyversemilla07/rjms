@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Research Journal Management System' ?></title>
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="/vendor/fortawesome/font-awesome/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/resources/css/style.css" rel="stylesheet">
+    <!-- Theme CSS -->
     
     <?= $additionalCss ?? '' ?>
 </head>

@@ -13,9 +13,9 @@ $recentUsers = $recentUsers ?? [];
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #F3F4F6; }
         .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 30px 0;
             margin-bottom: 30px;
@@ -32,7 +32,7 @@ $recentUsers = $recentUsers ?? [];
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
-        .stat-card.primary { border-color: #667eea; }
+        .stat-card.primary { border-color: #4F46E5; }
         .stat-card.success { border-color: #28a745; }
         .stat-card.warning { border-color: #ffc107; }
         .stat-card.danger { border-color: #dc3545; }
@@ -42,7 +42,7 @@ $recentUsers = $recentUsers ?? [];
             margin: 10px 0;
         }
         .stat-label {
-            color: #6c757d;
+            color: #64748B;
             font-size: 14px;
             text-transform: uppercase;
         }
@@ -62,14 +62,14 @@ $recentUsers = $recentUsers ?? [];
             border: 2px solid #e9ecef;
         }
         .quick-action:hover {
-            border-color: #667eea;
+            border-color: #4F46E5;
             background: #f8f9ff;
         }
         .activity-item {
             padding: 15px;
-            border-left: 3px solid #667eea;
+            border-left: 3px solid #4F46E5;
             margin-bottom: 10px;
-            background: #f8f9fa;
+            background: #F3F4F6;
             border-radius: 5px;
         }
     </style>
@@ -330,7 +330,7 @@ $recentUsers = $recentUsers ?? [];
                 datasets: [{
                     label: 'Submissions',
                     data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 38, 42, 45],
-                    borderColor: '#667eea',
+                    borderColor: '#4F46E5',
                     backgroundColor: 'rgba(102, 126, 234, 0.1)',
                     tension: 0.4,
                     fill: true

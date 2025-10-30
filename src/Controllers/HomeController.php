@@ -37,7 +37,7 @@ class HomeController extends Controller
         $this->view('home/index', [
             'articles' => $articles,
             'stats' => $stats
-        ]);
+        ], '');
     }
 
     /**
@@ -45,7 +45,7 @@ class HomeController extends Controller
      */
     public function about(): void
     {
-        $this->view('home/about');
+        $this->view('home/about', [], '');
     }
 
     /**
@@ -53,7 +53,7 @@ class HomeController extends Controller
      */
     public function contact(): void
     {
-        $this->view('home/contact');
+        $this->view('home/contact', [], '');
     }
 
     /**
@@ -83,7 +83,7 @@ class HomeController extends Controller
      */
     public function faq(): void
     {
-        $this->view('home/faq');
+        $this->view('home/faq', [], '');
     }
 
     /**
@@ -92,7 +92,7 @@ class HomeController extends Controller
     public function currentIssues(): void
     {
         $articles = $this->submissionModel->getPublished();
-        $this->view('home/current-issues', ['articles' => $articles]);
+        $this->view('home/current-issues', ['articles' => $articles], '');
     }
 
     /**
@@ -110,6 +110,6 @@ class HomeController extends Controller
         $this->view('home/search', [
             'keyword' => $keyword,
             'results' => $results
-        ]);
+        ], '');
     }
 }

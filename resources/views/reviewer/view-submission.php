@@ -12,9 +12,9 @@ $readonly = isset($review['reviewed_at']);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #F3F4F6; }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;
@@ -30,7 +30,7 @@ $readonly = isset($review['reviewed_at']);
         .rating-stars i.active { color: #ffc107; }
         .rating-stars i:hover, .rating-stars i:hover ~ i { color: #ffc107; }
         .criteria-section {
-            background: #f8f9fa;
+            background: #F3F4F6;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;

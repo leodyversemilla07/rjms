@@ -12,9 +12,9 @@ $filters = $filters ?? [];
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #F3F4F6; }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;
@@ -26,7 +26,7 @@ $filters = $filters ?? [];
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .filter-card {
-            background: #f8f9fa;
+            background: #F3F4F6;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;

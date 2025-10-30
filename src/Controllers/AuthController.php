@@ -30,7 +30,7 @@ class AuthController extends Controller
             $this->redirectToDashboard();
         }
 
-        $this->view('auth/login', [], null); // No layout
+        $this->view('auth/login', [], ''); // No layout
     }
 
     /**
@@ -137,7 +137,7 @@ class AuthController extends Controller
             $this->redirectToDashboard();
         }
 
-        $this->view('auth/register', [], null); // No layout
+        $this->view('auth/register', [], ''); // No layout
     }
 
     /**

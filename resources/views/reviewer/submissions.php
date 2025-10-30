@@ -11,9 +11,9 @@ $submissions = $submissions ?? [];
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #F3F4F6; }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;

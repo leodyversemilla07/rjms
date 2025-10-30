@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search - RJMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/resources/css/app.css" rel="stylesheet">
     <style>
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 60px 0;
             margin-bottom: 50px;
@@ -21,7 +23,7 @@
             margin-bottom: 40px;
         }
         .filter-section {
-            background: #f8f9fa;
+            background: #F3F4F6;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
@@ -263,6 +265,7 @@
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         function resetFilters() {
             document.querySelectorAll('.form-check-input').forEach(cb => cb.checked = false);

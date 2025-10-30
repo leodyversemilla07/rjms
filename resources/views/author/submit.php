@@ -10,9 +10,9 @@ $categories = $categories ?? [];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
+        body { background: #F3F4F6; }
         .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;
@@ -29,14 +29,14 @@ $categories = $categories ?? [];
             font-weight: 600;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #4F46E5;
         }
         .required::after {
             content: " *";
             color: red;
         }
         .file-upload-area {
-            border: 2px dashed #667eea;
+            border: 2px dashed #4F46E5;
             border-radius: 8px;
             padding: 40px;
             text-align: center;
@@ -46,11 +46,11 @@ $categories = $categories ?? [];
         }
         .file-upload-area:hover {
             background: #e8ebff;
-            border-color: #5568d3;
+            border-color: #4338CA;
         }
         .file-upload-area i {
             font-size: 48px;
-            color: #667eea;
+            color: #4F46E5;
             margin-bottom: 15px;
         }
     </style>
@@ -260,7 +260,7 @@ $categories = $categories ?? [];
         
         fileUploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            fileUploadArea.style.borderColor = '#5568d3';
+            fileUploadArea.style.borderColor = '#4338CA';
         });
 
         fileUploadArea.addEventListener('drop', (e) => {
@@ -283,7 +283,7 @@ $categories = $categories ?? [];
         function clearFile() {
             fileInput.value = '';
             fileInfo.classList.add('d-none');
-            fileUploadArea.style.borderColor = '#667eea';
+            fileUploadArea.style.borderColor = '#4F46E5';
         }
 
         function formatFileSize(bytes) {
