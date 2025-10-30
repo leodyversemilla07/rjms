@@ -1,6 +1,8 @@
 # Environment files
 .env
 .env.php
+.env.local
+.env.*.local
 
 # Dependencies
 /vendor/
@@ -13,19 +15,40 @@ composer.phar
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # Logs
 logs/*.log
+logs/*.txt
 !logs/.gitkeep
 
 # Uploads
 uploads/*
 !uploads/.gitkeep
+!uploads/submissions/.gitkeep
 
 # Testing
 .phpunit.result.cache
 coverage/
+phpunit.xml.dist
 
 # Build files
 dist/
 build/
+
+# Cache
+cache/
+*.cache
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Legacy (kept for reference)
+_legacy/
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+*~
