@@ -1,1 +1,31 @@
+# Environment files
+.env
+.env.php
+
+# Dependencies
 /vendor/
+node_modules/
+composer.phar
+
+# IDE files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/*.log
+!logs/.gitkeep
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Testing
+.phpunit.result.cache
+coverage/
+
+# Build files
+dist/
+build/

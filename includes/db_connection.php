@@ -1,18 +1,15 @@
 <?php
-// Database connection function
+// Legacy database connection function - DEPRECATED
+// Use App\Core\Database instead for new code
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/bootstrap.php';
+
+use App\Core\Database;
+
 function connectDB()
 {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "rjdb";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    return $conn;
+    // Return PDO instance instead of mysqli for better compatibility
+    return Database::getInstance();
 }
+
