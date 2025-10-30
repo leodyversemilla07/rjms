@@ -54,9 +54,25 @@ $router->post('/author/article/{id}/delete', ['AuthorController', 'deleteArticle
 // ============================================
 
 $router->get('/admin/dashboard', ['AdminController', 'dashboard']);
+
+// User Management
 $router->get('/admin/users', ['AdminController', 'users']);
+$router->post('/admin/users/create', ['AdminController', 'createUser']);
+$router->post('/admin/users/{id}/update', ['AdminController', 'updateUser']);
+$router->post('/admin/users/{id}/delete', ['AdminController', 'deleteUser']);
+
+// Submission Management
 $router->get('/admin/submissions', ['AdminController', 'submissions']);
+$router->post('/admin/submissions/{id}/publish', ['AdminController', 'publishArticle']);
+$router->post('/admin/submissions/{id}/unpublish', ['AdminController', 'unpublishArticle']);
+
+// Category Management
 $router->get('/admin/categories', ['AdminController', 'categories']);
+$router->post('/admin/categories/create', ['AdminController', 'createCategory']);
+$router->post('/admin/categories/{id}/delete', ['AdminController', 'deleteCategory']);
+
+// Reviewer Assignment
+$router->post('/admin/assign-reviewer', ['AdminController', 'assignReviewer']);
 
 // ============================================
 // Editor Routes
@@ -65,7 +81,9 @@ $router->get('/admin/categories', ['AdminController', 'categories']);
 $router->get('/editor/dashboard', ['EditorController', 'dashboard']);
 $router->get('/editor/submissions', ['EditorController', 'submissions']);
 $router->get('/editor/submission/{id}', ['EditorController', 'viewSubmission']);
-$router->post('/editor/submission/{id}/publish', ['EditorController', 'publish']);
+$router->post('/editor/assign-reviewer', ['EditorController', 'assignReviewer']);
+$router->post('/editor/submission/{id}/decision', ['EditorController', 'publishDecision']);
+$router->get('/editor/reviewers', ['EditorController', 'getReviewers']);
 
 // ============================================
 // Reviewer Routes
@@ -74,7 +92,9 @@ $router->post('/editor/submission/{id}/publish', ['EditorController', 'publish']
 $router->get('/reviewer/dashboard', ['ReviewerController', 'dashboard']);
 $router->get('/reviewer/submissions', ['ReviewerController', 'submissions']);
 $router->get('/reviewer/submission/{id}', ['ReviewerController', 'viewSubmission']);
-$router->post('/reviewer/submission/{id}/review', ['ReviewerController', 'submitReview']);
+$router->post('/reviewer/review/{id}/submit', ['ReviewerController', 'submitReview']);
+$router->post('/reviewer/review/{id}/update', ['ReviewerController', 'updateReview']);
+$router->get('/reviewer/history', ['ReviewerController', 'history']);
 
 // ============================================
 // API Routes (Optional)
