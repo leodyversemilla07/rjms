@@ -44,9 +44,6 @@ cache/
 Thumbs.db
 .DS_Store
 
-# Legacy (kept for reference)
-_legacy/
-
 # Temporary files
 *.tmp
 *.bak
