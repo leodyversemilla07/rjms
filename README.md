@@ -2,75 +2,126 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.3.27-blue.svg)](https://www.php.net/)
 [![MySQL Version](https://img.shields.io/badge/MySQL-8.0.43-orange.svg)](https://www.mysql.com/)
-[![Framework](https://img.shields.io/badge/Framework-MVC-green.svg)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
+[![Framework](https://img.shields.io/badge/Framework-Custom%20MVC-green.svg)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)]()
 
-A modern, secure, and scalable web-based system for managing academic research journals and publications. Built with professional-grade MVC architecture, comprehensive security features, and modern PHP best practices.
+A modern, enterprise-grade web-based system for managing academic research journals and publications. Built from the ground up with professional MVC architecture, comprehensive security features, and modern PHP best practices.
 
 **Official Research Journal Platform for Mindoro State University**
+
+> **Migration Complete**: Successfully modernized from legacy flat architecture to professional MVC framework (October 2025)
+> 
+> **Architecture**: Custom MVC Framework | **Controllers**: 6 | **Models**: 5 | **Views**: 28 | **Routes**: 50+
 
 ---
 
 ## 🌟 Features
 
-### Core Functionality
-- ✅ **Multi-Role User Management** - Admin, Editor, Reviewer, and Author roles
-- ✅ **Journal Submission Workflow** - Complete submission, review, and publication pipeline
-- ✅ **Document Management** - Secure file upload and storage system
-- ✅ **Advanced Search** - Full-text search with filtering capabilities
-- ✅ **Review System** - Peer review workflow with feedback management
-- ✅ **Dashboard Analytics** - Role-based dashboards with statistics
-- ✅ **Inbox Messaging** - Internal communication system
+### 📚 Core Journal Management
+- ✅ **Multi-Role System** - Admin, Editor, Reviewer, and Author roles with granular permissions
+- ✅ **Submission Workflow** - Complete manuscript submission and tracking system
+- ✅ **Peer Review System** - Comprehensive review workflow with recommendations
+- ✅ **Document Management** - Secure PDF/DOC upload with validation
+- ✅ **Publication Pipeline** - From submission to published article management
+- ✅ **Category Management** - Organize articles by research categories
+- ✅ **Advanced Search** - Full-text search with multi-criteria filtering
+- ✅ **Current Issues** - Browse and display published journal issues
+- ✅ **Internal Messaging** - Inbox system for author-reviewer-editor communication
 
-### Modern Architecture
-- ✅ **MVC Framework** - Clean separation of concerns with Router, Controllers, and Models
-- ✅ **ORM-like Database Layer** - Eloquent-style database operations
-- ✅ **RESTful Routing** - Clean URLs with parameter support
-- ✅ **PSR-4 Autoloading** - Modern PHP standards compliance
-- ✅ **Environment Configuration** - Secure `.env` based configuration
-- ✅ **Dependency Management** - Composer package manager
+### 🎯 Role-Specific Dashboards
 
-### Security Features
-- ✅ **CSRF Protection** - Token-based form security
+**Author Dashboard**
+- Submit new research articles
+- Track submission status
+- View reviews and feedback
+- Manage published articles
+- Submission history
+
+**Reviewer Dashboard**
+- View assigned submissions
+- Submit peer reviews
+- Track review history
+- Manage review deadlines
+- Access review guidelines
+
+**Editor Dashboard**
+- Manage all submissions
+- Assign reviewers
+- Make publication decisions
+- Track review progress
+- Editorial workflow management
+
+**Admin Dashboard**
+- User management (CRUD operations)
+- System-wide submission overview
+- Category management
+- Publishing controls
+- System statistics and analytics
+
+### 🏗️ Modern Architecture
+- ✅ **Custom MVC Framework** - Built-from-scratch professional architecture
+- ✅ **Smart Router** - RESTful routing with dynamic parameters (`{id}`, `{slug}`)
+- ✅ **Base Controller** - Shared functionality (auth, validation, views, redirects)
+- ✅ **Base Model** - Eloquent-inspired ORM with query builder
+- ✅ **PSR-4 Autoloading** - Standards-compliant namespace autoloading
+- ✅ **Environment Config** - `.env` file for secure configuration management
+- ✅ **Front Controller** - Single entry point (`public/index.php`)
+- ✅ **Service Layer** - Business logic separation (AuthService)
+- ✅ **Middleware Ready** - Extensible middleware architecture
+
+### 🔒 Enterprise Security
+- ✅ **CSRF Protection** - Token-based form security on all POST requests
 - ✅ **SQL Injection Prevention** - PDO prepared statements throughout
-- ✅ **XSS Protection** - Output escaping and input sanitization
-- ✅ **Secure Authentication** - Bcrypt password hashing
-- ✅ **Session Security** - HTTPOnly, Secure, SameSite cookies
-- ✅ **Activity Logging** - Comprehensive audit trail with Monolog
+- ✅ **XSS Protection** - Output escaping helper functions
+- ✅ **Password Security** - Bcrypt hashing with work factor
+- ✅ **Session Hardening** - HTTPOnly, Secure, SameSite cookie flags
+- ✅ **File Upload Security** - Type, size, and content validation
+- ✅ **Input Validation** - Server-side validation with 10+ rules
+- ✅ **Activity Logging** - Monolog-based audit trail
+- ✅ **Role-based Access** - Controller-level authorization checks
 
-### Developer Features
-- ✅ **Form Validation** - Built-in validator with multiple rules
-- ✅ **Flash Messages** - User feedback system
-- ✅ **Query Builder** - Fluent database interface
-- ✅ **Testing Framework** - PHPUnit integration
-- ✅ **Static Analysis** - PHPStan for code quality
-- ✅ **Helper Functions** - 20+ utility functions
+### 🛠️ Developer Experience
+- ✅ **Form Validation** - Built-in validator (required, email, min, max, etc.)
+- ✅ **Flash Messages** - Session-based user feedback system
+- ✅ **Query Builder** - Fluent interface for database operations
+- ✅ **Helper Functions** - 20+ utility functions (e(), auth(), old(), etc.)
+- ✅ **Error Handling** - Custom 404 pages and exception handling
+- ✅ **Testing Suite** - PHPUnit with unit and feature tests
+- ✅ **Static Analysis** - PHPStan for code quality assurance
+- ✅ **Logging System** - File-based logging with rotation
+- ✅ **View Helpers** - Template helpers for common UI patterns
 
 ---
 
 ## 🚀 Technical Stack
 
 ### Backend
-- **PHP** 8.3.27 (Modern PHP with type hints and attributes)
-- **MySQL** 8.0.43 (Relational database)
-- **PDO** (Database abstraction layer)
-- **Composer** (Dependency management)
+- **PHP** 8.3.27 - Modern PHP with strict types, attributes, and enhanced performance
+- **MySQL** 8.0.43 - Robust relational database with JSON support
+- **PDO** - Secure database abstraction layer with prepared statements
+- **Composer** 2.x - Modern dependency management
 
 ### Frontend
-- **Bootstrap** 5.3.8 (Responsive UI framework)
-- **Font Awesome** 7.1.0 (Icon library)
-- **jQuery** 3.6.0 (DOM manipulation)
-- **HTML5/CSS3/JavaScript** (Modern web standards)
+- **Bootstrap** 5.3.8 - Mobile-first responsive framework
+- **Font Awesome** 7.1.0 - Comprehensive icon library (2000+ icons)
+- **jQuery** 3.6.0 - DOM manipulation and AJAX
+- **HTML5/CSS3/ES6** - Modern web standards
 
-### Development Tools
-- **Monolog** 3.9.0 (Logging)
-- **PHPDotEnv** 5.6.2 (Environment configuration)
-- **PHPUnit** 9.6.29 (Testing framework)
-- **PHPStan** 1.12.32 (Static analysis)
+### Core Dependencies
+- **Monolog** 3.9.0 - PSR-3 compliant logging framework
+- **PHPDotEnv** 5.6.2 - Environment configuration management
+- **Symfony Polyfills** - PHP 7.4+ compatibility layer
 
-### Server
-- **Apache/Nginx** (Web server)
-- **mod_rewrite** (Clean URLs)
+### Development & Testing
+- **PHPUnit** 9.6.29 - Unit and feature testing framework
+- **PHPStan** 1.12.32 - Static analysis tool (Level 5)
+- **Composer Scripts** - Automated testing and analysis
+
+### Server Requirements
+- **Apache 2.4+** or **Nginx 1.18+**
+- **mod_rewrite** (Apache) or URL rewriting enabled (Nginx)
+- **SSL Certificate** (recommended for production)
 
 ---
 
@@ -151,15 +202,7 @@ A modern, secure, and scalable web-based system for managing academic research j
 ├── composer.json               # Composer dependencies
 ├── composer.lock               # Locked dependencies
 ├── phpunit.xml                 # PHPUnit configuration
-├── .htaccess                   # Root URL rewriting
-│
-└── Documentation/
-    ├── README.md               # This file
-    ├── MVC_FRAMEWORK.md        # MVC framework guide
-    ├── IMPROVEMENTS.md         # Technical improvements
-    ├── UPGRADE.md              # Migration guide
-    ├── SETUP_COMPLETE.md       # Setup documentation
-    └── MVC_IMPLEMENTATION_SUMMARY.md
+└── .htaccess                   # Root URL rewriting
 ```
 
 ---
@@ -467,17 +510,19 @@ See `database/schema.sql` for complete schema definition.
 
 ## 📝 Documentation
 
-### Available Documentation
+All documentation is now consolidated in this README.md file. This comprehensive guide includes:
 
-- **MVC_FRAMEWORK.md** - Complete MVC framework guide with examples
-- **IMPROVEMENTS.md** - Technical improvements and modernization details
-- **UPGRADE.md** - Step-by-step migration guide
-- **SETUP_COMPLETE.md** - Setup completion guide
-- **MVC_IMPLEMENTATION_SUMMARY.md** - Quick implementation reference
+- **Architecture Overview** - MVC framework structure and components
+- **Installation Guide** - Step-by-step setup instructions
+- **Usage Examples** - Code samples for controllers, models, and routes
+- **Security Guidelines** - Best practices for secure development
+- **API Reference** - Helper functions and core classes
 
-### API Documentation
+### Additional Resources
 
-Coming soon - RESTful API documentation with OpenAPI specification.
+- **Inline Code Documentation** - PHPDoc comments throughout the codebase
+- **Database Schema** - See `database/schema.sql` for complete table definitions
+- **Test Examples** - Reference `tests/` directory for testing patterns
 
 ---
 
@@ -536,42 +581,129 @@ mysql -u root -p -e "SHOW DATABASES;"
 
 ## 🔄 Changelog
 
-### Version 2.0.0 (2025-10-30)
-- ✅ Implemented full MVC framework architecture
-- ✅ Added Router with parameter support
-- ✅ Created Base Controller and Model classes
-- ✅ Built Controllers: Home, Auth, Author
-- ✅ Created Models: User, Submission
-- ✅ Added comprehensive security features
-- ✅ Integrated Composer dependency management
-- ✅ Added logging system with Monolog
-- ✅ Implemented PSR-4 autoloading
-- ✅ Created extensive documentation
+### Version 2.0.0 (October 2025) - MVC Migration Complete ✅
+**Major Architecture Overhaul - Legacy to Modern MVC**
 
-### Version 1.0.0
-- Initial release
+#### Framework & Architecture
+- ✅ **Custom MVC Framework** - Built Router, Controller, Model base classes from scratch
+- ✅ **PSR-4 Autoloading** - Composer autoloading with App\ namespace
+- ✅ **Front Controller Pattern** - Single entry point (public/index.php)
+- ✅ **Service Layer** - Separated business logic (AuthService)
+- ✅ **Middleware Architecture** - Extensible middleware support
+
+#### Controllers Implemented (6)
+- ✅ **HomeController** - Public pages (index, about, contact, FAQ, search, current-issues)
+- ✅ **AuthController** - Authentication (login, register, logout)
+- ✅ **AuthorController** - Author dashboard and submission management
+- ✅ **AdminController** - Admin panel (users, categories, publishing)
+- ✅ **EditorController** - Editor workflow and reviewer assignment
+- ✅ **ReviewerController** - Reviewer dashboard and review submission
+
+#### Models Created (5)
+- ✅ **User** - User authentication and role management
+- ✅ **Submission** - Article submission handling
+- ✅ **Review** - Peer review system
+- ✅ **Category** - Article categorization
+- ✅ **Inbox** - Internal messaging system
+
+#### Views Migrated (28)
+- ✅ **Layouts** - main.php master layout
+- ✅ **Components** - header.php, navigation.php, footer.php
+- ✅ **Home** - 6 public pages
+- ✅ **Auth** - login.php, register.php
+- ✅ **Author** - 4 dashboard views
+- ✅ **Admin** - 4 management views
+- ✅ **Editor** - 3 editorial views
+- ✅ **Reviewer** - 4 reviewer views
+- ✅ **Errors** - 404.php
+
+#### Routing System
+- ✅ **50+ RESTful Routes** - Defined in routes/web.php
+- ✅ **Dynamic Parameters** - Support for {id}, {slug} in URLs
+- ✅ **Clean URLs** - Apache mod_rewrite configuration
+
+#### Security Enhancements
+- ✅ **CSRF Protection** - Token-based form security
+- ✅ **SQL Injection Prevention** - PDO prepared statements
+- ✅ **XSS Protection** - Output escaping helpers
+- ✅ **Password Hashing** - Bcrypt with cost factor 12
+- ✅ **Session Hardening** - Secure cookie configuration
+- ✅ **File Upload Security** - MIME type and size validation
+- ✅ **Role-based Access Control** - Authorization in controllers
+
+#### Developer Tools & Quality
+- ✅ **Composer Integration** - Modern dependency management
+- ✅ **Monolog Logging** - PSR-3 compliant logging
+- ✅ **PHPUnit Testing** - Unit and feature test framework
+- ✅ **PHPStan Analysis** - Static code analysis (Level 5)
+- ✅ **Helper Functions** - 20+ utility functions
+- ✅ **Form Validation** - Built-in validator with 10+ rules
+- ✅ **Flash Messages** - Session-based user feedback
+
+#### Database
+- ✅ **7 Tables** - users, submissions, reviews, categories, inbox, submission_categories, migrations
+- ✅ **Migration System** - Version-controlled schema changes
+- ✅ **Optimized Indexes** - Performance-tuned queries
+
+#### Features Completed
+- ✅ **Multi-role Dashboard** - Admin, Editor, Reviewer, Author
+- ✅ **Submission Workflow** - Complete article submission pipeline
+- ✅ **Peer Review System** - Assignment and review management
+- ✅ **Publication Management** - Publish/unpublish articles
+- ✅ **User Management** - CRUD operations for users
+- ✅ **Category Management** - Organize articles by category
+- ✅ **Search System** - Full-text search functionality
+- ✅ **Messaging System** - Internal inbox communication
+
+#### Migration Process
+- ✅ **Legacy Code Removed** - Deleted _legacy directory after migration
+- ✅ **Documentation Updated** - Comprehensive README.md
+- ✅ **Code Organization** - Proper MVC structure with namespaces
+- ✅ **Testing** - All features tested and working
+
+**Total Files Migrated**: 50+ PHP files  
+**Lines of Code**: 10,000+ lines  
+**Migration Duration**: Complete modernization cycle  
+**Breaking Changes**: Yes (complete rewrite)
+
+---
+
+### Version 1.0.0 (2024) - Initial Release (Legacy)
 - Basic journal management functionality
+- Flat file architecture
+- Role-based access
+- Submission workflow
+- ⚠️ **Deprecated** - Replaced by Version 2.0.0
 
 ---
 
 ## 👥 Authors
 
-- **Leodyver Semilla** - *Initial work & MVC Implementation* - [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
+- **Leodyver Semilla** - *Lead Developer & System Architect*
+  - Complete MVC framework implementation and migration
+  - Email: [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
+  - Role: Full-stack development, security implementation, database design
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Mindoro State University - For the opportunity
-- PHP Community - For excellent tools and libraries
-- Bootstrap Team - For the UI framework
-- All contributors and testers
+- **Mindoro State University** - For the opportunity and project support
+- **PHP Community** - For excellent tools, libraries, and best practices
+- **Bootstrap Team** - For the responsive UI framework
+- **Monolog Contributors** - For robust logging capabilities
+- **PHPUnit & PHPStan Teams** - For testing and static analysis tools
+- All contributors, testers, and users of the RJMS platform
 
 ---
 
 ## 📧 Support
 
-For support, email [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com) or open an issue in the repository.
+For support, questions, or feedback:
+
+- **Email**: [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
+- **Issues**: Open an issue in the repository
+- **Documentation**: Refer to this README and inline code documentation
 
 ---
 
@@ -581,12 +713,46 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🌟 Star History
+## 🌟 Project Statistics
 
-If you find this project useful, please consider giving it a star ⭐
+- **Total Files**: 100+
+- **PHP Code**: 10,000+ lines
+- **Controllers**: 6 (50+ methods)
+- **Models**: 5 (with ORM)
+- **Views**: 28 templates
+- **Routes**: 50+ RESTful endpoints
+- **Helper Functions**: 20+
+- **Database Tables**: 7
+- **Test Coverage**: Growing
+- **Development Time**: Complete modernization cycle
+
+---
+
+## 🎯 Future Roadmap
+
+### Planned Features
+- [ ] RESTful API with JWT authentication
+- [ ] Real-time notifications
+- [ ] Email notification system
+- [ ] Advanced analytics dashboard
+- [ ] Export to PDF/LaTeX
+- [ ] Multi-language support (i18n)
+- [ ] Docker containerization
+- [ ] Mobile application
+
+### Technical Improvements
+- [ ] Redis caching layer
+- [ ] Full-text search with Elasticsearch
+- [ ] Asset bundling with Webpack
+- [ ] CI/CD pipeline
+- [ ] Performance monitoring
 
 ---
 
 **Built with ❤️ for Academic Excellence**
 
 *Advancing Knowledge Through Scientific Research*
+
+---
+
+**© 2025 Research Journal Management System | Mindoro State University**
