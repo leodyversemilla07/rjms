@@ -19,10 +19,13 @@ $router->get('/home', ['HomeController', 'index']);
 
 // About & Info Pages
 $router->get('/about', ['HomeController', 'about']);
+$router->get('/editorial-board', ['HomeController', 'editorialBoard']);
+$router->get('/submission-guidelines', ['HomeController', 'submissionGuidelines']);
 $router->get('/contact', ['HomeController', 'contact']);
 $router->post('/contact', ['HomeController', 'sendContact']);
 $router->get('/faq', ['HomeController', 'faq']);
 $router->get('/current-issues', ['HomeController', 'currentIssues']);
+$router->get('/archives', ['HomeController', 'archives']);
 
 // Search
 $router->get('/search', ['HomeController', 'search']);
@@ -95,13 +98,6 @@ $router->get('/reviewer/submission/{id}', ['ReviewerController', 'viewSubmission
 $router->post('/reviewer/review/{id}/submit', ['ReviewerController', 'submitReview']);
 $router->post('/reviewer/review/{id}/update', ['ReviewerController', 'updateReview']);
 $router->get('/reviewer/history', ['ReviewerController', 'history']);
-
-// ============================================
-// API Routes (Optional)
-// ============================================
-
-$router->get('/api/submissions', ['ApiController', 'submissions']);
-$router->get('/api/submission/{id}', ['ApiController', 'submission']);
 
 // Return router instance
 return $router;

@@ -216,3 +216,71 @@ function isGet(): bool
 {
     return requestMethod() === 'GET';
 }
+
+/**
+ * Render a view with optional layout
+ * 
+ * @param string $view View file path relative to resources/views (without .php)
+ * @param array $data Data to pass to the view
+ * @param string|null $layout Layout file path relative to resources/views/layouts (without .php), null for no layout
+ * @return void
+ */
+function view(string $view, array $data = [], ?string $layout = 'main'): void
+{
+    // Extract data to variables
+    extract($data);
+    
+    // Start output buffering
+    ob_start();
+    
+    // Include the view file
+    $viewPath = base_path('resources/views/' . str_replace('.', '/', $view) . '.php');
+    
+    if (!file_exists($viewPath)) {
+        throw new Exception("View file not found: {$viewPath}");
+    }
+    
+    include $viewPath;
+    
+    // Get the content
+    $content = ob_get_clean();
+    
+    // If no layout, just output the content
+    if ($layout === null) {
+        echo $content;
+        return;
+    }
+    
+    // Include the layout file
+    $layoutPath = base_path('resources/views/layouts/' . str_replace('.', '/', $layout) . '.php');
+    
+    if (!file_exists($layoutPath)) {
+        throw new Exception("Layout file not found: {$layoutPath}");
+    }
+    
+    include $layoutPath;
+}
+
+/**
+ * Render a view section (content only, no layout)
+ * 
+ * @param string $view View file path relative to resources/views (without .php)
+ * @param array $data Data to pass to the view
+ * @return string
+ */
+function section(string $view, array $data = []): string
+{
+    extract($data);
+    
+    ob_start();
+    
+    $viewPath = base_path('resources/views/' . str_replace('.', '/', $view) . '.php');
+    
+    if (!file_exists($viewPath)) {
+        throw new Exception("View file not found: {$viewPath}");
+    }
+    
+    include $viewPath;
+    
+    return ob_get_clean();
+}

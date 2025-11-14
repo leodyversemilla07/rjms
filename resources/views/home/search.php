@@ -1,276 +1,338 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="/resources/css/app.css" rel="stylesheet">
-    <style>
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 50px;
-        }
-        .search-box {
-            background: white;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-        }
-        .filter-section {
-            background: #F3F4F6;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        .result-item {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .result-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+<?php
+// Set page metadata
+$title = 'Search - Research Journal Management System';
+$description = 'RJMS - Research Journal Management System';
+$keywords = 'research, journal, academic publishing';
 
-    <div class="page-header">
-        <div class="container text-center">
-            <h1 class="display-4 fw-bold">Search Publications</h1>
-            <p class="lead">Find research articles, papers, and publications</p>
+// Start output buffering
+ob_start();
+?>
+
+
+    <!-- Page Header -->
+    <div class="bg-slate-800 text-white border-b-4 border-primary-700">
+        <div class="container mx-auto px-4 py-16">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-serif font-bold mb-4">Search Articles</h1>
+                <p class="text-xl text-slate-200">Discover research across all disciplines</p>
+            </div>
         </div>
     </div>
 
-    <div class="container mb-5">
+    <!-- Breadcrumb -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center text-sm text-slate-600">
+                <a href="/" class="hover:text-primary-700"><i class="fas fa-home mr-2"></i>Home</a>
+                <i class="fas fa-chevron-right mx-3 text-slate-400"></i>
+                <span class="text-slate-800 font-medium">Search</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+
         <!-- Search Box -->
-        <div class="search-box">
-            <form id="searchForm" method="GET" action="/search">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-8">
-                        <label for="query" class="form-label">Search Terms</label>
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" class="form-control" id="query" name="q" 
-                                   placeholder="Enter keywords, author names, or topics..."
-                                   value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="fas fa-search me-2"></i>Search
+        <div class="max-w-4xl mx-auto mb-12">
+            <div class="bg-white rounded-xl shadow-xl border-2 border-slate-200 p-8">
+                <form action="/search" method="GET" class="space-y-4">
+                    <!-- Main Search Input -->
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            name="q"
+                            placeholder="Search by title, author, keywords, or abstract..." 
+                            class="w-full px-6 py-4 pr-32 text-lg border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                        >
+                        <button 
+                            type="submit"
+                            class="absolute right-2 top-2 bg-primary-700 hover:bg-primary-800 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
+                        >
+                            <i class="fas fa-search mr-2"></i>Search
                         </button>
                     </div>
-                </div>
-            </form>
-        </div>
 
-        <div class="row">
-            <!-- Filters Sidebar -->
-            <div class="col-md-3">
-                <div class="filter-section">
-                    <h5 class="mb-4"><i class="fas fa-filter me-2"></i>Filters</h5>
-                    
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Category</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="cs" id="cat1">
-                            <label class="form-check-label" for="cat1">Computer Science</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="eng" id="cat2">
-                            <label class="form-check-label" for="cat2">Engineering</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="math" id="cat3">
-                            <label class="form-check-label" for="cat3">Mathematics</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="bio" id="cat4">
-                            <label class="form-check-label" for="cat4">Biology</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="phys" id="cat5">
-                            <label class="form-check-label" for="cat5">Physics</label>
-                        </div>
+                    <!-- Advanced Search Toggle -->
+                    <div class="flex items-center justify-between">
+                        <button 
+                            type="button"
+                            @click="showFilters = !showFilters"
+                            class="text-primary-700 hover:text-primary-800 font-medium text-sm flex items-center"
+                        >
+                            <i class="fas fa-sliders-h mr-2"></i>
+                            <span x-text="showFilters ? 'Hide Advanced Filters' : 'Show Advanced Filters'"></span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform" :class="{ 'rotate-180': showFilters }"></i>
+                        </button>
+                        <a href="/search" class="text-slate-500 hover:text-slate-700 text-sm">
+                            <i class="fas fa-redo mr-1"></i>Clear All
+                        </a>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Publication Year</label>
-                        <select class="form-select">
-                            <option value="">All Years</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Sort By</label>
-                        <select class="form-select">
-                            <option value="relevance">Relevance</option>
-                            <option value="date_desc">Newest First</option>
-                            <option value="date_asc">Oldest First</option>
-                            <option value="title">Title (A-Z)</option>
-                        </select>
-                    </div>
-
-                    <button type="button" class="btn btn-secondary w-100" onclick="resetFilters()">
-                        <i class="fas fa-redo me-2"></i>Reset Filters
-                    </button>
-                </div>
-            </div>
-
-            <!-- Search Results -->
-            <div class="col-md-9">
-                <?php if (isset($_GET['q']) && !empty($_GET['q'])): ?>
-                    <div class="mb-4">
-                        <h5>Search Results for "<?= htmlspecialchars($_GET['q']) ?>"</h5>
-                        <p class="text-muted">Found 12 results</p>
-                    </div>
-
-                    <!-- Sample Results -->
-                    <div class="result-item">
-                        <h5>
-                            <a href="#" class="text-decoration-none text-dark">
-                                Machine Learning Applications in Modern Healthcare Systems
-                            </a>
-                        </h5>
-                        <p class="text-muted small mb-2">
-                            <i class="fas fa-user me-2"></i>Dr. John Smith, Dr. Jane Doe
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-calendar me-2"></i>December 2024
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-tag me-2"></i>Computer Science
-                        </p>
-                        <p class="mb-3">
-                            This comprehensive study explores the integration of machine learning algorithms in healthcare 
-                            diagnostics, patient care management, and predictive analytics. The research demonstrates 
-                            significant improvements in accuracy and efficiency...
-                        </p>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Abstract
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-1"></i>Download PDF
-                            </a>
+                    <!-- Advanced Filters -->
+                    <div x-show="showFilters" x-collapse class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+                        <!-- Author -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Author</label>
+                            <input 
+                                type="text" 
+                                name="author"
+                                placeholder="Author name"
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
                         </div>
-                    </div>
 
-                    <div class="result-item">
-                        <h5>
-                            <a href="#" class="text-decoration-none text-dark">
-                                Sustainable Energy Solutions for Urban Development
-                            </a>
-                        </h5>
-                        <p class="text-muted small mb-2">
-                            <i class="fas fa-user me-2"></i>Dr. Michael Johnson
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-calendar me-2"></i>November 2024
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-tag me-2"></i>Engineering
-                        </p>
-                        <p class="mb-3">
-                            An in-depth analysis of renewable energy implementation in metropolitan areas, focusing on 
-                            solar, wind, and hybrid systems. The paper presents case studies from major cities worldwide...
-                        </p>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Abstract
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-1"></i>Download PDF
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="result-item">
-                        <h5>
-                            <a href="#" class="text-decoration-none text-dark">
-                                Advanced Graph Theory: Algorithms and Applications
-                            </a>
-                        </h5>
-                        <p class="text-muted small mb-2">
-                            <i class="fas fa-user me-2"></i>Dr. Sarah Williams
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-calendar me-2"></i>October 2024
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-tag me-2"></i>Mathematics
-                        </p>
-                        <p class="mb-3">
-                            Novel algorithmic approaches to complex graph problems with applications in network optimization, 
-                            social network analysis, and computational biology...
-                        </p>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Abstract
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-1"></i>Download PDF
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <nav aria-label="Search results pagination" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                <?php else: ?>
-                    <!-- No Search Yet -->
-                    <div class="text-center py-5">
-                        <i class="fas fa-search fa-4x text-muted mb-4"></i>
-                        <h4>Start Your Search</h4>
-                        <p class="text-muted">Enter keywords above to find research articles and publications</p>
-                        
-                        <div class="mt-5">
-                            <h6 class="mb-3">Popular Searches:</h6>
-                            <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <a href="/search?q=machine+learning" class="badge bg-secondary fs-6 text-decoration-none">Machine Learning</a>
-                                <a href="/search?q=artificial+intelligence" class="badge bg-secondary fs-6 text-decoration-none">Artificial Intelligence</a>
-                                <a href="/search?q=data+science" class="badge bg-secondary fs-6 text-decoration-none">Data Science</a>
-                                <a href="/search?q=quantum+computing" class="badge bg-secondary fs-6 text-decoration-none">Quantum Computing</a>
-                                <a href="/search?q=renewable+energy" class="badge bg-secondary fs-6 text-decoration-none">Renewable Energy</a>
+                        <!-- Year -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Publication Year</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input 
+                                    type="number" 
+                                    name="year_from"
+                                    placeholder="From"
+                                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                >
+                                <input 
+                                    type="number" 
+                                    name="year_to"
+                                    placeholder="To"
+                                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                >
                             </div>
                         </div>
+
+                        <!-- Subject -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Subject Area</label>
+                            <select 
+                                name="subject"
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
+                                <option value="">All Subjects</option>
+                                <option>Computer Science</option>
+                                <option>Engineering</option>
+                                <option>Medicine</option>
+                                <option>Social Sciences</option>
+                                <option>Natural Sciences</option>
+                                <option>Humanities</option>
+                            </select>
+                        </div>
+
+                        <!-- Article Type -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Article Type</label>
+                            <select 
+                                name="type"
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
+                                <option value="">All Types</option>
+                                <option>Research Article</option>
+                                <option>Review Article</option>
+                                <option>Case Study</option>
+                                <option>Short Communication</option>
+                                <option>Editorial</option>
+                            </select>
+                        </div>
                     </div>
-                <?php endif; ?>
+                </form>
+            </div>
+
+            <!-- Search Tips -->
+            <div class="mt-6 bg-primary-50 border-l-4 border-primary-600 rounded-r-lg p-4">
+                <h4 class="text-sm font-semibold text-slate-800 mb-2">
+                    <i class="fas fa-lightbulb text-primary-700 mr-2"></i>Search Tips
+                </h4>
+                <ul class="text-sm text-slate-600 space-y-1">
+                    <li>• Use quotes for exact phrases: "machine learning"</li>
+                    <li>• Use AND, OR, NOT for boolean searches</li>
+                    <li>• Use * as a wildcard: comput* finds computer, computing, etc.</li>
+                </ul>
             </div>
         </div>
+
+        <!-- Sample Results Section -->
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Results Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-slate-800 mb-1">Search Results</h2>
+                    <p class="text-slate-600">Showing recent articles • Use search above to filter</p>
+                </div>
+                <div>
+                    <select class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        <option>Most Relevant</option>
+                        <option>Most Recent</option>
+                        <option>Most Cited</option>
+                        <option>Title A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Result Card 1 -->
+            <div class="bg-white rounded-xl shadow-card border border-slate-200 p-6 mb-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <span class="inline-block bg-primary-100 text-primary-800 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+                            Research Article
+                        </span>
+                        <h3 class="text-xl font-serif font-bold text-slate-800 mb-2 hover:text-primary-700 cursor-pointer">
+                            <a href="/article/123">
+                                Advances in Machine Learning for Medical Diagnosis: A Comprehensive Review
+                            </a>
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-3">
+                            <i class="fas fa-user mr-1"></i>
+                            <strong>Authors:</strong> Dr. Sarah Johnson, Prof. Michael Chen, Dr. Emily Rodriguez
+                        </p>
+                    </div>
+                    <button class="text-slate-400 hover:text-primary-700 ml-4">
+                        <i class="far fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+
+                <p class="text-slate-700 mb-4 leading-relaxed">
+                    This comprehensive review examines recent developments in machine learning algorithms applied to medical 
+                    diagnostics, highlighting their impact on early disease detection and treatment planning...
+                </p>
+
+                <div class="flex flex-wrap gap-4 text-sm text-slate-600 mb-4">
+                    <span><i class="far fa-calendar mr-1"></i>Published: Oct 2024</span>
+                    <span><i class="fas fa-folder mr-1"></i>Computer Science, Medicine</span>
+                    <span><i class="fas fa-eye mr-1"></i>1,245 views</span>
+                    <span><i class="fas fa-quote-right mr-1"></i>23 citations</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="/article/123" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-file-pdf mr-2"></i>View PDF
+                    </a>
+                    <a href="/article/123/abstract" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>Abstract
+                    </a>
+                    <a href="/article/123/cite" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-quote-left mr-2"></i>Cite
+                    </a>
+                </div>
+            </div>
+
+            <!-- Result Card 2 -->
+            <div class="bg-white rounded-xl shadow-card border border-slate-200 p-6 mb-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+                            Review Article
+                        </span>
+                        <h3 class="text-xl font-serif font-bold text-slate-800 mb-2 hover:text-primary-700 cursor-pointer">
+                            <a href="/article/124">
+                                Sustainable Development Goals: Progress, Challenges, and Future Directions
+                            </a>
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-3">
+                            <i class="fas fa-user mr-1"></i>
+                            <strong>Authors:</strong> Prof. James Anderson, Dr. Maria Santos
+                        </p>
+                    </div>
+                    <button class="text-primary-700 ml-4">
+                        <i class="fas fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+
+                <p class="text-slate-700 mb-4 leading-relaxed">
+                    An in-depth analysis of global progress toward the United Nations Sustainable Development Goals, 
+                    examining both achievements and persistent challenges in environmental sustainability...
+                </p>
+
+                <div class="flex flex-wrap gap-4 text-sm text-slate-600 mb-4">
+                    <span><i class="far fa-calendar mr-1"></i>Published: Sep 2024</span>
+                    <span><i class="fas fa-folder mr-1"></i>Social Sciences, Environment</span>
+                    <span><i class="fas fa-eye mr-1"></i>2,890 views</span>
+                    <span><i class="fas fa-quote-right mr-1"></i>45 citations</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="/article/124" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-file-pdf mr-2"></i>View PDF
+                    </a>
+                    <a href="/article/124/abstract" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>Abstract
+                    </a>
+                    <a href="/article/124/cite" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-quote-left mr-2"></i>Cite
+                    </a>
+                </div>
+            </div>
+
+            <!-- Result Card 3 -->
+            <div class="bg-white rounded-xl shadow-card border border-slate-200 p-6 mb-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+                            Case Study
+                        </span>
+                        <h3 class="text-xl font-serif font-bold text-slate-800 mb-2 hover:text-primary-700 cursor-pointer">
+                            <a href="/article/125">
+                                Blockchain Technology in Supply Chain Management: Real-World Implementation
+                            </a>
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-3">
+                            <i class="fas fa-user mr-1"></i>
+                            <strong>Authors:</strong> Dr. Robert Kim, Prof. Lisa Martinez
+                        </p>
+                    </div>
+                    <button class="text-slate-400 hover:text-primary-700 ml-4">
+                        <i class="far fa-bookmark text-xl"></i>
+                    </button>
+                </div>
+
+                <p class="text-slate-700 mb-4 leading-relaxed">
+                    This case study presents a detailed examination of blockchain implementation in a multinational 
+                    supply chain, documenting challenges, solutions, and measurable outcomes...
+                </p>
+
+                <div class="flex flex-wrap gap-4 text-sm text-slate-600 mb-4">
+                    <span><i class="far fa-calendar mr-1"></i>Published: Aug 2024</span>
+                    <span><i class="fas fa-folder mr-1"></i>Business, Technology</span>
+                    <span><i class="fas fa-eye mr-1"></i>892 views</span>
+                    <span><i class="fas fa-quote-right mr-1"></i>12 citations</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <a href="/article/125" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-file-pdf mr-2"></i>View PDF
+                    </a>
+                    <a href="/article/125/abstract" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>Abstract
+                    </a>
+                    <a href="/article/125/cite" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-semibold text-sm">
+                        <i class="fas fa-quote-left mr-2"></i>Cite
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-8">
+                <nav class="flex items-center gap-2">
+                    <button class="px-4 py-2 border-2 border-slate-300 text-slate-400 rounded-lg cursor-not-allowed">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="px-4 py-2 bg-primary-700 text-white font-semibold rounded-lg">1</button>
+                    <button class="px-4 py-2 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg">2</button>
+                    <button class="px-4 py-2 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg">3</button>
+                    <button class="px-4 py-2 border-2 border-slate-300 text-slate-700 hover:bg-primary-50 hover:border-primary-700 rounded-lg">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </nav>
+            </div>
+
+        </div>
+
     </div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
+<?php
+// Get the buffered content
+$content = ob_get_clean();
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        function resetFilters() {
-            document.querySelectorAll('.form-check-input').forEach(cb => cb.checked = false);
-            document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
-        }
-    </script>
-</body>
-</html>
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

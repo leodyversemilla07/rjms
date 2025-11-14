@@ -16,7 +16,6 @@ database/
 ├── migrations/          # Individual migration files
 │   ├── 2025_09_08_120000_create_users_table.sql
 │   ├── 2025_09_08_120100_create_submissions_table.sql
-│   ├── 2025_09_08_120200_create_inbox_table.sql
 │   ├── 2025_09_08_120300_create_reviews_table.sql
 │   ├── 2025_09_08_120400_create_categories_table.sql
 │   ├── 2025_09_08_120500_create_submission_categories_table.sql
@@ -81,9 +80,8 @@ php migrate.php reset
 3. **reviews** - Peer review records
 4. **categories** - Research categories
 5. **submission_categories** - Many-to-many relationship
-6. **inbox** - Contact form messages
-7. **user_sessions** - Session management
-8. **migrations** - Migration tracking
+6. **user_sessions** - Session management
+7. **migrations** - Migration tracking
 
 ### Default Users
 
@@ -145,7 +143,7 @@ The system comes with default users for testing:
 ### Common Issues
 
 1. **Connection Error**:
-   - Check `includes/db_connection.php` settings
+   - Check `.env` database settings
    - Ensure MySQL server is running
    - Verify database credentials
 

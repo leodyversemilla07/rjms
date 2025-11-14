@@ -1,137 +1,129 @@
 <?php
-$submissions = $submissions ?? [];
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Submissions - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .action-btn {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+// Set page metadata
+$title = 'Manage Submissions - Research Journal Management System';
+$description = 'View and manage all your submitted articles';
+$keywords = 'author, submissions, manage articles';
 
-    <div class="page-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-folder-open me-3"></i>Manage Submissions</h1>
-                    <p class="mb-0">View and manage all your submitted articles</p>
+$submissions = $submissions ?? [];
+
+// Helper functions
+function getStatusColor($status) {
+    $colors = [
+        'draft' => 'bg-slate-100 text-slate-700',
+        'pending' => 'bg-amber-100 text-amber-700',
+        'under_review' => 'bg-blue-100 text-blue-700',
+        'revision_required' => 'bg-amber-100 text-amber-700',
+        'accepted' => 'bg-green-100 text-green-700',
+        'published' => 'bg-green-100 text-green-700',
+        'rejected' => 'bg-red-100 text-red-700'
+    ];
+    return $colors[$status] ?? 'bg-slate-100 text-slate-700';
+}
+
+function getStatusLabel($status) {
+    $labels = [
+        'draft' => 'Draft',
+        'pending' => 'Pending Review',
+        'under_review' => 'Under Review',
+        'revision_required' => 'Revision Required',
+        'accepted' => 'Accepted',
+        'published' => 'Published',
+        'rejected' => 'Rejected'
+    ];
+    return $labels[$status] ?? ucfirst($status);
+}
+
+// Start output buffering
+ob_start();
+?>
+
+    <!-- Page Header -->
+    <div class="bg-primary-700 text-white border-b-4 border-primary-800">
+        <div class="container mx-auto px-4 py-12">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                        <i class="fas fa-folder-open mr-3"></i>Manage Submissions
+                    </h1>
+                    <p class="text-primary-100">View and manage all your submitted articles</p>
                 </div>
-                <div class="col-md-4 text-end">
-                    <a href="/author/submit" class="btn btn-light btn-lg">
-                        <i class="fas fa-plus-circle me-2"></i>New Submission
+                <div>
+                    <a href="/author/submit" class="inline-flex items-center justify-center bg-white text-primary-700 hover:bg-primary-50 font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-plus-circle mr-2"></i>New Submission
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mb-5">
-        <?php if (isset($_SESSION['flash'])): ?>
-            <?php foreach ($_SESSION['flash'] as $type => $message): ?>
-                <div class="alert alert-<?= $type ?> alert-dismissible fade show">
-                    <?= htmlspecialchars($message) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php unset($_SESSION['flash'][$type]); ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-        <div class="content-card">
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-card p-6">
             <?php if (empty($submissions)): ?>
-                <div class="text-center py-5">
-                    <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
-                    <h4>No Submissions Yet</h4>
-                    <p class="text-muted mb-4">You haven't submitted any articles yet. Start by submitting your research!</p>
-                    <a href="/author/submit" class="btn btn-primary btn-lg">
-                        <i class="fas fa-plus-circle me-2"></i>Submit Your First Article
+                <div class="text-center py-12">
+                    <i class="fas fa-inbox text-8xl text-slate-300 mb-6"></i>
+                    <h4 class="text-2xl font-bold text-slate-800 mb-3">No Submissions Yet</h4>
+                    <p class="text-slate-600 mb-6">You haven't submitted any articles yet. Start by submitting your research!</p>
+                    <a href="/author/submit" class="inline-flex items-center justify-center bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
+                        <i class="fas fa-plus-circle mr-2"></i>Submit Your First Article
                     </a>
                 </div>
             <?php else: ?>
-                <div class="table-responsive">
-                    <table id="submissionsTable" class="table table-hover">
-                        <thead>
+                <div class="overflow-x-auto">
+                    <table id="submissionsTable" class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
                             <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Submission Date</th>
-                                <th>Last Updated</th>
-                                <th>Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Title</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Submission Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Last Updated</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                        <tbody class="bg-white divide-y divide-slate-200">
                             <?php foreach ($submissions as $submission): ?>
-                                <tr>
-                                    <td><?= $submission['id'] ?></td>
-                                    <td>
-                                        <strong><?= htmlspecialchars($submission['title']) ?></strong>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700"><?= $submission['id'] ?></td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-semibold text-slate-800"><?= htmlspecialchars($submission['title']) ?></div>
                                         <?php if (!empty($submission['keywords'])): ?>
-                                            <br><small class="text-muted">
+                                            <div class="text-xs text-slate-600 mt-1">
                                                 <i class="fas fa-tags"></i> <?= htmlspecialchars($submission['keywords']) ?>
-                                            </small>
+                                            </div>
                                         <?php endif; ?>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-info">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
                                             <?= htmlspecialchars($submission['category_name'] ?? 'Uncategorized') ?>
                                         </span>
                                     </td>
-                                    <td>
-                                        <span class="status-badge bg-<?= getStatusColor($submission['status']) ?>">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-block px-3 py-1 <?= getStatusColor($submission['status']) ?> text-xs font-bold rounded-full uppercase">
                                             <?= getStatusLabel($submission['status']) ?>
                                         </span>
                                     </td>
-                                    <td><?= date('M d, Y', strtotime($submission['submission_date'])) ?></td>
-                                    <td><?= date('M d, Y', strtotime($submission['updated_at'] ?? $submission['submission_date'])) ?></td>
-                                    <td>
-                                        <div class="btn-group" role="group">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"><?= date('M d, Y', strtotime($submission['submission_date'])) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"><?= date('M d, Y', strtotime($submission['updated_at'] ?? $submission['submission_date'])) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex gap-2">
                                             <a href="/author/article/<?= $submission['id'] ?>" 
-                                               class="btn btn-sm btn-outline-primary action-btn"
+                                               class="inline-flex items-center justify-center border-2 border-primary-700 text-primary-700 hover:bg-primary-50 font-semibold py-1 px-3 rounded transition-colors text-xs"
                                                title="View">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <?php if (in_array($submission['status'], ['draft', 'revision_required'])): ?>
                                                 <a href="/author/article/<?= $submission['id'] ?>/edit" 
-                                                   class="btn btn-sm btn-outline-secondary action-btn"
+                                                   class="inline-flex items-center justify-center border-2 border-slate-700 text-slate-700 hover:bg-slate-50 font-semibold py-1 px-3 rounded transition-colors text-xs"
                                                    title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             <?php endif; ?>
                                             <?php if ($submission['status'] == 'draft'): ?>
                                                 <button onclick="deleteSubmission(<?= $submission['id'] ?>)" 
-                                                        class="btn btn-sm btn-outline-danger action-btn"
+                                                        class="inline-flex items-center justify-center border-2 border-red-700 text-red-700 hover:bg-red-50 font-semibold py-1 px-3 rounded transition-colors text-xs"
                                                         title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -148,32 +140,37 @@ $submissions = $submissions ?? [];
 
         <!-- Legend -->
         <?php if (!empty($submissions)): ?>
-            <div class="content-card mt-4">
-                <h6><i class="fas fa-info-circle me-2"></i>Status Legend</h6>
-                <div class="row">
-                    <div class="col-md-3">
-                        <span class="status-badge bg-secondary">Draft</span> - Not yet submitted
+            <div class="bg-white rounded-xl shadow-card p-6 mt-6">
+                <h6 class="text-lg font-bold text-slate-800 mb-4">
+                    <i class="fas fa-info-circle mr-2"></i>Status Legend
+                </h6>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full uppercase">Draft</span>
+                        <span class="ml-2 text-slate-600">- Not yet submitted</span>
                     </div>
-                    <div class="col-md-3">
-                        <span class="status-badge bg-warning">Pending</span> - Awaiting review
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full uppercase">Pending</span>
+                        <span class="ml-2 text-slate-600">- Awaiting review</span>
                     </div>
-                    <div class="col-md-3">
-                        <span class="status-badge bg-info">Under Review</span> - Being reviewed
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full uppercase">Under Review</span>
+                        <span class="ml-2 text-slate-600">- Being reviewed</span>
                     </div>
-                    <div class="col-md-3">
-                        <span class="status-badge bg-success">Published</span> - Published
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase">Published</span>
+                        <span class="ml-2 text-slate-600">- Published</span>
                     </div>
                 </div>
             </div>
         <?php endif; ?>
     </div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    
     <script>
         $(document).ready(function() {
             $('#submissionsTable').DataTable({
@@ -206,33 +203,11 @@ $submissions = $submissions ?? [];
             }
         }
     </script>
-</body>
-</html>
 
 <?php
-function getStatusColor($status) {
-    $colors = [
-        'draft' => 'secondary',
-        'pending' => 'warning',
-        'under_review' => 'info',
-        'revision_required' => 'warning',
-        'accepted' => 'success',
-        'published' => 'success',
-        'rejected' => 'danger'
-    ];
-    return $colors[$status] ?? 'secondary';
-}
+// Get the buffered content
+$content = ob_get_clean();
 
-function getStatusLabel($status) {
-    $labels = [
-        'draft' => 'Draft',
-        'pending' => 'Pending Review',
-        'under_review' => 'Under Review',
-        'revision_required' => 'Revision Required',
-        'accepted' => 'Accepted',
-        'published' => 'Published',
-        'rejected' => 'Rejected'
-    ];
-    return $labels[$status] ?? ucfirst($status);
-}
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
 ?>

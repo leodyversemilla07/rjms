@@ -103,7 +103,8 @@ class Database
      */
     public static function execute(string $sql, array $params = []): bool
     {
-        return self::query($sql, $params)->rowCount() > 0;
+        $stmt = self::query($sql, $params);
+        return $stmt !== false;
     }
 
     /**

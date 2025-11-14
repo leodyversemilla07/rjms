@@ -1,4 +1,9 @@
 <?php
+// Set page metadata
+$title = 'Editor Dashboard - Research Journal Management System';
+$description = 'Manage and review submissions assigned to you';
+$keywords = 'editor, dashboard, submissions, review management';
+
 $stats = $stats ?? [
     'pending_review' => 0,
     'under_review' => 0,
@@ -6,69 +11,10 @@ $stats = $stats ?? [
     'total_assigned' => 0
 ];
 $recent_submissions = $recent_submissions ?? [];
+
+// Start output buffering
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor Dashboard - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .submission-item {
-            padding: 15px;
-            border-left: 4px solid #4F46E5;
-            margin-bottom: 15px;
-            background: #F3F4F6;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        .submission-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-        .priority-high { border-left-color: #dc3545; }
-        .priority-medium { border-left-color: #ffc107; }
-        .priority-low { border-left-color: #28a745; }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
 
     <div class="page-header">
         <div class="container">
@@ -163,26 +109,11 @@ $recent_submissions = $recent_submissions ?? [];
                         <?php foreach ($recent_submissions as $submission): ?>
                             <div class="submission-item priority-<?= $submission['priority'] ?? 'low' ?>">
                                 <div class="d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-2">
-                                            <a href="/editor/view-submission/<?= $submission['id'] ?>" class="text-decoration-none text-dark">
-                                                <?= htmlspecialchars($submission['title']) ?>
-                                            </a>
-                                        </h6>
-                                        <div class="d-flex gap-3 mb-2">
-                                            <small class="text-muted">
-                                                <i class="fas fa-user me-1"></i>
-                                                <?= htmlspecialchars($submission['author_name'] ?? 'Unknown') ?>
-                                            </small>
-                                            <small class="text-muted">
-                                                <i class="fas fa-calendar me-1"></i>
-                                                <?= date('M d, Y', strtotime($submission['created_at'])) ?>
-                                            </small>
-                                            <small class="text-muted">
-                                                <i class="fas fa-folder me-1"></i>
-                                                <?= htmlspecialchars($submission['category_name'] ?? 'Uncategorized') ?>
-                                            </small>
-                                        </div>
+                                    <div class="flex items-center">
+                                    <i class="fas fa-file-alt text-blue-600 text-xl mr-3"></i>
+                                    <div class="grow">
+                                        <h6 class="font-semibold"><?= htmlspecialchars($submission['title']) ?></h6>
+                                        <small class="text-gray-500">by <?= htmlspecialchars($submission['author_name']) ?></small>
                                         <div class="d-flex gap-2">
                                             <?php
                                             $statusColors = [
@@ -271,22 +202,41 @@ $recent_submissions = $recent_submissions ?? [];
                 </div>
 
                 <!-- Editor Guidelines -->
-                <div class="content-card">
-                    <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>Editor Guidelines</h6>
-                    <ul class="small mb-0">
-                        <li class="mb-2">Review submissions within 7 days</li>
-                        <li class="mb-2">Assign at least 2 reviewers per submission</li>
-                        <li class="mb-2">Provide constructive feedback</li>
-                        <li class="mb-2">Maintain communication with authors</li>
-                        <li>Make final decisions based on reviewer feedback</li>
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <h6 class="text-lg font-bold text-slate-800 mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>Editor Guidelines
+                    </h6>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Review submissions within 7 days</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Assign at least 2 reviewers per submission</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Provide constructive feedback</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Maintain communication with authors</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Make final decisions based on reviewer feedback</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
+<?php
+// Get the buffered content
+$content = ob_get_clean();
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

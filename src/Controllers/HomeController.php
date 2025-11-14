@@ -49,6 +49,22 @@ class HomeController extends Controller
     }
 
     /**
+     * Display editorial board page
+     */
+    public function editorialBoard(): void
+    {
+        $this->view('home/editorial-board', [], '');
+    }
+
+    /**
+     * Display submission guidelines page
+     */
+    public function submissionGuidelines(): void
+    {
+        $this->view('home/submission-guidelines', [], '');
+    }
+
+    /**
      * Display contact page
      */
     public function contact(): void
@@ -111,5 +127,20 @@ class HomeController extends Controller
             'keyword' => $keyword,
             'results' => $results
         ], '');
+    }
+
+    /**
+     * Display archives page
+     */
+    public function archives(): void
+    {
+        $stats = [
+            'total_articles' => count($this->submissionModel->getPublished()),
+            'total_issues' => 18,
+            'total_authors' => 250,
+            'years_active' => 5
+        ];
+
+        $this->view('home/archive', ['stats' => $stats], '');
     }
 }

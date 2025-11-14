@@ -61,8 +61,10 @@ class Review extends Model
      */
     public function getPendingByReviewer(int $reviewerId): array
     {
-        return $this->where('reviewer_id', $reviewerId)
-                    ->where('status', 'pending');
+        $sql = "SELECT * FROM {$this->table} 
+                WHERE reviewer_id = ? AND status = 'pending'
+                ORDER BY assigned_date DESC";
+        return $this->query($sql, [$reviewerId]);
     }
 
     /**

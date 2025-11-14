@@ -1,39 +1,30 @@
 <?php
+// Set page metadata
+$title = 'Admin Dashboard - Research Journal Management System';
+$description = 'System administration and analytics dashboard';
+$keywords = 'admin, dashboard, statistics, management';
+
 $stats = $stats ?? [];
 $recentSubmissions = $recentSubmissions ?? [];
 $recentUsers = $recentUsers ?? [];
+
+// Helper function
+function getStatusColor($status) {
+    $colors = [
+        'draft' => 'bg-slate-100 text-slate-700',
+        'pending' => 'bg-amber-100 text-amber-700',
+        'under_review' => 'bg-blue-100 text-blue-700',
+        'revision_required' => 'bg-amber-100 text-amber-700',
+        'accepted' => 'bg-green-100 text-green-700',
+        'published' => 'bg-green-100 text-green-700',
+        'rejected' => 'bg-red-100 text-red-700'
+    ];
+    return $colors[$status] ?? 'bg-slate-100 text-slate-700';
+}
+
+// Start output buffering
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .dashboard-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-            border-left: 4px solid;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-        .stat-card.primary { border-color: #4F46E5; }
-        .stat-card.success { border-color: #28a745; }
         .stat-card.warning { border-color: #ffc107; }
         .stat-card.danger { border-color: #dc3545; }
         .stat-value {
@@ -272,7 +263,7 @@ $recentUsers = $recentUsers ?? [];
                                         <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                                             <?= strtoupper(substr($user['first_name'] ?? 'U', 0, 1)) ?>
                                         </div>
-                                        <div class="flex-grow-1">
+                                        <div class="grow">
                                             <strong><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></strong>
                                             <br><small class="text-muted"><?= htmlspecialchars($user['email']) ?></small>
                                         </div>
@@ -317,7 +308,7 @@ $recentUsers = $recentUsers ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
@@ -351,20 +342,11 @@ $recentUsers = $recentUsers ?? [];
             }
         });
     </script>
-</body>
-</html>
 
 <?php
-function getStatusColor($status) {
-    $colors = [
-        'draft' => 'secondary',
-        'pending' => 'warning',
-        'under_review' => 'info',
-        'revision_required' => 'warning',
-        'accepted' => 'success',
-        'published' => 'success',
-        'rejected' => 'danger'
-    ];
-    return $colors[$status] ?? 'secondary';
-}
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
 ?>

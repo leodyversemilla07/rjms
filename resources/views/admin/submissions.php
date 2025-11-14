@@ -1,39 +1,41 @@
 <?php
+// Set page metadata
+$title = 'Manage Submissions - Research Journal Management System';
+$description = 'Manage all article submissions';
+$keywords = 'admin, submissions, management';
+
 $submissions = $submissions ?? [];
+
+// Helper functions
+function getStatusColor($status) {
+    $colors = [
+        'draft' => 'bg-slate-100 text-slate-700',
+        'pending' => 'bg-amber-100 text-amber-700',
+        'under_review' => 'bg-blue-100 text-blue-700',
+        'revision_required' => 'bg-amber-100 text-amber-700',
+        'accepted' => 'bg-green-100 text-green-700',
+        'published' => 'bg-green-100 text-green-700',
+        'rejected' => 'bg-red-100 text-red-700'
+    ];
+    return $colors[$status] ?? 'bg-slate-100 text-slate-700';
+}
+
+function getStatusLabel($status) {
+    $labels = [
+        'draft' => 'Draft',
+        'pending' => 'Pending',
+        'under_review' => 'Under Review',
+        'revision_required' => 'Revision Required',
+        'accepted' => 'Accepted',
+        'published' => 'Published',
+        'rejected' => 'Rejected'
+    ];
+    return $labels[$status] ?? ucfirst($status);
+}
+
+// Start output buffering
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Submissions - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .filter-card {
-            background: white;
-            border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -248,10 +250,10 @@ $submissions = $submissions ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             $('#submissionsTable').DataTable({
@@ -339,33 +341,7 @@ $submissions = $submissions ?? [];
             });
         });
     </script>
-</body>
-</html>
-
 <?php
-function getStatusColor($status) {
-    $colors = [
-        'draft' => 'secondary',
-        'pending' => 'warning',
-        'under_review' => 'info',
-        'revision_required' => 'warning',
-        'accepted' => 'success',
-        'published' => 'success',
-        'rejected' => 'danger'
-    ];
-    return $colors[$status] ?? 'secondary';
-}
-
-function getStatusLabel($status) {
-    $labels = [
-        'draft' => 'Draft',
-        'pending' => 'Pending',
-        'under_review' => 'Under Review',
-        'revision_required' => 'Revision Required',
-        'accepted' => 'Accepted',
-        'published' => 'Published',
-        'rejected' => 'Rejected'
-    ];
-    return $labels[$status] ?? ucfirst($status);
-}
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
 ?>

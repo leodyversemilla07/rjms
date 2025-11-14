@@ -41,6 +41,15 @@ class AuthController extends Controller
         header('Content-Type: application/json');
 
         try {
+            // Verify CSRF token
+            if (!CSRF::verify()) {
+                $this->json([
+                    'success' => false,
+                    'message' => 'Invalid request. Please refresh and try again.'
+                ]);
+                return;
+            }
+
             $usernameEmail = trim($_POST['username_email'] ?? '');
             $password = $_POST['password'] ?? '';
             $rememberMe = isset($_POST['remember_me']);
@@ -148,6 +157,15 @@ class AuthController extends Controller
         header('Content-Type: application/json');
 
         try {
+            // Verify CSRF token
+            if (!CSRF::verify()) {
+                $this->json([
+                    'success' => false,
+                    'message' => 'Invalid request. Please refresh and try again.'
+                ]);
+                return;
+            }
+
             // Validate input
             $data = $this->validate([
                 'username' => 'required|alphanumeric|min:3|max:50',

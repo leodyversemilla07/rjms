@@ -1,39 +1,25 @@
 <?php
+// Set page metadata
+$title = 'User Management - Research Journal Management System';
+$description = 'Manage system users and their roles';
+$keywords = 'admin, users, management, roles';
+
 $users = $users ?? [];
+
+// Helper function
+function getRoleColor($role) {
+    $colors = [
+        'admin' => 'bg-red-100 text-red-700',
+        'editor' => 'bg-primary-100 text-primary-700',
+        'reviewer' => 'bg-blue-100 text-blue-700',
+        'author' => 'bg-green-100 text-green-700'
+    ];
+    return $colors[$role] ?? 'bg-slate-100 text-slate-700';
+}
+
+// Start output buffering
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .role-badge {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .action-btn {
-            padding: 4px 8px;
-            font-size: 12px;
         }
     </style>
 </head>
@@ -218,10 +204,10 @@ $users = $users ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             $('#usersTable').DataTable({
@@ -305,17 +291,11 @@ $users = $users ?? [];
             }
         }
     </script>
-</body>
-</html>
 
 <?php
-function getRoleColor($role) {
-    $colors = [
-        'admin' => 'danger',
-        'editor' => 'primary',
-        'reviewer' => 'info',
-        'author' => 'success'
-    ];
-    return $colors[$role] ?? 'secondary';
-}
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
 ?>

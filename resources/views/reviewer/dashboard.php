@@ -1,267 +1,246 @@
 <?php
+// Set page metadata
+$title = 'Reviewer Dashboard - Research Journal Management System';
+$description = 'Manage and review assigned submissions';
+$keywords = 'reviewer, dashboard, submissions, reviews';
+
 $stats = $stats ?? [
     'pending' => 0,
     'completed' => 0,
     'total' => 0
 ];
 $assigned_submissions = $assigned_submissions ?? [];
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviewer Dashboard - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .submission-card {
-            padding: 20px;
-            border-left: 4px solid #4F46E5;
-            margin-bottom: 15px;
-            background: #F3F4F6;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        .submission-card:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-        .deadline-warning { border-left-color: #ffc107; }
-        .deadline-urgent { border-left-color: #dc3545; }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
 
-    <div class="page-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-user-graduate me-3"></i>Reviewer Dashboard</h1>
-                    <p class="mb-0">Review and evaluate assigned submissions</p>
+// Start output buffering
+ob_start();
+?>
+
+    <!-- Page Header -->
+    <div class="bg-primary-700 text-white border-b-4 border-primary-800">
+        <div class="container mx-auto px-4 py-12">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                        <i class="fas fa-user-graduate mr-3"></i>Reviewer Dashboard
+                    </h1>
+                    <p class="text-primary-100">Review and evaluate assigned submissions</p>
                 </div>
-                <div class="col-md-4 text-end">
-                    <a href="/reviewer/submissions" class="btn btn-light btn-lg">
-                        <i class="fas fa-list me-2"></i>All Assignments
+                <div>
+                    <a href="/reviewer/submissions" class="inline-flex items-center justify-center bg-white text-primary-700 hover:bg-primary-50 font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-list mr-2"></i>All Assignments
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mb-5">
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
         <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-2">Pending Reviews</h6>
-                            <h2 class="mb-0"><?= $stats['pending'] ?></h2>
-                        </div>
-                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                            <i class="fas fa-clock"></i>
-                        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6 hover:-translate-y-1 transition-transform">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h6 class="text-slate-600 text-sm font-medium mb-2">Pending Reviews</h6>
+                        <h2 class="text-3xl font-bold text-slate-800"><?= $stats['pending'] ?></h2>
+                    </div>
+                    <div class="w-16 h-16 bg-amber-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-clock text-3xl text-amber-600"></i>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-2">Completed Reviews</h6>
-                            <h2 class="mb-0"><?= $stats['completed'] ?></h2>
-                        </div>
-                        <div class="stat-icon bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-card p-6 hover:-translate-y-1 transition-transform">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h6 class="text-slate-600 text-sm font-medium mb-2">Completed Reviews</h6>
+                        <h2 class="text-3xl font-bold text-slate-800"><?= $stats['completed'] ?></h2>
+                    </div>
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-check-circle text-3xl text-green-600"></i>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="stat-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted mb-2">Total Assigned</h6>
-                            <h2 class="mb-0"><?= $stats['total'] ?></h2>
-                        </div>
-                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
+            <div class="bg-white rounded-xl shadow-card p-6 hover:-translate-y-1 transition-transform">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h6 class="text-slate-600 text-sm font-medium mb-2">Total Assigned</h6>
+                        <h2 class="text-3xl font-bold text-slate-800"><?= $stats['total'] ?></h2>
+                    </div>
+                    <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-file-alt text-3xl text-primary-700"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Pending Reviews -->
-            <div class="col-md-8">
-                <div class="content-card">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5><i class="fas fa-tasks me-2"></i>Pending Reviews</h5>
-                        <a href="/reviewer/submissions?status=pending" class="btn btn-sm btn-outline-primary">
-                            View All <i class="fas fa-arrow-right ms-1"></i>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Pending Reviews -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h5 class="text-xl font-bold text-slate-800">
+                            <i class="fas fa-tasks mr-2"></i>Pending Reviews
+                        </h5>
+                        <a href="/reviewer/submissions?status=pending" class="text-sm font-medium text-primary-700 hover:text-primary-800">
+                            View All <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
 
                     <?php if (empty($assigned_submissions)): ?>
-                        <div class="text-center py-5">
-                            <i class="fas fa-check-double fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No pending reviews. Great job!</p>
+                        <div class="text-center py-12">
+                            <i class="fas fa-check-double text-6xl text-slate-300 mb-4"></i>
+                            <p class="text-slate-600">No pending reviews. Great job!</p>
                         </div>
                     <?php else: ?>
+                        <div class="space-y-4">
                         <?php foreach ($assigned_submissions as $submission): ?>
                             <?php
                             $deadline = strtotime($submission['deadline'] ?? '+14 days');
                             $daysLeft = ceil(($deadline - time()) / 86400);
-                            $urgencyClass = '';
+                            $borderColor = 'border-primary-500';
                             if ($daysLeft <= 2) {
-                                $urgencyClass = 'deadline-urgent';
+                                $borderColor = 'border-red-500';
                             } elseif ($daysLeft <= 5) {
-                                $urgencyClass = 'deadline-warning';
+                                $borderColor = 'border-amber-500';
                             }
                             ?>
-                            <div class="submission-card <?= $urgencyClass ?>">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-2">
-                                            <a href="/reviewer/view-submission/<?= $submission['id'] ?>" class="text-decoration-none text-dark">
+                            <div class="bg-slate-50 border-l-4 <?= $borderColor ?> rounded-r-lg p-4 hover:bg-slate-100 transition-all">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div class="flex-1">
+                                        <h6 class="font-semibold text-slate-800 mb-2">
+                                            <a href="/reviewer/view-submission/<?= $submission['id'] ?>" class="hover:text-primary-700 transition-colors">
                                                 <?= htmlspecialchars($submission['title']) ?>
                                             </a>
                                         </h6>
-                                        <p class="mb-2 small text-muted">
+                                        <p class="text-sm text-slate-600 mb-3">
                                             <?= htmlspecialchars(substr($submission['abstract'] ?? '', 0, 150)) ?>...
                                         </p>
-                                        <div class="d-flex gap-3 mb-2">
-                                            <small class="text-muted">
-                                                <i class="fas fa-user me-1"></i>
+                                        <div class="flex flex-wrap gap-4 mb-2">
+                                            <small class="text-slate-600">
+                                                <i class="fas fa-user mr-1"></i>
                                                 <?= htmlspecialchars($submission['author_name'] ?? 'Anonymous') ?>
                                             </small>
-                                            <small class="text-muted">
-                                                <i class="fas fa-folder me-1"></i>
+                                            <small class="text-slate-600">
+                                                <i class="fas fa-folder mr-1"></i>
                                                 <?= htmlspecialchars($submission['category_name'] ?? 'Uncategorized') ?>
                                             </small>
-                                            <small class="<?= $daysLeft <= 2 ? 'text-danger' : ($daysLeft <= 5 ? 'text-warning' : 'text-muted') ?>">
-                                                <i class="fas fa-calendar-alt me-1"></i>
+                                            <small class="<?= $daysLeft <= 2 ? 'text-red-600' : ($daysLeft <= 5 ? 'text-amber-600' : 'text-slate-600') ?>">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
                                                 Due in <?= $daysLeft ?> day<?= $daysLeft != 1 ? 's' : '' ?>
                                             </small>
                                         </div>
                                         <?php if ($submission['review_status'] == 'in_progress'): ?>
-                                            <span class="badge bg-info">Draft Saved</span>
+                                            <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">Draft Saved</span>
                                         <?php endif; ?>
                                     </div>
                                     <div>
-                                        <a href="/reviewer/view-submission/<?= $submission['id'] ?>" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-eye me-1"></i>Review
+                                        <a href="/reviewer/view-submission/<?= $submission['id'] ?>" class="inline-flex items-center justify-center bg-primary-700 hover:bg-primary-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
+                                            <i class="fas fa-eye mr-1"></i>Review
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
 
             <!-- Sidebar -->
-            <div class="col-md-4">
+            <div class="space-y-6"
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="content-card mb-4">
-                    <h6 class="mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
-                    <div class="d-grid gap-2">
-                        <a href="/reviewer/submissions?status=pending" class="btn btn-outline-warning">
-                            <i class="fas fa-clock me-2"></i>Pending (<?= $stats['pending'] ?>)
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <h6 class="text-lg font-bold text-slate-800 mb-4">
+                        <i class="fas fa-bolt mr-2"></i>Quick Actions
+                    </h6>
+                    <div class="flex flex-col gap-3">
+                        <a href="/reviewer/submissions?status=pending" class="flex items-center justify-center border-2 border-amber-500 text-amber-700 hover:bg-amber-50 font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-clock mr-2"></i>Pending (<?= $stats['pending'] ?>)
                         </a>
-                        <a href="/reviewer/submissions" class="btn btn-outline-primary">
-                            <i class="fas fa-list me-2"></i>All Submissions
+                        <a href="/reviewer/submissions" class="flex items-center justify-center border-2 border-primary-700 text-primary-700 hover:bg-primary-50 font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-list mr-2"></i>All Submissions
                         </a>
-                        <a href="/reviewer/history" class="btn btn-outline-secondary">
-                            <i class="fas fa-history me-2"></i>Review History
+                        <a href="/reviewer/history" class="flex items-center justify-center border-2 border-slate-700 text-slate-700 hover:bg-slate-50 font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-history mr-2"></i>Review History
                         </a>
                     </div>
                 </div>
 
                 <!-- Performance Stats -->
-                <div class="content-card mb-4">
-                    <h6 class="mb-3"><i class="fas fa-chart-line me-2"></i>Your Performance</h6>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>Completion Rate</small>
-                            <small>
-                                <?php 
-                                $total = $stats['total'];
-                                $completed = $stats['completed'];
-                                $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
-                                echo $percentage . '%';
-                                ?>
-                            </small>
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <h6 class="text-lg font-bold text-slate-800 mb-4">
+                        <i class="fas fa-chart-line mr-2"></i>Your Performance
+                    </h6>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <small class="text-slate-700 font-medium">Completion Rate</small>
+                                <small class="text-slate-700 font-semibold">
+                                    <?php 
+                                    $total = $stats['total'];
+                                    $completed = $stats['completed'];
+                                    $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
+                                    echo $percentage . '%';
+                                    ?>
+                                </small>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: <?= $percentage ?>%"></div>
+                            </div>
                         </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success" style="width: <?= $percentage ?>%"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <small>On-Time Reviews</small>
-                            <small>95%</small>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-info" style="width: 95%"></div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <small class="text-slate-700 font-medium">On-Time Reviews</small>
+                                <small class="text-slate-700 font-semibold">95%</small>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 95%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reviewer Guidelines -->
-                <div class="content-card">
-                    <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>Reviewer Guidelines</h6>
-                    <ul class="small mb-0">
-                        <li class="mb-2">Be objective and constructive</li>
-                        <li class="mb-2">Complete reviews by the deadline</li>
-                        <li class="mb-2">Maintain confidentiality</li>
-                        <li class="mb-2">Disclose conflicts of interest</li>
-                        <li>Provide detailed feedback</li>
+                <div class="bg-white rounded-xl shadow-card p-6">
+                    <h6 class="text-lg font-bold text-slate-800 mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>Reviewer Guidelines
+                    </h6>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Be objective and constructive</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Complete reviews by the deadline</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Maintain confidentiality</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Disclose conflicts of interest</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-primary-700 mr-2 mt-1"></i>
+                            <span>Provide detailed feedback</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
+<?php
+// Get the buffered content
+$content = ob_get_clean();
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

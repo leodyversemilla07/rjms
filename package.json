@@ -1,0 +1,39 @@
+{
+  "name": "rjms",
+  "version": "1.0.0",
+  "description": "Research Journal Management System with Tailwind CSS",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "npx postcss ./resources/css/tailwind.css -o ./public/css/tailwind.css --watch",
+    "build": "node build-css.js",
+    "build:postcss": "npx postcss ./resources/css/tailwind.css -o ./public/css/tailwind.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leodyversemilla07/rjms.git"
+  },
+  "keywords": [
+    "research",
+    "journal",
+    "management",
+    "tailwindcss"
+  ],
+  "author": "Leodyver Semilla",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/leodyversemilla07/rjms/issues"
+  },
+  "homepage": "https://github.com/leodyversemilla07/rjms#readme",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8.4.35",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}
+

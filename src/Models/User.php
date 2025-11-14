@@ -100,20 +100,4 @@ class User extends Model
     {
         return password_verify($plainPassword, $hashedPassword);
     }
-
-    /**
-     * Activate user account
-     */
-    public function activate(int $userId): bool
-    {
-        return $this->update($userId, ['is_active' => 1]);
-    }
-
-    /**
-     * Deactivate user account
-     */
-    public function deactivate(int $userId): bool
-    {
-        return $this->update($userId, ['is_active' => 0]);
-    }
 }

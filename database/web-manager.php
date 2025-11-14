@@ -39,15 +39,18 @@
                     </div>
                     <div class="card-body">
                         <?php
-                        require_once '../includes/db_connection.php';
+                        require_once '../vendor/autoload.php';
+                        require_once '../src/bootstrap.php';
                         require_once 'Migration.php';
+
+                        use App\Core\Database;
 
                         $action = $_GET['action'] ?? 'status';
                         $output = '';
                         $alertClass = 'info';
 
                         try {
-                            $conn = connectDB();
+                            $conn = Database::getConnection();
                             $migration = new Migration($conn);
 
                             switch ($action) {

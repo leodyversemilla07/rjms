@@ -1,234 +1,224 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to RJMS - Research Journal Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="/resources/css/app.css" rel="stylesheet">
-    <style>
-        .hero-section {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 100px 0;
-            margin-bottom: 50px;
-        }
-        .feature-card {
-            padding: 30px;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            height: 100%;
-            transition: transform 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-        .feature-icon {
-            font-size: 48px;
-            color: #4F46E5;
-            margin-bottom: 20px;
-        }
-        .stats-section {
-            background: #F3F4F6;
-            padding: 60px 0;
-            margin: 50px 0;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 30px;
-        }
-        .cta-section {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 80px 0;
-            margin-top: 50px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+<?php
+$title = 'Research Journal Management System - Advancing Scholarly Communication';
+$description = 'A comprehensive platform for managing scholarly publications, peer reviews, and editorial workflows';
+$keywords = 'research, journal, academic publishing, peer review, scholarly communication, manuscript submission';
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="container text-center">
-            <h1 class="display-3 fw-bold mb-4">Welcome to RJMS</h1>
-            <p class="lead mb-5">A Modern Research Journal Management System for Authors, Reviewers, and Editors</p>
-            <div class="d-flex gap-3 justify-content-center">
-                <a href="/register" class="btn btn-light btn-lg">
-                    <i class="fas fa-user-plus me-2"></i>Get Started
+ob_start();
+?>
+
+<!-- Hero Section -->
+    <div class="bg-slate-800 text-white">
+        <div class="container mx-auto px-4 py-20">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="mb-6">
+                    <span class="inline-block px-4 py-1 bg-primary-600/20 border border-primary-400/30 rounded-full text-sm font-medium text-primary-100 mb-6">
+                        Peer-Reviewed Academic Journal Platform
+                    </span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-tight text-white">
+                    Research Journal<br/>Management System
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-200 mb-8 leading-relaxed">
+                    A comprehensive platform for managing scholarly publications, peer reviews, and editorial workflows
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/register" class="inline-flex items-center justify-center bg-white text-primary-700 font-semibold py-4 px-8 rounded-lg hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-file-upload mr-2"></i>Submit Your Research
+                    </a>
+                    <a href="/current-issues" class="inline-flex items-center justify-center border-2 border-white text-white font-semibold py-4 px-8 rounded-lg hover:bg-white hover:text-slate-800 transition-all">
+                        <i class="fas fa-book-open mr-2"></i>Browse Publications
+                    </a>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="text-3xl font-bold text-white mb-1">500+</div>
+                        <div class="text-sm text-slate-300">Published Articles</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="text-3xl font-bold text-white mb-1">200+</div>
+                        <div class="text-sm text-slate-300">Active Authors</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="text-3xl font-bold text-white mb-1">50+</div>
+                        <div class="text-sm text-slate-300">Expert Reviewers</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="text-3xl font-bold text-white mb-1">95%</div>
+                        <div class="text-sm text-slate-300">Satisfaction Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Bar -->
+    <div class="bg-primary-700 text-white py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center text-sm">
+                <i class="fas fa-bullhorn mr-2"></i>
+                <span class="font-medium">Latest Issue:</span>
+                <span class="ml-2">Volume 12, Issue 3 (2024) now available</span>
+                <a href="/current-issues" class="ml-4 underline hover:text-primary-100">Read now →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-16">
+        
+        <!-- About Section -->
+        <div class="max-w-4xl mx-auto mb-20 text-center">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">
+                Advancing Scholarly Communication
+            </h2>
+            <p class="text-lg text-slate-600 leading-relaxed">
+                Our platform provides researchers, authors, and academic institutions with a robust system for 
+                managing the complete lifecycle of scholarly publications—from initial submission through 
+                peer review to final publication.
+            </p>
+        </div>
+
+        <!-- Key Features -->
+        <div class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-serif font-bold mb-3">Platform Features</h2>
+                <p class="text-slate-600">Comprehensive tools for every stakeholder in the publishing process</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature Card 1 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-file-upload text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Streamlined Submission</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Easy-to-use manuscript submission system with real-time tracking and automated workflows for efficient processing.
+                    </p>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-user-friends text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Expert Peer Review</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Rigorous double-blind peer review process with qualified reviewers ensuring quality and integrity.
+                    </p>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-tasks text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Editorial Management</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Comprehensive dashboard for editors to manage submissions, assign reviewers, and make decisions.
+                    </p>
+                </div>
+
+                <!-- Feature Card 4 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-chart-line text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Analytics & Metrics</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Detailed insights on submissions, review times, acceptance rates, and publication metrics.
+                    </p>
+                </div>
+
+                <!-- Feature Card 5 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-bell text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Smart Notifications</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Automated email alerts and in-system notifications keep everyone informed throughout the process.
+                    </p>
+                </div>
+
+                <!-- Feature Card 6 -->
+                <div class="bg-white rounded-lg border-2 border-slate-200 p-8 hover:border-primary-600 hover:shadow-lg transition-all group">
+                    <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+                        <i class="fas fa-shield-alt text-2xl text-primary-700 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Secure & Compliant</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        Bank-grade security with GDPR compliance ensuring confidentiality and data protection.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submission Process -->
+        <div class="bg-white rounded-xl shadow-card border border-slate-200 p-8 md:p-12 mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-serif font-bold mb-3">Publication Process</h2>
+                <p class="text-slate-600">From submission to publication in four simple steps</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="relative text-center">
+                    <div class="w-20 h-20 bg-primary-700 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
+                        1
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Submit Manuscript</h4>
+                    <p class="text-sm text-slate-600">Upload your research paper and complete the submission form</p>
+                    <div class="hidden md:block absolute top-10 left-full w-full h-0.5 bg-primary-700 -ml-4"></div>
+                </div>
+
+                <div class="relative text-center">
+                    <div class="w-20 h-20 bg-primary-700 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
+                        2
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Initial Review</h4>
+                    <p class="text-sm text-slate-600">Editorial team conducts preliminary assessment</p>
+                    <div class="hidden md:block absolute top-10 left-full w-full h-0.5 bg-primary-700 -ml-4"></div>
+                </div>
+
+                <div class="relative text-center">
+                    <div class="w-20 h-20 bg-primary-700 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
+                        3
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Peer Review</h4>
+                    <p class="text-sm text-slate-600">Expert reviewers evaluate and provide feedback</p>
+                    <div class="hidden md:block absolute top-10 left-full w-full h-0.5 bg-primary-700 -ml-4"></div>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-700 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-lg">
+                        4
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Publication</h4>
+                    <p class="text-sm text-slate-600">Accepted papers are published and indexed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="bg-primary-800 rounded-2xl shadow-2xl p-8 md:p-12 text-white text-center">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4 text-white">Ready to Publish Your Research?</h2>
+            <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+                Join hundreds of researchers worldwide who trust our platform for their scholarly publications
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/register" class="inline-flex items-center justify-center bg-white text-primary-800 font-semibold py-4 px-8 rounded-lg hover:bg-primary-50 transition-all shadow-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Create Account
                 </a>
-                <a href="/about" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-info-circle me-2"></i>Learn More
+                <a href="/submission-guidelines" class="inline-flex items-center justify-center border-2 border-white text-white font-semibold py-4 px-8 rounded-lg hover:bg-white hover:text-primary-800 transition-all">
+                    <i class="fas fa-book mr-2"></i>View Guidelines
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Features Section -->
-    <div class="container mb-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Why Choose RJMS?</h2>
-            <p class="text-muted">Everything you need for efficient journal management</p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <h4>Easy Submission</h4>
-                    <p class="text-muted">Submit your research papers online with our intuitive interface. Track your submissions in real-time.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h4>Peer Review</h4>
-                    <p class="text-muted">Streamlined peer review process with expert reviewers and comprehensive feedback systems.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                    <h4>Editorial Management</h4>
-                    <p class="text-muted">Powerful tools for editors to manage submissions, assign reviewers, and make decisions.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h4>Analytics & Reports</h4>
-                    <p class="text-muted">Comprehensive dashboards and reports to track journal performance and metrics.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <h4>Real-time Notifications</h4>
-                    <p class="text-muted">Stay updated with instant email and in-app notifications for all important events.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h4>Secure & Reliable</h4>
-                    <p class="text-muted">Enterprise-grade security to protect your research and personal information.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Section -->
-    <div class="stats-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="stat-box">
-                        <h2 class="fw-bold text-primary">500+</h2>
-                        <p class="text-muted mb-0">Submissions</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-box">
-                        <h2 class="fw-bold text-primary">200+</h2>
-                        <p class="text-muted mb-0">Authors</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-box">
-                        <h2 class="fw-bold text-primary">50+</h2>
-                        <p class="text-muted mb-0">Reviewers</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-box">
-                        <h2 class="fw-bold text-primary">95%</h2>
-                        <p class="text-muted mb-0">Satisfaction</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- How It Works -->
-    <div class="container mb-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">How It Works</h2>
-            <p class="text-muted">Simple steps to get started</p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px;">
-                        <span class="display-6 text-primary fw-bold">1</span>
-                    </div>
-                </div>
-                <h5>Create Account</h5>
-                <p class="text-muted">Sign up as an author, reviewer, or editor</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px;">
-                        <span class="display-6 text-primary fw-bold">2</span>
-                    </div>
-                </div>
-                <h5>Submit Paper</h5>
-                <p class="text-muted">Upload your research manuscript</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px;">
-                        <span class="display-6 text-primary fw-bold">3</span>
-                    </div>
-                </div>
-                <h5>Peer Review</h5>
-                <p class="text-muted">Expert reviewers evaluate your work</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="mb-3">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px;">
-                        <span class="display-6 text-primary fw-bold">4</span>
-                    </div>
-                </div>
-                <h5>Publication</h5>
-                <p class="text-muted">Get your research published</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="cta-section">
-        <div class="container text-center">
-            <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
-            <p class="lead mb-5">Join hundreds of researchers using RJMS for their publications</p>
-            <a href="/register" class="btn btn-light btn-lg">
-                <i class="fas fa-rocket me-2"></i>Start Publishing Today
-            </a>
-        </div>
-    </div>
-
-    <?php include __DIR__ . '/../components/footer.php'; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
+?>

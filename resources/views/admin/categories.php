@@ -1,44 +1,14 @@
 <?php
+// Set page metadata
+$title = 'Category Management - Research Journal Management System';
+$description = 'Manage article categories and classifications';
+$keywords = 'admin, categories, management';
+
 $categories = $categories ?? [];
+
+// Start output buffering
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category Management - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .category-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #4F46E5;
-            transition: all 0.3s;
-        }
-        .category-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
 
     <div class="page-header">
         <div class="container">
@@ -85,7 +55,7 @@ $categories = $categories ?? [];
                         <?php foreach ($categories as $category): ?>
                             <div class="category-card">
                                 <div class="d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
+                                    <div class="grow">
                                         <h5><?= htmlspecialchars($category['name']) ?></h5>
                                         <p class="text-muted mb-2"><?= htmlspecialchars($category['description'] ?? '') ?></p>
                                         <div class="d-flex gap-3">
@@ -241,7 +211,7 @@ $categories = $categories ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $('#addCategoryForm').on('submit', function(e) {
@@ -330,5 +300,11 @@ $categories = $categories ?? [];
             }
         }
     </script>
-</body>
-</html>
+
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

@@ -6,8 +6,14 @@ use Dotenv\Dotenv;
 use App\Core\Session;
 use App\Core\Logger;
 
+// Check if .env file exists
+$envPath = dirname(__DIR__);
+if (!file_exists($envPath . '/.env')) {
+    die('Environment file (.env) not found. Please copy .env.example to .env and configure your settings.');
+}
+
 // Load environment variables
-$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv = Dotenv::createImmutable($envPath);
 $dotenv->load();
 
 // Start session

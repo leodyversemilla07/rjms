@@ -2,78 +2,65 @@
 $submission = $submission ?? null;
 $reviews = $reviews ?? [];
 $timeline = $timeline ?? [];
+$title = htmlspecialchars($submission['title'] ?? 'View Submission');
+$description = 'Review and manage submission details';
+$keywords = 'submission, editor, review, manage';
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($submission['title'] ?? 'View Submission') ?> - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .review-card {
-            background: #F3F4F6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #4F46E5;
-        }
-        .timeline-item {
-            position: relative;
-            padding-left: 40px;
-            padding-bottom: 20px;
-            border-left: 2px solid #e9ecef;
-        }
-        .timeline-item:last-child {
-            border-left: none;
-        }
-        .timeline-icon {
-            position: absolute;
-            left: -12px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #4F46E5;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-        .rating-stars {
-            color: #ffc107;
-        }
-        .meta-item {
-            padding: 15px;
-            background: #F3F4F6;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+<style>
+    .content-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .review-card {
+        background: #F3F4F6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4F46E5;
+    }
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+        padding-bottom: 20px;
+        border-left: 2px solid #e9ecef;
+    }
+    .timeline-item:last-child {
+        border-left: none;
+    }
+    .timeline-icon {
+        position: absolute;
+        left: -12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #4F46E5;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+    .rating-stars {
+        color: #ffc107;
+    }
+    .meta-item {
+        padding: 15px;
+        background: #F3F4F6;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+</style>
 
-    <?php if ($submission): ?>
-        <div class="page-header">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
+    </style>
+
+<?php if ($submission): ?>
+    <div class="bg-blue-600 text-white py-10 mb-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
                         <h1><?= htmlspecialchars($submission['title']) ?></h1>
                         <p class="mb-0">Submission ID: #<?= $submission['id'] ?></p>
                     </div>
@@ -347,7 +334,7 @@ $timeline = $timeline ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function makeDecision() {
@@ -378,5 +365,7 @@ $timeline = $timeline ?? [];
             window.open('/uploads/<?= htmlspecialchars($submission['file_path'] ?? '') ?>', '_blank');
         }
     </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
+?>

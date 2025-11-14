@@ -138,6 +138,11 @@ abstract class Model
      */
     public function orderBy(string $column, string $direction = 'ASC'): array
     {
+        // Validate column name to prevent SQL injection
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+            throw new \Exception('Invalid column name for ordering');
+        }
+        
         $direction = strtoupper($direction);
         if (!in_array($direction, ['ASC', 'DESC'])) {
             $direction = 'ASC';

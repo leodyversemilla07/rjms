@@ -52,20 +52,4 @@ class Category extends Model
                 ORDER BY s.submission_date DESC";
         return $this->query($sql, [$categoryId]);
     }
-
-    /**
-     * Activate category
-     */
-    public function activate(int $id): bool
-    {
-        return $this->update($id, ['is_active' => 1]);
-    }
-
-    /**
-     * Deactivate category
-     */
-    public function deactivate(int $id): bool
-    {
-        return $this->update($id, ['is_active' => 0]);
-    }
 }

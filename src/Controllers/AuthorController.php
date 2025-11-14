@@ -60,6 +60,11 @@ class AuthorController extends Controller
     public function submit(): void
     {
         try {
+            // Verify CSRF token
+            if (!\App\Core\CSRF::verify()) {
+                throw new \Exception('Invalid request. Please try again.');
+            }
+
             $data = $this->validate([
                 'title' => 'required|max:255',
                 'abstract' => 'required',
@@ -70,12 +75,30 @@ class AuthorController extends Controller
             if (isset($_FILES['manuscript']) && $_FILES['manuscript']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . '/../../uploads/submissions/';
                 
+                // Validate file type
+                $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                $fileType = mime_content_type($_FILES['manuscript']['tmp_name']);
+                
+                if (!in_array($fileType, $allowedTypes)) {
+                    throw new \Exception('Invalid file type. Only PDF, DOC, and DOCX files are allowed.');
+                }
+                
+                // Validate file size (10MB max)
+                $maxSize = 10 * 1024 * 1024; // 10MB in bytes
+                if ($_FILES['manuscript']['size'] > $maxSize) {
+                    throw new \Exception('File size exceeds maximum limit of 10MB.');
+                }
+                
                 // Create directory if not exists
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0775, true);
                 }
 
-                $fileName = time() . '_' . basename($_FILES['manuscript']['name']);
+                // Sanitize filename and add unique prefix
+                $originalName = basename($_FILES['manuscript']['name']);
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
+                $fileName = uniqid() . '_' . $safeName . '.' . $extension;
                 $uploadPath = $uploadDir . $fileName;
 
                 if (move_uploaded_file($_FILES['manuscript']['tmp_name'], $uploadPath)) {

@@ -1,263 +1,289 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Research Journal Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="/resources/css/app.css" rel="stylesheet">
-    <style>
-        body {
-            background: #F3F4F6;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 40px 20px;
-        }
+<?php
+// Set page metadata
+$title = 'Register - Research Journal Management System';
+$description = 'Create an account to submit and manage your research publications';
+$keywords = 'register, sign up, create account, research journal, academic publishing';
 
-        .auth-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 550px;
-            border: 1px solid #e0e0e0;
-        }
+// Additional CSS for register page styling
+$additionalCss = <<<'CSS'
+<style>
+.register-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+</style>
+CSS;
 
-        .auth-header {
-            background: #4F46E5;
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
+// Start output buffering
+ob_start();
+?>
 
-        .auth-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .auth-header p {
-            margin: 0;
-            opacity: 0.95;
-            font-size: 14px;
-        }
-
-        .auth-body {
-            padding: 40px 30px;
-        }
-
-        .form-control, .form-select {
-            padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            font-size: 14px;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #4F46E5;
-            box-shadow: 0 0 0 0.15rem rgba(79, 70, 229, 0.15);
-            outline: none;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #1E293B;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        .btn-primary {
-            background: #4F46E5;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 15px;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: #4338CA;
-        }
-
-        .auth-footer {
-            text-align: center;
-            padding: 20px 30px 30px;
-            background: #F3F4F6;
-        }
-
-        .auth-footer a {
-            color: #4F46E5;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .form-check-label {
-            font-size: 14px;
-        }
-
-        .form-text {
-            font-size: 13px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1E293B;
-            margin-bottom: 20px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #4F46E5;
-        }
-    </style>
-</head>
-<body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>Create Account</h1>
-            <p>Join the research community</p>
+<!-- Registration Page Content -->
+<div class="register-container">
+    <div class="w-full max-w-2xl">
+        <!-- Logo/Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-700 rounded-full mb-4">
+                <i class="fas fa-graduation-cap text-white text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-serif font-bold text-slate-800 mb-2">Research Journal</h1>
+            <p class="text-slate-600">Management System</p>
         </div>
 
-        <div class="auth-body">
-            <?php if (isset($_SESSION['flash']['error'])): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['flash']['error']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php unset($_SESSION['flash']['error']); ?>
-            <?php endif; ?>
+        <!-- Registration Card -->
+        <div class="bg-white rounded-xl shadow-lg border-2 border-slate-200">
+            <!-- Card Header -->
+            <div class="bg-slate-800 text-white px-8 py-6 rounded-t-xl">
+                <h2 class="text-2xl font-semibold mb-1">Create Your Account</h2>
+                <p class="text-slate-200 text-sm">Join our academic publishing platform</p>
+            </div>
 
-            <form id="registerForm" method="POST" action="/register">
-                <!-- Account Information -->
-                <div class="section-title">Account Information</div>
-                
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    <div class="form-text">Minimum 8 characters</div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                </div>
-
-                <!-- Personal Information -->
-                <div class="section-title">Personal Information</div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="first_name" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+            <!-- Card Body -->
+            <div class="p-8">
+                <!-- Registration Form -->
+                <form id="registerForm" method="POST" action="/register" class="space-y-5">
+                    <!-- Role Selection -->
+                    <div class="bg-primary-50 border-l-4 border-primary-600 p-4 rounded-r">
+                        <label class="block text-sm font-medium text-slate-800 mb-3">
+                            <i class="fas fa-user-tag mr-2 text-primary-700"></i>I want to register as:
+                        </label>
+                        <div class="max-w-2xl mx-auto">
+            <form method="POST" action="/register" class="space-y-6">
+                <?= \App\Core\CSRF::field() ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-primary-600 hover:bg-white transition-all">
+                                <input type="radio" name="role" value="author" required class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
+                                <div class="ml-3">
+                                    <span class="block font-medium text-slate-800">Author</span>
+                                    <span class="block text-xs text-slate-600">Submit research papers</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-primary-600 hover:bg-white transition-all">
+                                <input type="radio" name="role" value="reviewer" class="w-4 h-4 text-primary-600 border-slate-300 focus:ring-primary-500">
+                                <div class="ml-3">
+                                    <span class="block font-medium text-slate-800">Reviewer</span>
+                                    <span class="block text-xs text-slate-600">Review submissions</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="last_name" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+
+                    <!-- Personal Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-slate-700 mb-2">
+                                <i class="fas fa-user mr-2 text-slate-500"></i>First Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="first_name" 
+                                name="first_name" 
+                                required
+                                class="input-field"
+                                placeholder="John"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-slate-700 mb-2">
+                                Last Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="last_name" 
+                                name="last_name" 
+                                required
+                                class="input-field"
+                                placeholder="Doe"
+                            >
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="affiliation" class="form-label">Affiliation/Institution</label>
-                    <input type="text" class="form-control" id="affiliation" name="affiliation" required>
-                </div>
+                    <!-- Account Details -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-slate-700 mb-2">
+                            <i class="fas fa-at mr-2 text-slate-500"></i>Username
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            required
+                            class="input-field"
+                            placeholder="johndoe"
+                        >
+                    </div>
 
-                <div class="mb-3">
-                    <label for="role" class="form-label">I want to register as</label>
-                    <select class="form-select" id="role" name="role" required>
-                        <option value="">Select role...</option>
-                        <option value="author">Author</option>
-                        <option value="reviewer">Reviewer</option>
-                    </select>
-                </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-slate-500"></i>Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            class="input-field"
+                            placeholder="john.doe@university.edu"
+                        >
+                        <p class="mt-1 text-xs text-slate-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Use your institutional email for verification
+                        </p>
+                    </div>
 
-                <div class="mb-4">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
-                        <label class="form-check-label" for="terms">
-                            I agree to the <a href="/terms" target="_blank">Terms and Conditions</a>
+                    <!-- Password Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                                <i class="fas fa-lock mr-2 text-slate-500"></i>Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required
+                                minlength="8"
+                                class="input-field"
+                                placeholder="••••••••"
+                            >
+                            <p class="mt-1 text-xs text-slate-500">Minimum 8 characters</p>
+                        </div>
+
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-2">
+                                Confirm Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                required
+                                minlength="8"
+                                class="input-field"
+                                placeholder="••••••••"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Affiliation -->
+                    <div>
+                        <label for="affiliation" class="block text-sm font-medium text-slate-700 mb-2">
+                            <i class="fas fa-university mr-2 text-slate-500"></i>Institutional Affiliation
+                        </label>
+                        <input 
+                            type="text" 
+                            id="affiliation" 
+                            name="affiliation" 
+                            class="input-field"
+                            placeholder="University Name, Department"
+                        >
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                        <label class="flex items-start">
+                            <input type="checkbox" name="terms" required class="w-4 h-4 mt-1 text-primary-600 border-slate-300 rounded focus:ring-primary-500">
+                            <span class="ml-3 text-sm text-slate-700">
+                                I agree to the <a href="/terms" class="text-primary-700 hover:text-primary-800 font-medium">Terms of Service</a> 
+                                and <a href="/privacy" class="text-primary-700 hover:text-primary-800 font-medium">Privacy Policy</a>
+                            </span>
                         </label>
                     </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary w-full text-lg">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        <span>Create Account</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-slate-500">Already have an account?</span>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Create Account</button>
-            </form>
+                <!-- Login Link -->
+                <div class="text-center">
+                    <a href="/login" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign in instead
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="auth-footer">
-            <p class="mb-0">Already have an account? <a href="/login">Login here</a></p>
+        <!-- Footer Links -->
+        <div class="mt-8 text-center text-sm text-slate-600">
+            <a href="/" class="hover:text-primary-700 mx-2">Home</a>
+            <span class="text-slate-400">•</span>
+            <a href="/help" class="hover:text-primary-700 mx-2">Help</a>
+            <span class="text-slate-400">•</span>
+            <a href="/contact" class="hover:text-primary-700 mx-2">Contact</a>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Additional JavaScript for register page
+$additionalJs = <<<'JS'
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Validate password match
+        const password = document.getElementById('password').value;
+        const confirmation = document.getElementById('password_confirmation').value;
+        
+        if (password !== confirmation) {
+            alert('Passwords do not match!');
+            return;
+        }
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const btnText = submitBtn.querySelector('span');
+        const originalText = btnText.innerHTML;
+        
+        submitBtn.disabled = true;
+        btnText.innerHTML = 'Creating account...';
+        
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: formData
+            });
             
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('password_confirmation').value;
+            const data = await response.json();
             
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            if (password.length < 8) {
-                alert('Password must be at least 8 characters long!');
-                return;
-            }
-            
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Creating account...';
-            
-            try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    window.location.href = data.redirect || '/login';
-                } else {
-                    alert(data.message || 'Registration failed. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            } catch (error) {
-                alert('An error occurred. Please try again.');
+            if (data.success) {
+                btnText.innerHTML = 'Success! Redirecting...';
+                window.location.href = data.redirect || '/login';
+            } else {
+                alert(data.message || 'Registration failed. Please try again.');
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                btnText.innerHTML = originalText;
             }
-        });
-    </script>
-</body>
-</html>
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+            submitBtn.disabled = false;
+            btnText.innerHTML = originalText;
+        }
+    });
+</script>
+JS;
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

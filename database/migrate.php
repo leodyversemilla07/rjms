@@ -10,8 +10,11 @@
  *   php migrate.php create <name>    - Create a new migration file
  */
 
-require_once __DIR__ . '/../includes/db_connection.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/bootstrap.php';
 require_once __DIR__ . '/Migration.php';
+
+use App\Core\Database;
 
 // Get command line arguments
 $command = $argv[1] ?? 'help';
@@ -19,7 +22,7 @@ $name = $argv[2] ?? null;
 
 try {
     // Connect to database
-    $conn = connectDB();
+    $conn = Database::getConnection();
     $migration = new Migration($conn);
     
     switch ($command) {

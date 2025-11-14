@@ -49,11 +49,11 @@ CREATE TABLE categories (
 -- Create submissions table
 CREATE TABLE submissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    author_user_id INT NOT NULL,
+    author_id INT NOT NULL,
     title VARCHAR(500) NOT NULL,
     abstract TEXT NOT NULL,
     keywords TEXT DEFAULT NULL,
-    status ENUM('pending', 'Under Review', 'Accepted', 'Rejected', 'Published') DEFAULT 'pending',
+    status ENUM('pending', 'under_review', 'accepted', 'rejected', 'published') DEFAULT 'pending',
     submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     file_path VARCHAR(500) NOT NULL,
     is_published BOOLEAN DEFAULT FALSE,
@@ -63,9 +63,9 @@ CREATE TABLE submissions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
     
-    INDEX idx_author (author_user_id),
+    INDEX idx_author (author_id),
     INDEX idx_status (status),
     INDEX idx_published (is_published),
     INDEX idx_submission_date (submission_date),
@@ -76,7 +76,7 @@ CREATE TABLE submissions (
 CREATE TABLE reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     submission_id INT NOT NULL,
-    reviewer_user_id INT NOT NULL,
+    reviewer_id INT NOT NULL,
     status ENUM('pending', 'in_progress', 'completed') DEFAULT 'pending',
     recommendation ENUM('accept', 'minor_revision', 'major_revision', 'reject') DEFAULT NULL,
     comments TEXT DEFAULT NULL,
@@ -87,12 +87,12 @@ CREATE TABLE reviews (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
-    FOREIGN KEY (reviewer_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE CASCADE,
     
-    UNIQUE KEY unique_reviewer_submission (submission_id, reviewer_user_id),
+    UNIQUE KEY unique_reviewer_submission (submission_id, reviewer_id),
     
     INDEX idx_submission (submission_id),
-    INDEX idx_reviewer (reviewer_user_id),
+    INDEX idx_reviewer (reviewer_id),
     INDEX idx_status (status),
     INDEX idx_assigned_date (assigned_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -111,21 +111,6 @@ CREATE TABLE submission_categories (
     
     INDEX idx_submission (submission_id),
     INDEX idx_category (category_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Create inbox table
-CREATE TABLE inbox (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    INDEX idx_email (email),
-    INDEX idx_read (is_read),
-    INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create user_sessions table

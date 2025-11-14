@@ -1,73 +1,57 @@
 <?php
-$submissions = $submissions ?? [];
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Assignments - Reviewer Dashboard - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .deadline-soon { background-color: #fff3cd !important; }
-        .deadline-overdue { background-color: #f8d7da !important; }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+// Set page metadata
+$title = 'My Review Assignments - Reviewer Dashboard - Research Journal Management System';
+$description = 'All submissions assigned to you for review';
+$keywords = 'reviewer, assignments, submissions, reviews';
 
-    <div class="page-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-list-check me-3"></i>My Review Assignments</h1>
-                    <p class="mb-0">All submissions assigned to you for review</p>
+$submissions = $submissions ?? [];
+
+// Start output buffering
+ob_start();
+?>
+
+    <!-- Page Header -->
+    <div class="bg-primary-700 text-white border-b-4 border-primary-800">
+        <div class="container mx-auto px-4 py-12">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                        <i class="fas fa-list-check mr-3"></i>My Review Assignments
+                    </h1>
+                    <p class="text-primary-100">All submissions assigned to you for review</p>
                 </div>
-                <div class="col-md-4 text-end">
-                    <a href="/reviewer/dashboard" class="btn btn-light btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>Dashboard
+                <div>
+                    <a href="/reviewer/dashboard" class="inline-flex items-center justify-center bg-white text-primary-700 hover:bg-primary-50 font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Dashboard
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mb-5">
-        <div class="content-card">
-            <div class="table-responsive">
-                <table id="submissionsTable" class="table table-hover">
-                    <thead>
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-card overflow-hidden">
+            <div class="overflow-x-auto">
+                <table id="submissionsTable" class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
                         <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Assigned</th>
-                            <th>Deadline</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Assigned</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Deadline</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                    <tbody class="bg-white divide-y divide-slate-200">
                         <?php if (empty($submissions)): ?>
                             <tr>
-                                <td colspan="7" class="text-center py-5">
-                                    <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
-                                    <p class="text-muted">No submissions assigned to you yet</p>
+                                <td colspan="7" class="px-6 py-12 text-center">
+                                    <i class="fas fa-inbox text-6xl text-slate-300 mb-4 block"></i>
+                                    <p class="text-slate-600">No submissions assigned to you yet</p>
                                 </td>
                             </tr>
                         <?php else: ?>
@@ -77,55 +61,55 @@ $submissions = $submissions ?? [];
                                 $daysLeft = ceil(($deadline - time()) / 86400);
                                 $rowClass = '';
                                 if ($daysLeft < 0) {
-                                    $rowClass = 'deadline-overdue';
+                                    $rowClass = 'bg-red-50';
                                 } elseif ($daysLeft <= 3) {
-                                    $rowClass = 'deadline-soon';
+                                    $rowClass = 'bg-amber-50';
                                 }
                                 ?>
-                                <tr class="<?= $rowClass ?>">
-                                    <td>#<?= $submission['id'] ?></td>
-                                    <td>
-                                        <strong><?= htmlspecialchars($submission['title']) ?></strong>
+                                <tr class="<?= $rowClass ?> hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700">#<?= $submission['id'] ?></td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-semibold text-slate-800"><?= htmlspecialchars($submission['title']) ?></div>
                                         <?php if (isset($submission['abstract'])): ?>
-                                            <br><small class="text-muted"><?= htmlspecialchars(substr($submission['abstract'], 0, 80)) ?>...</small>
+                                            <div class="text-xs text-slate-600 mt-1"><?= htmlspecialchars(substr($submission['abstract'], 0, 80)) ?>...</div>
                                         <?php endif; ?>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-secondary">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded">
                                             <?= htmlspecialchars($submission['category_name'] ?? 'Uncategorized') ?>
                                         </span>
                                     </td>
-                                    <td>
-                                        <small><?= date('M d, Y', strtotime($submission['assigned_at'])) ?></small>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                                        <?= date('M d, Y', strtotime($submission['assigned_at'])) ?>
                                     </td>
-                                    <td>
-                                        <small class="<?= $daysLeft < 0 ? 'text-danger' : ($daysLeft <= 3 ? 'text-warning' : '') ?>">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm <?= $daysLeft < 0 ? 'text-red-600' : ($daysLeft <= 3 ? 'text-amber-600' : 'text-slate-600') ?>">
                                             <?= date('M d, Y', $deadline) ?>
-                                            <?php if ($daysLeft < 0): ?>
-                                                <br><span class="badge bg-danger">Overdue</span>
-                                            <?php elseif ($daysLeft <= 3): ?>
-                                                <br><span class="badge bg-warning"><?= $daysLeft ?> day<?= $daysLeft != 1 ? 's' : '' ?> left</span>
-                                            <?php endif; ?>
-                                        </small>
+                                        </div>
+                                        <?php if ($daysLeft < 0): ?>
+                                            <span class="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded mt-1">Overdue</span>
+                                        <?php elseif ($daysLeft <= 3): ?>
+                                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded mt-1"><?= $daysLeft ?> day<?= $daysLeft != 1 ? 's' : '' ?> left</span>
+                                        <?php endif; ?>
                                     </td>
-                                    <td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <?php
                                         $statusColors = [
-                                            'pending' => 'warning',
-                                            'in_progress' => 'info',
-                                            'completed' => 'success'
+                                            'pending' => 'bg-amber-100 text-amber-700',
+                                            'in_progress' => 'bg-blue-100 text-blue-700',
+                                            'completed' => 'bg-green-100 text-green-700'
                                         ];
                                         $status = $submission['review_status'] ?? 'pending';
-                                        $color = $statusColors[$status] ?? 'secondary';
+                                        $colorClass = $statusColors[$status] ?? 'bg-slate-100 text-slate-700';
                                         ?>
-                                        <span class="badge bg-<?= $color ?>">
+                                        <span class="inline-block px-2 py-1 <?= $colorClass ?> text-xs font-semibold rounded">
                                             <?= ucfirst(str_replace('_', ' ', $status)) ?>
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <a href="/reviewer/view-submission/<?= $submission['id'] ?>" 
-                                           class="btn btn-sm btn-primary">
-                                            <i class="fas fa-eye me-1"></i>
+                                           class="inline-flex items-center justify-center bg-primary-700 hover:bg-primary-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
+                                            <i class="fas fa-eye mr-1"></i>
                                             <?= ($submission['review_status'] ?? 'pending') == 'completed' ? 'View' : 'Review' ?>
                                         </a>
                                     </td>
@@ -138,12 +122,11 @@ $submissions = $submissions ?? [];
         </div>
     </div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    
     <script>
         $(document).ready(function() {
             $('#submissionsTable').DataTable({
@@ -156,5 +139,11 @@ $submissions = $submissions ?? [];
             });
         });
     </script>
-</body>
-</html>
+
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

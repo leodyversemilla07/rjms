@@ -97,10 +97,7 @@ class Controller
      */
     protected function flash(string $key, $value): void
     {
-        if (!isset($_SESSION['flash'])) {
-            $_SESSION['flash'] = [];
-        }
-        $_SESSION['flash'][$key] = $value;
+        Session::flash($key, $value);
     }
 
     /**
@@ -108,9 +105,7 @@ class Controller
      */
     protected function getFlash(string $key, $default = null)
     {
-        $value = $_SESSION['flash'][$key] ?? $default;
-        unset($_SESSION['flash'][$key]);
-        return $value;
+        return Session::getFlash($key, $default);
     }
 
     /**

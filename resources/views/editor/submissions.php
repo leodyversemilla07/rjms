@@ -1,62 +1,43 @@
 <?php
 $submissions = $submissions ?? [];
 $filters = $filters ?? [];
+$title = 'Assigned Submissions';
+$description = 'Manage all submissions assigned to you as editor';
+$keywords = 'editor, submissions, manage, review';
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submissions - Editor Dashboard - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .filter-card {
-            background: #F3F4F6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .table-actions {
-            display: flex;
-            gap: 5px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+<style>
+    .content-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .filter-card {
+        background: #F3F4F6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+</style>
 
-    <div class="page-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-list me-3"></i>Assigned Submissions</h1>
-                    <p class="mb-0">Manage all submissions assigned to you as editor</p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <a href="/editor/dashboard" class="btn btn-light btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>Dashboard
-                    </a>
-                </div>
+<div class="bg-blue-600 text-white py-10 mb-8">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold mb-2"><i class="fas fa-list mr-3"></i>Assigned Submissions</h1>
+                <p>Manage all submissions assigned to you as editor</p>
+            </div>
+            <div>
+                <a href="/editor/dashboard" class="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-arrow-left mr-2"></i>Dashboard
+                </a>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container mb-5">
+<div class="container mx-auto px-4 mb-8">
         <!-- Filters -->
         <div class="filter-card">
             <form id="filterForm" method="GET">
@@ -99,7 +80,7 @@ $filters = $filters ?? [];
                     <div class="col-md-3">
                         <label class="form-label small">&nbsp;</label>
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                            <button type="submit" class="btn btn-sm btn-primary grow">
                                 <i class="fas fa-filter me-1"></i>Filter
                             </button>
                             <a href="/editor/submissions" class="btn btn-sm btn-secondary">
@@ -292,10 +273,10 @@ $filters = $filters ?? [];
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             $('#submissionsTable').DataTable({
@@ -362,5 +343,7 @@ $filters = $filters ?? [];
             });
         });
     </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
+?>

@@ -1,214 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Research Journal Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="/resources/css/app.css" rel="stylesheet">
-    <style>
-        body {
-            background: #F3F4F6;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 20px;
-        }
+<?php
+// Set page metadata
+$title = 'Login - Research Journal Management System';
+$description = 'Login to your Research Journal Management System account';
+$keywords = 'login, research journal, sign in, authentication';
 
-        .auth-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid #e0e0e0;
-        }
+// Additional CSS for login page styling
+$additionalCss = <<<'CSS'
+<style>
+.login-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+</style>
+CSS;
 
-        .auth-header {
-            background: #4F46E5;
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
+// Start output buffering for the content
+ob_start();
+?>
 
-        .auth-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .auth-header p {
-            margin: 0;
-            opacity: 0.95;
-            font-size: 14px;
-        }
-
-        .auth-body {
-            padding: 40px 30px;
-        }
-
-        .form-control {
-            padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            font-size: 14px;
-        }
-
-        .form-control:focus {
-            border-color: #4F46E5;
-            box-shadow: 0 0 0 0.15rem rgba(79, 70, 229, 0.15);
-            outline: none;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #1E293B;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        .btn-primary {
-            background: #4F46E5;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 15px;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: #4338CA;
-        }
-
-        .auth-footer {
-            text-align: center;
-            padding: 20px 30px 30px;
-            background: #F3F4F6;
-        }
-
-        .auth-footer a {
-            color: #4F46E5;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .form-check-label {
-            font-size: 14px;
-        }
-
-        .text-end a {
-            color: #4F46E5;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .text-end a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>Welcome Back</h1>
-            <p>Login to your account</p>
+<!-- Login Page Content -->
+<div class="login-container">
+    <div class="w-full max-w-md">
+        <!-- Logo/Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-700 rounded-full mb-4">
+                <i class="fas fa-graduation-cap text-white text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-serif font-bold text-slate-800 mb-2">Research Journal</h1>
+            <p class="text-slate-600">Management System</p>
         </div>
 
-        <div class="auth-body">
-            <?php if (isset($_SESSION['flash']['error'])): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['flash']['error']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php unset($_SESSION['flash']['error']); ?>
-            <?php endif; ?>
+        <!-- Login Card -->
+        <div class="bg-white rounded-xl shadow-lg border-2 border-slate-200">
+            <!-- Card Header -->
+            <div class="bg-slate-800 text-white px-8 py-6 rounded-t-xl">
+                <h2 class="text-2xl font-semibold mb-1">Welcome Back</h2>
+                <p class="text-slate-200 text-sm">Sign in to access your account</p>
+            </div>
 
-            <?php if (isset($_SESSION['flash']['success'])): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['flash']['success']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php unset($_SESSION['flash']['success']); ?>
-            <?php endif; ?>
-
-            <form id="loginForm" method="POST" action="/login">
-                <div class="mb-3">
-                    <label for="username_email" class="form-label">Username or Email</label>
-                    <input type="text" class="form-control" id="username_email" name="username_email" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
-
-                <div class="mb-3 d-flex justify-content-between align-items-center">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
-                        <label class="form-check-label" for="remember_me">Remember me</label>
+            <!-- Card Body -->
+            <div class="p-8">
+                <!-- Flash Messages -->
+                <?php if (isset($_SESSION['flash']['error'])): ?>
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r" x-data="{ show: true }" x-show="show" x-transition>
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start">
+                                <i class="fas fa-exclamation-circle text-red-600 mr-3 mt-0.5"></i>
+                                <p class="text-sm text-red-800"><?= htmlspecialchars($_SESSION['flash']['error']) ?></p>
+                            </div>
+                            <button @click="show = false" class="text-red-600 hover:text-red-800 ml-4">&times;</button>
+                        </div>
                     </div>
-                    <div class="text-end">
-                        <a href="/forgot-password">Forgot Password?</a>
+                    <?php unset($_SESSION['flash']['error']); ?>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['flash']['success'])): ?>
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r" x-data="{ show: true }" x-show="show" x-transition>
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 mr-3 mt-0.5"></i>
+                                <p class="text-sm text-green-800"><?= htmlspecialchars($_SESSION['flash']['success']) ?></p>
+                            </div>
+                            <button @click="show = false" class="text-green-600 hover:text-green-800 ml-4">&times;</button>
+                        </div>
+                    </div>
+                    <?php unset($_SESSION['flash']['success']); ?>
+                <?php endif; ?>
+
+                <!-- Login Form -->
+                <form id="loginForm" method="POST" action="/login" class="space-y-5">
+                    <?= \App\Core\CSRF::field() ?>
+                    <!-- Username/Email Field -->
+                    <div>
+                        <label for="username_email" class="block text-sm font-medium text-slate-700 mb-2">
+                            <i class="fas fa-user mr-2 text-slate-500"></i>Username or Email
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username_email" 
+                            name="username_email" 
+                            required
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                            placeholder="Enter your username or email"
+                        >
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-slate-500"></i>Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                placeholder="Enter your password"
+                            >
+                            <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember_me" class="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500">
+                            <span class="ml-2 text-sm text-slate-600">Remember me</span>
+                        </label>
+                        <a href="/forgot-password" class="text-sm text-primary-700 hover:text-primary-800 font-medium">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                    >
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-slate-500">New to the platform?</span>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+                <!-- Register Link -->
+                <div class="text-center">
+                    <a href="/register" class="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Create an account
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="auth-footer">
-            <p class="mb-0">Don't have an account? <a href="/register">Create Account</a></p>
+        <!-- Footer Links -->
+        <div class="mt-8 text-center text-sm text-slate-600">
+            <a href="/" class="hover:text-primary-700 mx-2">Home</a>
+            <span class="text-slate-400">•</span>
+            <a href="/help" class="hover:text-primary-700 mx-2">Help</a>
+            <span class="text-slate-400">•</span>
+            <a href="/contact" class="hover:text-primary-700 mx-2">Contact</a>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+<?php
+// Get the buffered content
+$content = ob_get_clean();
+
+// Additional JavaScript for login page
+$additionalJs = <<<'JS'
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const btnText = submitBtn.querySelector('span');
+        const originalText = btnText.innerHTML;
+        
+        submitBtn.disabled = true;
+        btnText.innerHTML = 'Signing in...';
+        
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
             
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
+            const data = await response.json();
             
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Logging in...';
-            
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    window.location.href = data.redirect || '/';
-                } else {
-                    alert(data.message || 'Login failed. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            } catch (error) {
-                alert('An error occurred. Please try again.');
+            if (data.success) {
+                btnText.innerHTML = 'Success!';
+                window.location.href = data.redirect || '/';
+            } else {
+                alert(data.message || 'Login failed. Please check your credentials.');
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                btnText.innerHTML = originalText;
             }
-        });
-    </script>
-</body>
-</html>
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+            submitBtn.disabled = false;
+            btnText.innerHTML = originalText;
+        }
+    });
+</script>
+JS;
+
+// Include the main layout
+include __DIR__ . '/../layouts/main.php';
+?>

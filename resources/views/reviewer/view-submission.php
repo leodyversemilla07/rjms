@@ -2,63 +2,51 @@
 $submission = $submission ?? null;
 $review = $review ?? null;
 $readonly = isset($review['reviewed_at']);
+$title = htmlspecialchars($submission['title'] ?? 'Review Submission');
+$description = 'Review and provide feedback on submission';
+$keywords = 'review, submission, peer review, feedback';
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($submission['title'] ?? 'Review Submission') ?> - RJMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #F3F4F6; }
-        .page-header {
-            background: linear-gradient(135deg, #4F46E5 0%, #4F46E5 100%);
-            color: white;
-            padding: 40px 0;
-            margin-bottom: 30px;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .rating-stars { font-size: 24px; color: #e9ecef; cursor: pointer; }
-        .rating-stars i.active { color: #ffc107; }
-        .rating-stars i:hover, .rating-stars i:hover ~ i { color: #ffc107; }
-        .criteria-section {
-            background: #F3F4F6;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
+<style>
+    .content-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .rating-stars { font-size: 24px; color: #e9ecef; cursor: pointer; }
+    .rating-stars i.active { color: #ffc107; }
+    .rating-stars i:hover, .rating-stars i:hover ~ i { color: #ffc107; }
+    .criteria-section {
+        background: #F3F4F6;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+</style>
 
-    <?php if ($submission): ?>
-        <div class="page-header">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1><?= htmlspecialchars($submission['title']) ?></h1>
-                        <p class="mb-0">Submission ID: #<?= $submission['id'] ?></p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <a href="/reviewer/submissions" class="btn btn-light">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
-                        </a>
-                    </div>
+    </style>
+
+<?php if ($submission): ?>
+    <div class="bg-blue-600 text-white py-10 mb-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2"><?= htmlspecialchars($submission['title']) ?></h1>
+                    <p>Submission ID: #<?= $submission['id'] ?></p>
+                </div>
+                <div>
+                    <a href="/reviewer/submissions" class="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to List
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="container mb-5">
-            <div class="row">
+    <div class="container mx-auto px-4 mb-8">
+        <div class="grid grid-cols-12 gap-6">
                 <!-- Submission Content -->
                 <div class="col-md-8">
                     <!-- Submission Details -->
@@ -318,7 +306,7 @@ $readonly = isset($review['reviewed_at']);
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         <?php if (!$readonly): ?>
@@ -344,5 +332,7 @@ $readonly = isset($review['reviewed_at']);
         });
         <?php endif; ?>
     </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
+?>
