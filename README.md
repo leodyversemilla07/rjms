@@ -10,9 +10,9 @@ A modern, enterprise-grade web-based system for managing academic research journ
 
 **Official Research Journal Platform for Mindoro State University**
 
-> **Migration Complete**: Successfully modernized from legacy flat architecture to professional MVC framework (October 2025)
+> **Migration Complete**: Successfully modernized from legacy flat architecture to professional MVC framework (November 2025)
 > 
-> **Architecture**: Custom MVC Framework | **Controllers**: 6 | **Models**: 5 | **Views**: 28 | **Routes**: 50+
+> **Architecture**: Custom MVC Framework | **Controllers**: 6 | **Models**: 4 | **Views**: 28 | **Routes**: 45+
 
 ---
 
@@ -27,7 +27,6 @@ A modern, enterprise-grade web-based system for managing academic research journ
 - ✅ **Category Management** - Organize articles by research categories
 - ✅ **Advanced Search** - Full-text search with multi-criteria filtering
 - ✅ **Current Issues** - Browse and display published journal issues
-- ✅ **Internal Messaging** - Inbox system for author-reviewer-editor communication
 
 ### 🎯 Role-Specific Dashboards
 
@@ -481,7 +480,7 @@ composer analyse
 - **submissions** - Research article submissions
 - **reviews** - Peer review records
 - **categories** - Article categories
-- **inbox** - Internal messaging
+- **submission_categories** - Article-category relationships
 - **user_sessions** - Active sessions
 - **migrations** - Database migration history
 
@@ -581,7 +580,7 @@ mysql -u root -p -e "SHOW DATABASES;"
 
 ## 🔄 Changelog
 
-### Version 2.0.0 (October 2025) - MVC Migration Complete ✅
+### Version 2.0.0 (November 2025) - MVC Migration Complete ✅
 **Major Architecture Overhaul - Legacy to Modern MVC**
 
 #### Framework & Architecture
@@ -599,12 +598,11 @@ mysql -u root -p -e "SHOW DATABASES;"
 - ✅ **EditorController** - Editor workflow and reviewer assignment
 - ✅ **ReviewerController** - Reviewer dashboard and review submission
 
-#### Models Created (5)
+#### Models Created (4)
 - ✅ **User** - User authentication and role management
 - ✅ **Submission** - Article submission handling
 - ✅ **Review** - Peer review system
 - ✅ **Category** - Article categorization
-- ✅ **Inbox** - Internal messaging system
 
 #### Views Migrated (28)
 - ✅ **Layouts** - main.php master layout
@@ -641,7 +639,7 @@ mysql -u root -p -e "SHOW DATABASES;"
 - ✅ **Flash Messages** - Session-based user feedback
 
 #### Database
-- ✅ **7 Tables** - users, submissions, reviews, categories, inbox, submission_categories, migrations
+- ✅ **6 Tables** - users, submissions, reviews, categories, submission_categories, user_sessions
 - ✅ **Migration System** - Version-controlled schema changes
 - ✅ **Optimized Indexes** - Performance-tuned queries
 
@@ -653,7 +651,6 @@ mysql -u root -p -e "SHOW DATABASES;"
 - ✅ **User Management** - CRUD operations for users
 - ✅ **Category Management** - Organize articles by category
 - ✅ **Search System** - Full-text search functionality
-- ✅ **Messaging System** - Internal inbox communication
 
 #### Migration Process
 - ✅ **Legacy Code Removed** - Deleted _legacy directory after migration
@@ -718,9 +715,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Total Files**: 100+
 - **PHP Code**: 10,000+ lines
 - **Controllers**: 6 (50+ methods)
-- **Models**: 5 (with ORM)
+- **Models**: 4 (with ORM)
 - **Views**: 28 templates
-- **Routes**: 50+ RESTful endpoints
+- **Routes**: 45+ RESTful endpoints
 - **Helper Functions**: 20+
 - **Database Tables**: 7
 - **Test Coverage**: Growing
