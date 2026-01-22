@@ -6,7 +6,9 @@ description: Comprehensive Git workflow assistant for commits, branches, merges,
 # Git Workflow Skill
 
 ## When to Use This Skill
+
 Use this skill when:
+
 - Creating commits with proper messages
 - Managing branches and merges
 - Resolving merge conflicts
@@ -17,6 +19,7 @@ Use this skill when:
 ## Commit Message Guidelines
 
 ### Format
+
 ```
 <type>(<scope>): <subject>
 
@@ -26,6 +29,7 @@ Use this skill when:
 ```
 
 ### Types
+
 - **feat**: New feature for the user
 - **fix**: Bug fix
 - **docs**: Documentation changes
@@ -38,6 +42,7 @@ Use this skill when:
 - **build**: Build system or dependencies
 
 ### Rules
+
 1. Subject line: max 50 characters
 2. Use imperative mood: "add" not "added" or "adds"
 3. No period at end of subject line
@@ -46,6 +51,7 @@ Use this skill when:
 6. Separate subject from body with blank line
 
 ### Examples
+
 ```
 feat(auth): add JWT token refresh mechanism
 
@@ -71,19 +77,23 @@ Fixes #456
 ## Commit Size Guidelines
 
 ### Ideal Commit Sizes
+
 - **Small**: 10-50 lines (bug fixes, small tweaks)
 - **Medium**: 50-300 lines (features, refactors)
 - **Large**: 300-500 lines (major features - consider splitting)
 - **Too Large**: 500+ lines (definitely split into multiple commits)
 
 ### Atomic Commit Principle
+
 Each commit should:
+
 1. Build successfully
 2. Pass all tests
 3. Represent one logical change
 4. Be independently revertable
 
 ### Staging Strategy
+
 ```bash
 # Stage specific files only
 git add src/component.js tests/component.test.js
@@ -101,6 +111,7 @@ git commit -m "feat: add user profile component"
 ## Branch Management
 
 ### Branch Naming Conventions
+
 ```
 feature/short-description    # New features
 fix/bug-description         # Bug fixes
@@ -112,6 +123,7 @@ chore/maintenance-task      # Maintenance
 ```
 
 ### Branch Workflow
+
 ```bash
 # Create and switch to new branch
 git checkout -b feature/user-notifications
@@ -137,18 +149,21 @@ git push origin --delete feature/user-notifications
 ## Merge Strategies
 
 ### Fast-Forward Merge (cleanest history)
+
 ```bash
 git checkout main
 git merge feature/simple-change
 ```
 
 ### Merge Commit (preserves branch history)
+
 ```bash
 git checkout main
 git merge --no-ff feature/important-feature
 ```
 
 ### Rebase (linear history)
+
 ```bash
 git checkout feature/my-branch
 git rebase main
@@ -157,6 +172,7 @@ git push --force-with-lease origin feature/my-branch
 ```
 
 ### When to Use Each
+
 - **Fast-forward**: Simple, quick changes
 - **Merge commit**: Team features, want to preserve context
 - **Rebase**: Personal branches, want clean linear history
@@ -165,6 +181,7 @@ git push --force-with-lease origin feature/my-branch
 ## Conflict Resolution
 
 ### Process
+
 ```bash
 # 1. Start merge or rebase
 git merge feature/branch
@@ -174,11 +191,7 @@ git merge feature/branch
 git status
 
 # 3. Open conflicted file, look for:
-<<<<<<< HEAD
-current branch content
-=======
 incoming branch content
->>>>>>> feature/branch
 
 # 4. Resolve by:
 # - Keeping one version
@@ -195,6 +208,7 @@ git rebase --continue  # for rebase
 ```
 
 ### Conflict Prevention
+
 - Pull/merge main frequently
 - Make smaller, focused commits
 - Communicate with team about file changes
@@ -203,6 +217,7 @@ git rebase --continue  # for rebase
 ## History Management
 
 ### Viewing History
+
 ```bash
 # Basic log
 git log
@@ -222,6 +237,7 @@ git log --follow filename.js
 ```
 
 ### Amending Commits (before push)
+
 ```bash
 # Fix last commit message
 git commit --amend -m "Better message"
@@ -235,6 +251,7 @@ git rebase -i HEAD~3
 ```
 
 ### Undoing Changes
+
 ```bash
 # Discard working directory changes
 git checkout -- filename.js
@@ -255,12 +272,14 @@ git revert <commit-hash>
 ## Stashing
 
 ### When to Stash
+
 - Switch branches but not ready to commit
 - Pull latest changes
 - Quick context switch
 - Save experimental work
 
 ### Stash Commands
+
 ```bash
 # Save current work
 git stash save "WIP: working on feature X"
@@ -287,6 +306,7 @@ git stash clear
 ## Remote Operations
 
 ### Safe Push/Pull
+
 ```bash
 # Always pull before push
 git pull origin main
@@ -307,6 +327,7 @@ git checkout --track origin/feature/branch
 ## Git Best Practices Checklist
 
 ### Before Committing
+
 - [ ] Code builds successfully
 - [ ] Tests pass locally
 - [ ] Linting passes
@@ -315,12 +336,14 @@ git checkout --track origin/feature/branch
 - [ ] Commit message is clear and descriptive
 
 ### Before Pushing
+
 - [ ] Pulled latest changes
 - [ ] Resolved any conflicts
 - [ ] Tests still pass after merge
 - [ ] Commit history is clean
 
 ### Before Merging PR
+
 - [ ] All CI checks pass
 - [ ] Code reviewed and approved
 - [ ] Branch is up to date with target
@@ -330,6 +353,7 @@ git checkout --track origin/feature/branch
 ## Common Workflows
 
 ### Daily Development Flow
+
 ```bash
 # Morning: Get latest
 git checkout main
@@ -350,6 +374,7 @@ git push origin feature/new-thing
 ```
 
 ### Hotfix Flow
+
 ```bash
 # Create hotfix from main
 git checkout main
@@ -366,6 +391,7 @@ git push origin hotfix/critical-bug
 ```
 
 ### Feature Branch Flow
+
 ```bash
 # Create feature branch
 git checkout -b feature/user-dashboard
@@ -384,6 +410,7 @@ git push origin feature/user-dashboard
 ## Troubleshooting
 
 ### "Detached HEAD state"
+
 ```bash
 # Create branch from current state
 git checkout -b recovery-branch
@@ -393,6 +420,7 @@ git checkout main
 ```
 
 ### "Your branch has diverged"
+
 ```bash
 # If you want remote version
 git reset --hard origin/main
@@ -405,6 +433,7 @@ git pull --rebase origin main
 ```
 
 ### "Permission denied (publickey)"
+
 ```bash
 # Check SSH key
 ssh -T git@github.com
@@ -415,6 +444,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
 
 ### Accidentally committed secrets
+
 ```bash
 # Remove from last commit
 git reset HEAD~1
@@ -475,7 +505,9 @@ git push origin main         # Push to remote
 ## Integration with CI/CD
 
 ### Pre-commit Hooks
+
 Create `.git/hooks/pre-commit`:
+
 ```bash
 #!/bin/sh
 # Run tests before commit
@@ -487,7 +519,9 @@ fi
 ```
 
 ### Commit Message Validation
+
 Create `.git/hooks/commit-msg`:
+
 ```bash
 #!/bin/sh
 # Validate commit message format
