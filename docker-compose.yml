@@ -4,22 +4,51 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
+      args:
+        XDEBUG_VERSION: 3.3.1
+      cache_from:
+        - rjms-php:dev
+    image: rjms-php:dev
     container_name: rjms-php
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
-      - ./:/var/www/html
-      - ./uploads:/var/www/html/uploads
-      - ./logs:/var/www/html/logs
-      - ./.env:/var/www/html/.env
+      # Mount code with cached for better Windows performance
+      - .:/var/www/html:cached
+      # Exclude vendor & node_modules for performance on Windows
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+      # Named volumes for caches
+      - composer-cache:/root/.composer/cache
+      # Logs outside container for persistence
+      - ./logs:/var/www/html/logs:delegated
+      - ./uploads:/var/www/html/uploads:delegated
     environment:
-      XDEBUG_MODE: ${XDEBUG_MODE:-develop,debug}
+      # Xdebug configuration
+      XDEBUG_MODE: ${XDEBUG_MODE:-develop,debug,coverage}
       XDEBUG_CONFIG: client_host=host.docker.internal
+      PHP_IDE_CONFIG: serverName=rjms-docker
+      # App configuration
+      APP_ENV: development
+      # Redis session (if enabled)
+      SESSION_DRIVER: ${SESSION_DRIVER:-file}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - rjms-network
     depends_on:
       mysql:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php-fpm-healthcheck"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=php"
 
   # Nginx Web Server
   nginx:
@@ -27,14 +56,44 @@ services:
     container_name: rjms-nginx
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "${APP_PORT:-8080}:80"
     volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/var/www/html:cached,ro
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - nginx-logs:/var/log/nginx
     networks:
       - rjms-network
     depends_on:
-      - php
+      php:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=nginx"
+
+  # Node.js for live Tailwind CSS compilation
+  node:
+    image: node:20-alpine
+    container_name: rjms-node
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - .:/app:cached
+      - /app/node_modules
+      - npm-cache:/root/.npm
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - rjms-network
+    environment:
+      - NODE_ENV=development
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=node"
 
   # MySQL Database
   mysql:
@@ -48,20 +107,29 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-rjmspassword}
       MYSQL_ROOT_HOST: '%'
     ports:
-      - "3307:3306"
+      - "${DB_PORT:-3307}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
-      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
     networks:
       - rjms-network
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=100
+      --innodb-buffer-pool-size=256M
+      --skip-log-bin
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=mysql"
 
   # PHPMyAdmin
   phpmyadmin:
@@ -73,14 +141,41 @@ services:
       PMA_PORT: 3306
       PMA_USER: ${DB_USER:-rjms}
       PMA_PASSWORD: ${DB_PASSWORD:-rjmspassword}
-      UPLOAD_LIMIT: 10M
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 50M
+      MAX_EXECUTION_TIME: 600
     ports:
-      - "8081:80"
+      - "${PMA_PORT:-8081}:80"
     networks:
       - rjms-network
     depends_on:
       mysql:
         condition: service_healthy
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=phpmyadmin"
+
+  # Redis for sessions and caching (optional but recommended)
+  redis:
+    image: redis:7-alpine
+    container_name: rjms-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - rjms-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.rjms.environment=development"
+      - "com.rjms.service=redis"
 
 networks:
   rjms-network:
@@ -91,3 +186,15 @@ volumes:
   mysql-data:
     driver: local
     name: rjms-mysql-data
+  composer-cache:
+    driver: local
+    name: rjms-composer-cache
+  npm-cache:
+    driver: local
+    name: rjms-npm-cache
+  nginx-logs:
+    driver: local
+    name: rjms-nginx-logs
+  redis-data:
+    driver: local
+    name: rjms-redis-data

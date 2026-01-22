@@ -1,49 +1,95 @@
-# Docker Compose Override Example
-# Copy this file to docker-compose.override.yml to customize your local setup
-# This file is automatically loaded by docker-compose and is gitignored
-
-version: '3.8'
+# Docker Compose Override Example for Development
+# Copy this to docker-compose.override.yml to customize your local setup
+# This file is automatically merged with docker-compose.yml and is gitignored
 
 services:
-  # Example: Change PHP settings
+  # PHP Customizations
   php:
+    # Example: Adjust Xdebug settings
     environment:
-      # Enable specific Xdebug features
-      XDEBUG_MODE: debug,develop,coverage
-      # Override PHP memory limit
-      PHP_MEMORY_LIMIT: 512M
-    # Example: Add custom volume mounts
+      # Enable all Xdebug features
+      XDEBUG_MODE: debug,develop,coverage,profile
+      # Or disable Xdebug entirely for better performance
+      # XDEBUG_MODE: off
+    # Example: Mount custom PHP config
     # volumes:
-    #   - ./custom-config.ini:/usr/local/etc/php/conf.d/custom.ini
+    #   - ./my-custom.ini:/usr/local/etc/php/conf.d/zzz-custom.ini
 
-  # Example: Expose MySQL port to host (useful for external tools)
-  # mysql:
-  #   ports:
-  #     - "3306:3306"  # Expose on default MySQL port
+  # MySQL Customizations
+  mysql:
+    # Example: Expose on default port (careful of conflicts)
+    # ports:
+    #   - "3306:3306"
+    # Example: Increase memory for large datasets
+    # command: >
+    #   --default-authentication-plugin=mysql_native_password
+    #   --character-set-server=utf8mb4
+    #   --collation-server=utf8mb4_unicode_ci
+    #   --innodb-buffer-pool-size=512M
 
-  # Example: Change Nginx port
-  # nginx:
-  #   ports:
-  #     - "9090:80"  # Change from 8080 to 9090
+  # Nginx Customizations
+  nginx:
+    # Example: Change port to avoid conflicts
+    # ports:
+    #   - "9090:80"
+    # Example: Enable debug logging
+    # command: nginx-debug -g 'daemon off;'
 
-  # Example: Remove PHPMyAdmin (for production-like setup)
+  # Node Customizations  
+  node:
+    # Example: Run different npm command
+    # command: sh -c "npm install && npm run watch"
+    # Example: Add environment variables
+    # environment:
+    #   - NODE_ENV=production
+
+  # Redis Customizations
+  redis:
+    # Example: Increase memory
+    # command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    # Example: Enable persistence
+    # command: redis-server --appendonly yes --save 60 1000
+
+  # PHPMyAdmin Customizations
   # phpmyadmin:
-  #   profiles:
-  #     - disabled
+    # Example: Disable if not needed (saves resources)
+    # profiles:
+    #   - tools
 
 # Example: Add additional services
-#  redis:
-#    image: redis:alpine
-#    ports:
-#      - "6379:6379"
-#    networks:
-#      - rjms-network
+# services:
+#   mailhog:
+#     image: mailhog/mailhog:latest
+#     container_name: rjms-mailhog
+#     ports:
+#       - "8025:8025"  # Web UI
+#       - "1025:1025"  # SMTP
+#     networks:
+#       - rjms-network
+#     labels:
+#       - "com.rjms.environment=development"
+#       - "com.rjms.service=mailhog"
+#
+#   elasticsearch:
+#     image: elasticsearch:8.11.0
+#     container_name: rjms-elasticsearch
+#     environment:
+#       - discovery.type=single-node
+#       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#     ports:
+#       - "9200:9200"
+#     volumes:
+#       - elasticsearch-data:/usr/share/elasticsearch/data
+#     networks:
+#       - rjms-network
 
-# Example: Customize volumes
+# Example: Custom volume configurations
 # volumes:
 #   mysql-data:
 #     driver: local
 #     driver_opts:
 #       type: none
-#       device: /custom/path/mysql
+#       device: C:/docker-data/mysql
 #       o: bind
+#   elasticsearch-data:
+#     driver: local

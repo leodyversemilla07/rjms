@@ -211,26 +211,31 @@ A modern, enterprise-grade web-based system for managing academic research journ
 
 ### 🐳 Docker Installation (Recommended)
 
-The fastest way to get started! No need to install PHP, MySQL, or configure web servers manually.
+The fastest way to get started! Optimized development environment with hot-reloading, Xdebug, and live CSS compilation.
 
 **Prerequisites:**
 - Docker Desktop (Windows/Mac) or Docker Engine (Linux)
 - 4GB+ RAM, 5GB+ disk space
 
-**Windows:**
-```cmd
-docker-start.bat
-```
-
-**Linux/Mac:**
+**Quick Start:**
 ```bash
-chmod +x docker-start.sh
-./docker-start.sh
+# Windows
+setup-docker.bat
+
+# Linux/Mac
+chmod +x setup-docker.sh
+./setup-docker.sh
+
+# Or use Makefile
+make up
+make install
 ```
 
 **Access the application:**
 - Main App: http://localhost:8080
 - PHPMyAdmin: http://localhost:8081
+- MySQL: localhost:3307
+- Redis: localhost:6379
 
 **Default credentials:**
 - Admin: `admin` / `admin123`
@@ -238,7 +243,11 @@ chmod +x docker-start.sh
 - Reviewer: `reviewer` / `reviewer123`
 - Author: `author` / `author123`
 
-📖 **Full Docker documentation**: See [DOCKER.md](DOCKER.md) for detailed setup and troubleshooting.
+📖 **Docker Documentation**:
+- [DOCKER-DEV-GUIDE.md](DOCKER-DEV-GUIDE.md) - Complete development guide
+- [DOCKER-CHEATSHEET.md](DOCKER-CHEATSHEET.md) - Quick reference
+- [DOCKER-OPTIMIZATION-SUMMARY.md](DOCKER-OPTIMIZATION-SUMMARY.md) - What's new
+- [DOCKER.md](DOCKER.md) - Legacy documentation
 
 ---
 
