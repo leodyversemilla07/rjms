@@ -30,6 +30,9 @@ $router->get('/archives', ['HomeController', 'archives']);
 // Search
 $router->get('/search', ['HomeController', 'search']);
 
+// Test Routes
+$router->get('/test-email', ['TestController', 'testEmail']);
+
 // ============================================
 // Authentication Routes
 // ============================================

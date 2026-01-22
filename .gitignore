@@ -49,3 +49,15 @@ Thumbs.db
 *.bak
 *.old
 *~
+
+# Docker
+docker/mysql/init/schema.sql
+docker-compose.override.yml
+.docker/
+
+# Backups
+backups/
+*.sql
+*.sql.gz
+*_backup_*
+

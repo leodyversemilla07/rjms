@@ -21,300 +21,249 @@ function getStatusColor($status) {
     ];
     return $colors[$status] ?? 'bg-slate-100 text-slate-700';
 }
-
-// Start output buffering
-ob_start();
 ?>
-        .stat-card.warning { border-color: #ffc107; }
-        .stat-card.danger { border-color: #dc3545; }
-        .stat-value {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .stat-label {
-            color: #64748B;
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-        .content-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .quick-action {
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 2px solid #e9ecef;
-        }
-        .quick-action:hover {
-            border-color: #4F46E5;
-            background: #f8f9ff;
-        }
-        .activity-item {
-            padding: 15px;
-            border-left: 3px solid #4F46E5;
-            margin-bottom: 10px;
-            background: #F3F4F6;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <?php include __DIR__ . '/../components/navigation.php'; ?>
 
-    <div class="dashboard-header">
-        <div class="container">
-            <h1><i class="fas fa-tachometer-alt me-3"></i>Admin Dashboard</h1>
-            <p class="mb-0">System Overview & Management</p>
+<div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-tachometer-alt mr-3 text-indigo-600"></i>Admin Dashboard
+        </h2>
+        <p class="text-gray-600">System Overview & Management</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <!-- Total Users Card -->
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg border-l-4 border-indigo-600 transition-transform duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-slate-600 text-sm font-semibold uppercase tracking-wide mb-2">Total Users</div>
+                    <div class="text-4xl font-bold text-indigo-600 mb-2"><?= $stats['total_users'] ?? 0 ?></div>
+                    <div class="text-sm text-slate-500">
+                        <i class="fas fa-arrow-up text-green-500"></i> 
+                        <?= $stats['new_users_month'] ?? 0 ?> this month
+                    </div>
+                </div>
+                <div>
+                    <i class="fas fa-users text-5xl text-indigo-600 opacity-20"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Published Articles Card -->
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-500 transition-transform duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-slate-600 text-sm font-semibold uppercase tracking-wide mb-2">Published Articles</div>
+                    <div class="text-4xl font-bold text-green-600 mb-2"><?= $stats['published_articles'] ?? 0 ?></div>
+                    <div class="text-sm text-slate-500">
+                        <i class="fas fa-arrow-up text-green-500"></i> 
+                        <?= $stats['published_this_month'] ?? 0 ?> this month
+                    </div>
+                </div>
+                <div>
+                    <i class="fas fa-check-circle text-5xl text-green-600 opacity-20"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Review Card -->
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-500 transition-transform duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-slate-600 text-sm font-semibold uppercase tracking-wide mb-2">Pending Review</div>
+                    <div class="text-4xl font-bold text-amber-600 mb-2"><?= $stats['pending_submissions'] ?? 0 ?></div>
+                    <div class="text-sm text-slate-500">Require attention</div>
+                </div>
+                <div>
+                    <i class="fas fa-clock text-5xl text-amber-600 opacity-20"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Submissions Card -->
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg border-l-4 border-red-500 transition-transform duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-slate-600 text-sm font-semibold uppercase tracking-wide mb-2">Total Submissions</div>
+                    <div class="text-4xl font-bold text-red-600 mb-2"><?= $stats['total_submissions'] ?? 0 ?></div>
+                    <div class="text-sm text-slate-500">All time</div>
+                </div>
+                <div>
+                    <i class="fas fa-file-alt text-5xl text-red-600 opacity-20"></i>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="container-fluid px-4">
-        <?php if (isset($_SESSION['flash'])): ?>
-            <?php foreach ($_SESSION['flash'] as $type => $message): ?>
-                <div class="alert alert-<?= $type ?> alert-dismissible fade show">
-                    <?= htmlspecialchars($message) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Recent Submissions - Takes 2 columns -->
+        <div class="xl:col-span-2 space-y-6">
+            <!-- Recent Submissions Table -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h5 class="text-xl font-bold text-gray-800">
+                        <i class="fas fa-file-alt mr-2 text-indigo-600"></i>Recent Submissions
+                    </h5>
+                    <a href="/admin/submissions" class="px-4 py-2 text-sm font-semibold text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">
+                        View All
+                    </a>
                 </div>
-                <?php unset($_SESSION['flash'][$type]); ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="stat-card primary">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="stat-label">Total Users</div>
-                            <div class="stat-value text-primary"><?= $stats['total_users'] ?? 0 ?></div>
-                            <small class="text-muted">
-                                <i class="fas fa-arrow-up text-success"></i> 
-                                <?= $stats['new_users_month'] ?? 0 ?> this month
-                            </small>
-                        </div>
-                        <div>
-                            <i class="fas fa-users fa-3x text-primary opacity-25"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="stat-card success">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="stat-label">Published Articles</div>
-                            <div class="stat-value text-success"><?= $stats['published_articles'] ?? 0 ?></div>
-                            <small class="text-muted">
-                                <i class="fas fa-arrow-up text-success"></i> 
-                                <?= $stats['published_this_month'] ?? 0 ?> this month
-                            </small>
-                        </div>
-                        <div>
-                            <i class="fas fa-check-circle fa-3x text-success opacity-25"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="stat-card warning">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="stat-label">Pending Review</div>
-                            <div class="stat-value text-warning"><?= $stats['pending_submissions'] ?? 0 ?></div>
-                            <small class="text-muted">Require attention</small>
-                        </div>
-                        <div>
-                            <i class="fas fa-clock fa-3x text-warning opacity-25"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-3">
-                <div class="stat-card danger">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="stat-label">Total Submissions</div>
-                            <div class="stat-value text-danger"><?= $stats['total_submissions'] ?? 0 ?></div>
-                            <small class="text-muted">All time</small>
-                        </div>
-                        <div>
-                            <i class="fas fa-file-alt fa-3x text-danger opacity-25"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Recent Submissions -->
-            <div class="col-xl-8 mb-4">
-                <div class="content-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Recent Submissions</h5>
-                        <a href="/admin/submissions" class="btn btn-sm btn-outline-primary">View All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200 text-left">
+                                <th class="pb-3 text-sm font-semibold text-gray-600">ID</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Title</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Author</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Status</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Date</th>
+                                <th class="pb-3 text-sm font-semibold text-gray-600">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($recentSubmissions)): ?>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
+                                    <td colspan="6" class="py-8 text-center text-gray-500">No recent submissions</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($recentSubmissions)): ?>
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted">No recent submissions</td>
+                            <?php else: ?>
+                                <?php foreach ($recentSubmissions as $submission): ?>
+                                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+                                        <td class="py-4 text-sm text-gray-600">#<?= $submission['id'] ?></td>
+                                        <td class="py-4">
+                                            <span class="font-semibold text-gray-800">
+                                                <?= htmlspecialchars(substr($submission['title'], 0, 50)) ?><?= strlen($submission['title']) > 50 ? '...' : '' ?>
+                                            </span>
+                                        </td>
+                                        <td class="py-4 text-sm text-gray-600"><?= htmlspecialchars($submission['author_name'] ?? 'Unknown') ?></td>
+                                        <td class="py-4">
+                                            <span class="px-3 py-1 text-xs font-semibold rounded-full <?= getStatusColor($submission['status']) ?>">
+                                                <?= ucfirst(str_replace('_', ' ', $submission['status'])) ?>
+                                            </span>
+                                        </td>
+                                        <td class="py-4 text-sm text-gray-600"><?= date('M d, Y', strtotime($submission['submission_date'])) ?></td>
+                                        <td class="py-4">
+                                            <a href="/admin/submissions/<?= $submission['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">
+                                                <i class="fas fa-eye text-sm"></i>
+                                            </a>
+                                        </td>
                                     </tr>
-                                <?php else: ?>
-                                    <?php foreach ($recentSubmissions as $submission): ?>
-                                        <tr>
-                                            <td>#<?= $submission['id'] ?></td>
-                                            <td>
-                                                <strong><?= htmlspecialchars(substr($submission['title'], 0, 50)) ?><?= strlen($submission['title']) > 50 ? '...' : '' ?></strong>
-                                            </td>
-                                            <td><?= htmlspecialchars($submission['author_name'] ?? 'Unknown') ?></td>
-                                            <td>
-                                                <span class="badge bg-<?= getStatusColor($submission['status']) ?>">
-                                                    <?= ucfirst($submission['status']) ?>
-                                                </span>
-                                            </td>
-                                            <td><?= date('M d, Y', strtotime($submission['submission_date'])) ?></td>
-                                            <td>
-                                                <a href="/admin/submissions/<?= $submission['id'] ?>" class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Submission Chart -->
-                <div class="content-card">
-                    <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Submission Trends</h5>
-                    <canvas id="submissionChart" height="80"></canvas>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="col-xl-4">
-                <!-- Quick Actions -->
-                <div class="content-card mb-4">
-                    <h5 class="mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <a href="/admin/users" class="quick-action text-decoration-none d-block">
-                                <i class="fas fa-users fa-2x text-primary mb-2"></i>
-                                <div class="fw-bold">Manage Users</div>
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="/admin/submissions" class="quick-action text-decoration-none d-block">
-                                <i class="fas fa-file-alt fa-2x text-success mb-2"></i>
-                                <div class="fw-bold">Submissions</div>
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="/admin/categories" class="quick-action text-decoration-none d-block">
-                                <i class="fas fa-folder fa-2x text-warning mb-2"></i>
-                                <div class="fw-bold">Categories</div>
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="/admin/settings" class="quick-action text-decoration-none d-block">
-                                <i class="fas fa-cog fa-2x text-danger mb-2"></i>
-                                <div class="fw-bold">Settings</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <!-- Submission Chart -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h5 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-chart-line mr-2 text-indigo-600"></i>Submission Trends
+                </h5>
+                <canvas id="submissionChart" height="80"></canvas>
+            </div>
+        </div>
 
-                <!-- Recent Users -->
-                <div class="content-card mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>New Users</h5>
-                        <a href="/admin/users" class="btn btn-sm btn-outline-primary">View All</a>
-                    </div>
-                    <?php if (empty($recentUsers)): ?>
-                        <p class="text-muted text-center">No recent users</p>
-                    <?php else: ?>
-                        <div class="list-group list-group-flush">
-                            <?php foreach (array_slice($recentUsers, 0, 5) as $user): ?>
-                                <div class="list-group-item px-0">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                            <?= strtoupper(substr($user['first_name'] ?? 'U', 0, 1)) ?>
-                                        </div>
-                                        <div class="grow">
-                                            <strong><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></strong>
-                                            <br><small class="text-muted"><?= htmlspecialchars($user['email']) ?></small>
-                                        </div>
-                                        <small class="text-muted"><?= date('M d', strtotime($user['created_at'])) ?></small>
-                                    </div>
+        <!-- Sidebar - Takes 1 column -->
+        <div class="xl:col-span-1 space-y-6">
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h5 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-bolt mr-2 text-indigo-600"></i>Quick Actions
+                </h5>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="/admin/users" class="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition text-center cursor-pointer">
+                        <i class="fas fa-users text-3xl text-indigo-600 mb-2"></i>
+                        <div class="font-bold text-sm text-gray-700">Manage Users</div>
+                    </a>
+                    <a href="/admin/submissions" class="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-600 hover:bg-green-50 transition text-center cursor-pointer">
+                        <i class="fas fa-file-alt text-3xl text-green-600 mb-2"></i>
+                        <div class="font-bold text-sm text-gray-700">Submissions</div>
+                    </a>
+                    <a href="/admin/categories" class="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-amber-600 hover:bg-amber-50 transition text-center cursor-pointer">
+                        <i class="fas fa-folder text-3xl text-amber-600 mb-2"></i>
+                        <div class="font-bold text-sm text-gray-700">Categories</div>
+                    </a>
+                    <a href="/admin/settings" class="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-red-600 hover:bg-red-50 transition text-center cursor-pointer">
+                        <i class="fas fa-cog text-3xl text-red-600 mb-2"></i>
+                        <div class="font-bold text-sm text-gray-700">Settings</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Users -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h5 class="text-xl font-bold text-gray-800">
+                        <i class="fas fa-user-plus mr-2 text-indigo-600"></i>New Users
+                    </h5>
+                    <a href="/admin/users" class="px-3 py-1 text-xs font-semibold text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">
+                        View All
+                    </a>
+                </div>
+                <?php if (empty($recentUsers)): ?>
+                    <p class="text-gray-500 text-center py-4">No recent users</p>
+                <?php else: ?>
+                    <div class="space-y-3">
+                        <?php foreach (array_slice($recentUsers, 0, 5) as $user): ?>
+                            <div class="flex items-center py-2 border-b border-gray-100 last:border-0">
+                                <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                                    <?= strtoupper(substr($user['first_name'] ?? 'U', 0, 1)) ?>
                                 </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold text-gray-800 truncate">
+                                        <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
+                                    </div>
+                                    <div class="text-xs text-gray-500 truncate"><?= htmlspecialchars($user['email']) ?></div>
+                                </div>
+                                <div class="text-xs text-gray-400 ml-2"><?= date('M d', strtotime($user['created_at'])) ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
 
-                <!-- System Status -->
-                <div class="content-card">
-                    <h5 class="mb-3"><i class="fas fa-server me-2"></i>System Status</h5>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>Storage Used</span>
-                            <span class="fw-bold">45%</span>
+            <!-- System Status -->
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h5 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-server mr-2 text-indigo-600"></i>System Status
+                </h5>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Storage Used</span>
+                            <span class="text-sm font-bold text-gray-800">45%</span>
                         </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-primary" style="width: 45%"></div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>Database Size</span>
-                            <span class="fw-bold">2.4 GB</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success" style="width: 60%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-indigo-600 h-2 rounded-full" style="width: 45%"></div>
                         </div>
                     </div>
-                    <div class="d-grid">
-                        <button class="btn btn-outline-secondary btn-sm" onclick="alert('System optimization feature coming soon!')">
-                            <i class="fas fa-wrench me-2"></i>Optimize System
-                        </button>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Database Size</span>
+                            <span class="text-sm font-bold text-gray-800">2.4 GB</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+                        </div>
                     </div>
+                    <button class="w-full mt-4 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition" onclick="alert('System optimization feature coming soon!')">
+                        <i class="fas fa-wrench mr-2"></i>Optimize System
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <?php include __DIR__ . '/../components/footer.php'; ?>
-
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
-        // Submission Trends Chart
-        const ctx = document.getElementById('submissionChart').getContext('2d');
-        new Chart(ctx, {
+<!-- Chart.js for the submission trends chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Submission Trends Chart
+    const ctx = document.getElementById('submissionChart');
+    if (ctx) {
+        new Chart(ctx.getContext('2d'), {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -322,13 +271,14 @@ ob_start();
                     label: 'Submissions',
                     data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 38, 42, 45],
                     borderColor: '#4F46E5',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
                     tension: 0.4,
                     fill: true
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
                         display: false
@@ -341,12 +291,5 @@ ob_start();
                 }
             }
         });
-    </script>
-
-<?php
-// Get the buffered content
-$content = ob_get_clean();
-
-// Include the main layout
-include __DIR__ . '/../layouts/main.php';
-?>
+    }
+</script>
