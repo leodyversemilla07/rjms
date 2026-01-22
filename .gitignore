@@ -40,6 +40,11 @@ build/
 cache/
 *.cache
 
+# Sessions
+storage/sessions/sess_*
+storage/sessions/*
+!storage/sessions/.gitkeep
+
 # OS files
 Thumbs.db
 .DS_Store
