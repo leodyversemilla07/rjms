@@ -1,358 +1,418 @@
-# 🎓 Research Journal Management System (RJMS)
+# Research Journal Management System
 
-[![PHP Version](https://img.shields.io/badge/PHP-8.3.27-blue.svg)](https://www.php.net/)
-[![MySQL Version](https://img.shields.io/badge/MySQL-8.0.43-orange.svg)](https://www.mysql.com/)
-[![Framework](https://img.shields.io/badge/Framework-Custom%20MVC-green.svg)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](DOCKER.md)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)]()
+<div align="center">
 
-A modern, enterprise-grade web-based system for managing academic research journals and publications. Built from the ground up with professional MVC architecture, comprehensive security features, and modern PHP best practices.
+[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)](DOCKER-DEV-GUIDE.md)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
-**Official Research Journal Platform for Mindoro State University**
+**Modern, enterprise-grade platform for managing academic research journals and publications**
 
-> **Migration Complete**: Successfully modernized from legacy flat architecture to professional MVC framework (November 2025)
-> 
-> **Architecture**: Custom MVC Framework | **Controllers**: 6 | **Models**: 4 | **Views**: 28 | **Routes**: 45+
+[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Contributing](#contributing)
 
 ---
 
-## 🌟 Features
+### Official Research Journal Platform for [Mindoro State University](https://minsu.edu.ph)
 
-### 📚 Core Journal Management
-- ✅ **Multi-Role System** - Admin, Editor, Reviewer, and Author roles with granular permissions
-- ✅ **Submission Workflow** - Complete manuscript submission and tracking system
-- ✅ **Peer Review System** - Comprehensive review workflow with recommendations
-- ✅ **Document Management** - Secure PDF/DOC upload with validation
-- ✅ **Publication Pipeline** - From submission to published article management
-- ✅ **Category Management** - Organize articles by research categories
-- ✅ **Advanced Search** - Full-text search with multi-criteria filtering
-- ✅ **Current Issues** - Browse and display published journal issues
+_Built with a custom MVC framework, modern security practices, and Docker support_
 
-### 🎯 Role-Specific Dashboards
+</div>
 
-**Author Dashboard**
-- Submit new research articles
-- Track submission status
-- View reviews and feedback
-- Manage published articles
-- Submission history
+## Overview
 
-**Reviewer Dashboard**
-- View assigned submissions
-- Submit peer reviews
-- Track review history
-- Manage review deadlines
-- Access review guidelines
+RJMS is a comprehensive web-based system designed for managing the complete lifecycle of academic research journals—from submission to publication. Built from the ground up with clean architecture principles and enterprise-grade security.
 
-**Editor Dashboard**
-- Manage all submissions
-- Assign reviewers
-- Make publication decisions
-- Track review progress
-- Editorial workflow management
+**What makes RJMS different:**
 
-**Admin Dashboard**
-- User management (CRUD operations)
-- System-wide submission overview
-- Category management
-- Publishing controls
-- System statistics and analytics
+- **Custom MVC Framework** - No bloated dependencies, full control
+- **Security First** - CSRF, XSS protection, secure sessions, input validation
+- **Docker Ready** - One-command setup for development and production
+- **Role-Based Access** - Separate dashboards for Authors, Reviewers, Editors, and Admins
+- **Modern PHP** - PHP 8.3+ with strict types, ORM-style models, PSR-4 autoloading
 
-### 🏗️ Modern Architecture
-- ✅ **Custom MVC Framework** - Built-from-scratch professional architecture
-- ✅ **Smart Router** - RESTful routing with dynamic parameters (`{id}`, `{slug}`)
-- ✅ **Base Controller** - Shared functionality (auth, validation, views, redirects)
-- ✅ **Base Model** - Eloquent-inspired ORM with query builder
-- ✅ **PSR-4 Autoloading** - Standards-compliant namespace autoloading
-- ✅ **Environment Config** - `.env` file for secure configuration management
-- ✅ **Front Controller** - Single entry point (`public/index.php`)
-- ✅ **Service Layer** - Business logic separation (AuthService)
-- ✅ **Middleware Ready** - Extensible middleware architecture
+## Features
 
-### 🔒 Enterprise Security
-- ✅ **CSRF Protection** - Token-based form security on all POST requests
-- ✅ **SQL Injection Prevention** - PDO prepared statements throughout
-- ✅ **XSS Protection** - Output escaping helper functions
-- ✅ **Password Security** - Bcrypt hashing with work factor
-- ✅ **Session Hardening** - HTTPOnly, Secure, SameSite cookie flags
-- ✅ **File Upload Security** - Type, size, and content validation
-- ✅ **Input Validation** - Server-side validation with 10+ rules
-- ✅ **Activity Logging** - Monolog-based audit trail
-- ✅ **Role-based Access** - Controller-level authorization checks
+<table>
+<tr>
+<td width="50%">
 
-### 🛠️ Developer Experience
-- ✅ **Form Validation** - Built-in validator (required, email, min, max, etc.)
-- ✅ **Flash Messages** - Session-based user feedback system
-- ✅ **Query Builder** - Fluent interface for database operations
-- ✅ **Helper Functions** - 20+ utility functions (e(), auth(), old(), etc.)
-- ✅ **Error Handling** - Custom 404 pages and exception handling
-- ✅ **Testing Suite** - PHPUnit with unit and feature tests
-- ✅ **Static Analysis** - PHPStan for code quality assurance
-- ✅ **Logging System** - File-based logging with rotation
-- ✅ **View Helpers** - Template helpers for common UI patterns
+### Journal Management
 
----
+- **Multi-role system** with granular permissions
+- **Complete submission workflow** from draft to publication
+- **Peer review system** with reviewer assignment
+- **Document management** (PDF/DOC) with validation
+- **Category organization** for research topics
+- **Advanced search** with filters
+- **Issue management** for journal publications
 
-## 🚀 Technical Stack
+</td>
+<td width="50%">
 
-### Backend
-- **PHP** 8.3.27 - Modern PHP with strict types, attributes, and enhanced performance
-- **MySQL** 8.0.43 - Robust relational database with JSON support
-- **PDO** - Secure database abstraction layer with prepared statements
-- **Composer** 2.x - Modern dependency management
+### Role-Based Dashboards
 
-### Frontend
-- **Bootstrap** 5.3.8 - Mobile-first responsive framework
-- **Font Awesome** 7.1.0 - Comprehensive icon library (2000+ icons)
-- **jQuery** 3.6.0 - DOM manipulation and AJAX
-- **HTML5/CSS3/ES6** - Modern web standards
+- **Authors** - Submit, track, and manage articles
+- **Reviewers** - Review submissions and provide feedback
+- **Editors** - Manage workflow and make decisions
+- **Admins** - Full system control and analytics
 
-### Core Dependencies
-- **Monolog** 3.9.0 - PSR-3 compliant logging framework
-- **PHPDotEnv** 5.6.2 - Environment configuration management
-- **Symfony Polyfills** - PHP 7.4+ compatibility layer
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-### Development & Testing
-- **PHPUnit** 9.6.29 - Unit and feature testing framework
-- **PHPStan** 1.12.32 - Static analysis tool (Level 5)
-- **Composer Scripts** - Automated testing and analysis
+### Technical Excellence
 
-### Server Requirements
-- **Apache 2.4+** or **Nginx 1.18+**
-- **mod_rewrite** (Apache) or URL rewriting enabled (Nginx)
-- **SSL Certificate** (recommended for production)
+- Custom **MVC framework** (Router, ORM, Controllers)
+- **PSR-4 autoloading** with Composer
+- **RESTful routing** with dynamic parameters
+- **Service layer** architecture
+- Modern PHP 8.3+ features
 
----
+</td>
+<td width="50%">
 
-## 📁 Project Structure
+### Enterprise Security
 
-```
-/rjms
-├── public/                      # Web root (Document Root)
-│   ├── index.php               # Front controller (entry point)
-│   └── .htaccess               # Apache URL rewriting
-│
-├── routes/                      # Application routes
-│   └── web.php                 # Route definitions
-│
-├── src/                         # Application source code
-│   ├── Core/                   # Framework core
-│   │   ├── Router.php         # HTTP routing engine
-│   │   ├── Controller.php     # Base controller class
-│   │   ├── Model.php          # Base model (ORM)
-│   │   ├── Database.php       # PDO database layer
-│   │   ├── Session.php        # Session management
-│   │   ├── CSRF.php           # CSRF protection
-│   │   └── Logger.php         # Logging system
-│   │
-│   ├── Controllers/            # Application controllers
-│   │   ├── HomeController.php
-│   │   ├── AuthController.php
-│   │   ├── AuthorController.php
-│   │   ├── AdminController.php
-│   │   ├── EditorController.php
-│   │   └── ReviewerController.php
-│   │
-│   ├── Models/                 # Data models
-│   │   ├── User.php
-│   │   ├── Submission.php
-│   │   ├── Review.php
-│   │   └── Category.php
-│   │
-│   ├── Services/               # Business logic
-│   │   └── AuthService.php
-│   │
-│   ├── Middleware/             # HTTP middleware
-│   ├── Helpers/                # Helper functions
-│   ├── bootstrap.php           # Application initialization
-│   └── helpers.php             # Global helper functions
-│
-├── resources/                   # Application resources
-│   └── views/                  # View templates
-│       ├── layouts/            # Layout templates
-│       ├── home/               # Home page views
-│       ├── auth/               # Authentication views
-│       ├── author/             # Author dashboard views
-│       ├── admin/              # Admin dashboard views
-│       ├── editor/             # Editor dashboard views
-│       ├── reviewer/           # Reviewer dashboard views
-│       ├── components/         # Reusable components
-│       └── errors/             # Error pages
-│
-├── database/                    # Database files
-│   ├── schema.sql              # Database schema
-│   ├── migrations/             # Database migrations
-│   └── migrate.php             # Migration runner
-│
-├── tests/                       # Test files
-│   └── Unit/                   # Unit tests
-│
-├── logs/                        # Application logs
-│   └── app.log                 # Main log file
-│
-├── uploads/                     # User uploads
-│   └── submissions/            # Submission files
-│
-├── vendor/                      # Composer dependencies
-│
-├── .env                         # Environment configuration
-├── .env.example                # Environment template
-├── .gitignore                  # Git ignore rules
-├── composer.json               # Composer dependencies
-├── composer.lock               # Locked dependencies
-├── phpunit.xml                 # PHPUnit configuration
-└── .htaccess                   # Root URL rewriting
-```
+- **CSRF** & **XSS protection**
+- **SQL injection prevention** (PDO)
+- **Bcrypt password** hashing
+- **Session hardening**
+- **Input validation** & sanitization
+- **File upload security**
+- **Activity logging** (Monolog)
 
----
+</td>
+</tr>
+</table>
 
-## ⚡ Quick Start
+## Tech Stack
 
-### 🐳 Docker Installation (Recommended)
+| Layer            | Technologies                                          |
+| ---------------- | ----------------------------------------------------- |
+| **Backend**      | PHP 8.3+, MySQL 8.0+, PDO, Composer                   |
+| **Frontend**     | Bootstrap 5, Font Awesome 7, jQuery 3, Tailwind CSS 4 |
+| **Dependencies** | Monolog 3.9, PHPDotEnv 5.6, PHPMailer 7.0             |
+| **Dev Tools**    | PHPUnit 9.6, PHPStan 1.12, Docker, Git                |
+| **Server**       | Apache/Nginx, mod_rewrite, SSL (production)           |
 
-The fastest way to get started! Optimized development environment with hot-reloading, Xdebug, and live CSS compilation.
-
-**Prerequisites:**
-- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
-- 4GB+ RAM, 5GB+ disk space
-
-**Quick Start:**
-```bash
-# Windows
-setup-docker.bat
-
-# Linux/Mac
-chmod +x setup-docker.sh
-./setup-docker.sh
-
-# Or use Makefile
-make up
-make install
-```
-
-**Access the application:**
-- Main App: http://localhost:8080
-- PHPMyAdmin: http://localhost:8081
-- MySQL: localhost:3307
-- Redis: localhost:6379
-
-**Default credentials:**
-- Admin: `admin` / `admin123`
-- Editor: `editor` / `editor123`
-- Reviewer: `reviewer` / `reviewer123`
-- Author: `author` / `author123`
-
-📖 **Docker Documentation**:
-- [DOCKER-DEV-GUIDE.md](DOCKER-DEV-GUIDE.md) - Complete development guide
-- [DOCKER-CHEATSHEET.md](DOCKER-CHEATSHEET.md) - Quick reference
-- [DOCKER-OPTIMIZATION-SUMMARY.md](DOCKER-OPTIMIZATION-SUMMARY.md) - What's new
-- [DOCKER.md](DOCKER.md) - Legacy documentation
-
----
-
-### 💻 Manual Installation
+## Quick Start
 
 ### Prerequisites
 
-- PHP 8.3+ with extensions:
-  - pdo_mysql
-  - mbstring
-  - xml
-  - curl
-  - gd
-  - zip
-  - bcmath
+Choose your installation method:
+
+<details open>
+<summary><b>Docker (Recommended)</b> - One-command setup</summary>
+
+**Requirements:**
+
+- Docker Desktop 4.0+ (Windows/Mac) or Docker Engine 20.10+ (Linux)
+- 4GB RAM, 5GB disk space
+
+**Quick Start:**
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/rjms.git
+cd rjms
+
+# Windows - Run setup script
+setup-docker.bat
+
+# Linux/Mac - Run setup script
+chmod +x setup-docker.sh && ./setup-docker.sh
+
+# Or use Makefile
+make setup
+```
+
+**That's it!** The application will be available at:
+
+- **App:** http://localhost:8080
+- **PHPMyAdmin:** http://localhost:8081
+- **MySQL:** localhost:3307
+- **Redis:** localhost:6379
+
+**Default Login Credentials:**
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin` | `admin123` |
+| Editor | `editor` | `editor123` |
+| Reviewer | `reviewer` | `reviewer123` |
+| Author | `author` | `author123` |
+
+**Docker Documentation:**
+
+- [Development Guide](DOCKER-DEV-GUIDE.md) - Full development workflow
+- [Quick Reference](DOCKER-QUICKREF.md) - Common commands
+- [Optimization Summary](DOCKER-OPTIMIZATION-SUMMARY.md) - Performance tips
+
+</details>
+
+<details>
+<summary><b>Manual Installation</b> - Traditional LAMP/LEMP stack</summary>
+
+**Requirements:**
+
+- PHP 8.3+ with extensions: `pdo_mysql`, `mbstring`, `xml`, `curl`, `gd`, `zip`
 - MySQL 8.0+
-- Composer
-- Apache/Nginx with mod_rewrite
+- Composer 2.x
+- Apache 2.4+ (with `mod_rewrite`) or Nginx 1.18+
 
-### Installation
+**Step 1: Clone and Install Dependencies**
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/rjms.git
-   cd rjms
-   ```
+```bash
+git clone https://github.com/yourusername/rjms.git
+cd rjms
+composer install
+```
 
-2. **Install dependencies**
-   ```bash
-   composer install
-   ```
+**Step 2: Environment Configuration**
 
-3. **Configure environment**
-   ```bash
-   cp .env.example .env
-   nano .env
-   ```
-   
-   Update database credentials:
-   ```env
-   DB_HOST=localhost
-   DB_PORT=3306
-   DB_NAME=rjdb
-   DB_USER=root
-   DB_PASSWORD=your_password
-   ```
+```bash
+# Copy environment file
+cp .env.example .env
 
-4. **Create database and import schema**
-   ```bash
-   mysql -u root -p -e "CREATE DATABASE rjdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-   mysql -u root -p rjdb < database/schema.sql
-   ```
+# Edit configuration (use your favorite editor)
+nano .env
+```
 
-5. **Set permissions**
-   ```bash
-   chmod -R 775 uploads logs
-   chmod 644 .env
-   ```
+Update these critical values in `.env`:
 
-6. **Configure Apache Virtual Host**
-   
-   Create `/etc/apache2/sites-available/rjms.conf`:
-   ```apache
-   <VirtualHost *:80>
-       ServerName rjms.local
-       DocumentRoot /path/to/rjms/public
-       
-       <Directory /path/to/rjms/public>
-           AllowOverride All
-           Require all granted
-       </Directory>
-       
-       ErrorLog ${APACHE_LOG_DIR}/rjms-error.log
-       CustomLog ${APACHE_LOG_DIR}/rjms-access.log combined
-   </VirtualHost>
-   ```
-   
-   Enable site and rewrite module:
-   ```bash
-   sudo a2ensite rjms
-   sudo a2enmod rewrite
-   sudo systemctl restart apache2
-   ```
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=rjdb
+DB_USER=root
+DB_PASSWORD=your_secure_password
+APP_URL=http://rjms.local
+APP_ENV=production
+APP_DEBUG=false
+```
 
-7. **Add to hosts file**
-   ```bash
-   echo "127.0.0.1 rjms.local" | sudo tee -a /etc/hosts
-   ```
+**Step 3: Database Setup**
 
-8. **Access the application**
-   ```
-   http://rjms.local
-   ```
+```bash
+# Create database
+mysql -u root -p -e "CREATE DATABASE rjdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
----
+# Import schema
+mysql -u root -p rjdb < database/schema.sql
+```
 
-## 🎯 Usage
+**Step 4: Set Permissions**
 
-### MVC Framework
+```bash
+# Linux/Mac
+chmod -R 775 uploads logs storage
+chown -R www-data:www-data uploads logs storage
 
-#### Creating a Controller
+# Windows (Run as Administrator)
+icacls uploads /grant "IIS_IUSRS:(OI)(CI)F" /T
+icacls logs /grant "IIS_IUSRS:(OI)(CI)F" /T
+```
+
+**Step 5: Web Server Configuration**
+
+<details>
+<summary>Apache Configuration</summary>
+
+Create `/etc/apache2/sites-available/rjms.conf`:
+
+```apache
+<VirtualHost *:80>
+    ServerName rjms.local
+    DocumentRoot /var/www/rjms/public
+
+    <Directory /var/www/rjms/public>
+        AllowOverride All
+        Require all granted
+        Options -Indexes +FollowSymLinks
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/rjms-error.log
+    CustomLog ${APACHE_LOG_DIR}/rjms-access.log combined
+</VirtualHost>
+```
+
+Enable site:
+
+```bash
+sudo a2ensite rjms
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
+
+</details>
+
+<details>
+<summary>Nginx Configuration</summary>
+
+Create `/etc/nginx/sites-available/rjms`:
+
+```nginx
+server {
+    listen 80;
+    server_name rjms.local;
+    root /var/www/rjms/public;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}
+```
+
+Enable site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/rjms /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+```
+
+</details>
+
+**Step 6: Update Hosts File**
+
+```bash
+# Linux/Mac
+echo "127.0.0.1 rjms.local" | sudo tee -a /etc/hosts
+
+# Windows (Edit C:\Windows\System32\drivers\etc\hosts as Administrator)
+127.0.0.1 rjms.local
+```
+
+**Step 7: Access Application**
+Navigate to http://rjms.local and login with default credentials above.
+
+</details>
+
+### Post-Installation
+
+After installation, verify everything works:
+
+```bash
+# Test database connection
+php -r "require 'vendor/autoload.php'; \$db = new \App\Core\Database(); echo 'Connected!';"
+
+# Run tests
+composer test
+
+# Check code quality
+composer analyse
+
+# Build CSS (if using Tailwind)
+npm run build
+```
+
+## Project Structure
+
+```
+rjms/
+├── 📂 public/              # Web root (document root points here)
+│   ├── index.php          # Front controller (single entry point)
+│   ├── .htaccess          # Apache URL rewriting rules
+│   └── css/               # Compiled stylesheets
+│
+├── 📂 src/                 # Application source code (PSR-4: App\)
+│   ├── 📂 Core/           # Framework components
+│   │   ├── Router.php     # URL routing & parameter binding
+│   │   ├── Controller.php # Base controller (auth, views, validation)
+│   │   ├── Model.php      # Base model (ORM/Query Builder)
+│   │   ├── Database.php   # PDO wrapper with connection pooling
+│   │   ├── Session.php    # Secure session management
+│   │   └── CSRF.php       # CSRF token generation & validation
+│   │
+│   ├── 📂 Controllers/    # Business logic controllers
+│   │   ├── AuthController.php    # Login/Register/Logout
+│   │   ├── AdminController.php   # User & category management
+│   │   ├── AuthorController.php  # Submission workflow
+│   │   ├── EditorController.php  # Review assignment
+│   │   └── ReviewerController.php # Peer reviews
+│   │
+│   ├── 📂 Models/         # Data models
+│   │   ├── User.php       # User authentication & roles
+│   │   ├── Submission.php # Article submissions
+│   │   ├── Review.php     # Peer reviews
+│   │   └── Category.php   # Research categories
+│   │
+│   ├── 📂 Services/       # Business logic layer
+│   │   └── AuthService.php # Authentication service
+│   │
+│   ├── bootstrap.php      # Application bootstrap
+│   └── helpers.php        # Global helper functions
+│
+├── 📂 resources/           # Application resources
+│   ├── 📂 views/          # Blade-style templates
+│   │   ├── layouts/       # Master layouts
+│   │   ├── components/    # Reusable UI components
+│   │   ├── auth/          # Login & registration
+│   │   └── [role]/        # Role-specific dashboards
+│   └── css/               # Source stylesheets
+│
+├── 📂 routes/              # Route definitions
+│   └── web.php            # HTTP routes
+│
+├── 📂 database/            # Database management
+│   ├── schema.sql         # Full database schema
+│   └── migrations/        # Database migrations
+│
+├── 📂 tests/               # Test suite
+│   └── Unit/              # Unit tests (PHPUnit)
+│
+├── 📂 uploads/             # User-uploaded files
+│   └── submissions/       # Research article files
+│
+├── 📂 logs/                # Application logs
+│   └── app.log            # Main log file (Monolog)
+│
+├── .env                    # Environment configuration (gitignored)
+├── .env.example            # Environment template
+├── composer.json           # PHP dependencies
+├── package.json            # Node.js dependencies (CSS build)
+└── Dockerfile              # Docker image definition
+```
+
+### Key Architecture Patterns
+
+- **MVC Pattern**: Clean separation of concerns (Model-View-Controller)
+- **Front Controller**: Single entry point (`public/index.php`) handles all requests
+- **PSR-4 Autoloading**: `App\` namespace maps to `src/` directory
+- **Service Layer**: Complex business logic isolated in Services
+- **Repository Pattern**: Models act as data repositories
+- **Dependency Injection**: Dependencies passed via constructors
+
+## Development Guide
+
+### Creating Your First Feature
+
+#### 1. Define Routes
+
+```php
+// routes/web.php
+$router->get('/articles', ['ArticleController', 'index']);
+$router->post('/articles', ['ArticleController', 'store']);
+$router->get('/articles/{id}', ['ArticleController', 'show']);
+```
+
+#### 2. Create Controller
 
 ```php
 <?php
-
 namespace App\Controllers;
 
 use App\Core\Controller;
@@ -360,38 +420,51 @@ use App\Models\Article;
 
 class ArticleController extends Controller
 {
-    private Article $articleModel;
+    private Article $article;
 
     public function __construct()
     {
-        $this->articleModel = new Article();
+        $this->article = new Article();
     }
 
     public function index()
     {
-        $articles = $this->articleModel->all();
+        $articles = $this->article->all();
         $this->view('articles/index', ['articles' => $articles]);
     }
 
     public function store()
     {
+        // Validation with built-in validator
         $data = $this->validate([
             'title' => 'required|max:255',
-            'content' => 'required'
+            'content' => 'required|min:100',
+            'category_id' => 'required|numeric'
         ]);
 
-        $id = $this->articleModel->create($data);
+        $id = $this->article->create($data);
+
         $this->flash('success', 'Article created successfully!');
         $this->redirect('/articles/' . $id);
+    }
+
+    public function show(int $id)
+    {
+        $article = $this->article->find($id);
+
+        if (!$article) {
+            $this->notFound('Article not found');
+        }
+
+        $this->view('articles/show', ['article' => $article]);
     }
 }
 ```
 
-#### Creating a Model
+#### 3. Create Model
 
 ```php
 <?php
-
 namespace App\Models;
 
 use App\Core\Model;
@@ -399,402 +472,559 @@ use App\Core\Model;
 class Article extends Model
 {
     protected string $table = 'articles';
-    protected array $fillable = ['title', 'content', 'author_id'];
+
+    protected array $fillable = [
+        'title', 'content', 'author_id', 'category_id', 'status'
+    ];
+
     protected array $hidden = ['deleted_at'];
 
+    // Custom query methods
     public function getPublished()
     {
-        return $this->where('status', 'published');
+        return $this->where('status', 'published')
+                    ->orderBy('created_at', 'DESC');
     }
 
     public function getByAuthor(int $authorId)
     {
         return $this->where('author_id', $authorId);
     }
+
+    // Relationships (manual eager loading)
+    public function withAuthor($id)
+    {
+        $article = $this->find($id);
+        $article->author = (new User())->find($article->author_id);
+        return $article;
+    }
 }
 ```
 
-#### Defining Routes
+#### 4. Create View
 
 ```php
-// routes/web.php
+<!-- resources/views/articles/show.php -->
+<?php require __DIR__ . '/../layouts/header.php'; ?>
 
-$router->get('/articles', ['ArticleController', 'index']);
-$router->post('/articles', ['ArticleController', 'store']);
-$router->get('/articles/{id}', ['ArticleController', 'show']);
-$router->post('/articles/{id}/update', ['ArticleController', 'update']);
-$router->post('/articles/{id}/delete', ['ArticleController', 'destroy']);
+<div class="container mt-4">
+    <article>
+        <h1><?= e($article->title) ?></h1>
+        <p class="text-muted">
+            By <?= e($article->author_name) ?>
+            on <?= e(date('F j, Y', strtotime($article->created_at))) ?>
+        </p>
+        <div class="content">
+            <?= nl2br(e($article->content)) ?>
+        </div>
+    </article>
+</div>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
 ```
 
-### Available Routes
+### Available Helper Functions
 
-#### Public Routes
-- `GET /` - Homepage
-- `GET /about` - About page
-- `GET /contact` - Contact page
-- `GET /faq` - FAQ page
-- `GET /search` - Search articles
+```php
+// Output Escaping
+e($string)                    // Escape HTML entities (XSS protection)
+old('field_name', 'default')  // Get old input value (form validation)
 
-#### Authentication
-- `GET /login` - Login page
-- `POST /login` - Login handler
-- `GET /register` - Registration page
-- `POST /register` - Registration handler
-- `GET /logout` - Logout
+// Authentication
+auth()                        // Get current authenticated user
+isLoggedIn()                  // Check if user is logged in
+hasRole('admin')              // Check user role
 
-#### Author Dashboard
-- `GET /author/dashboard` - Author dashboard
-- `GET /author/submit` - Submit article form
-- `POST /author/submit` - Submit article
-- `GET /author/manage` - Manage articles
-- `GET /author/article/{id}` - View article
-- `POST /author/article/{id}/delete` - Delete article
+// URL & Routing
+url('/path')                  // Generate full URL
+asset('/css/style.css')       // Generate asset URL
+redirect('/dashboard')        // Redirect to URL
 
----
+// Flash Messages
+flash('success', 'Saved!')    // Set flash message
+getFlash('success')           // Get flash message
+hasFlash('error')             // Check if flash exists
 
-## 🔒 Security
+// CSRF Protection
+csrf_field()                  // Generate CSRF hidden input
+csrf_token()                  // Get CSRF token value
 
-### Implemented Security Features
+// Validation
+validate($rules)              // Validate request data
+hasError('field')             // Check validation error
+getError('field')             // Get validation error
+```
 
-- **CSRF Protection** - All forms protected with tokens
-- **SQL Injection Prevention** - PDO prepared statements
-- **XSS Protection** - Output escaping helpers
-- **Password Security** - Bcrypt hashing
-- **Session Security** - Secure cookie settings
-- **Input Validation** - Server-side validation
-- **File Upload Security** - Type and size validation
-- **Activity Logging** - All critical operations logged
+### Built-in Validation Rules
+
+```php
+$data = $this->validate([
+    'email' => 'required|email|unique:users,email',
+    'password' => 'required|min:8|max:255',
+    'age' => 'numeric|min:18|max:120',
+    'website' => 'url',
+    'terms' => 'accepted',
+    'file' => 'file|max:2048|mimes:pdf,doc,docx',
+]);
+```
+
+**Available rules:** `required`, `email`, `numeric`, `url`, `min`, `max`, `unique`, `confirmed`, `accepted`, `file`, `mimes`
 
 ### Security Best Practices
 
 ```php
-// Always escape output
+// ✅ Always escape output
 <?= e($userInput) ?>
 
-// Use CSRF protection in forms
+// ✅ Use CSRF protection in forms
 <form method="POST">
-    <?= \App\Core\CSRF::field() ?>
+    <?= csrf_field() ?>
     <!-- form fields -->
 </form>
 
-// Validate user input
+// ✅ Validate all user input
 $data = $this->validate([
     'email' => 'required|email',
     'password' => 'required|min:6'
 ]);
 
-// Use authentication
-$this->requireAuth();
-$this->requireRole('admin');
+// ✅ Require authentication
+public function dashboard()
+{
+    $this->requireAuth();
+    $this->requireRole('admin'); // Optional: specific role
+    // ... controller logic
+}
+
+// ✅ Use parameterized queries (automatic in Model)
+$users = $this->user->where('email', $email); // ✅ Safe
+// Never: "SELECT * FROM users WHERE email = '$email'" // ❌ SQL Injection!
 ```
 
----
+## Testing & Quality
 
-## 🧪 Testing
-
-### Run Tests
+### Running Tests
 
 ```bash
 # Run all tests
 composer test
 
-# Run with coverage
-./vendor/bin/phpunit --coverage-html coverage
-
-# Run specific test
+# Run specific test file
 ./vendor/bin/phpunit tests/Unit/UserTest.php
+
+# Run with coverage report
+./vendor/bin/phpunit --coverage-html coverage/
+
+# Watch mode (requires phpunit-watcher)
+./vendor/bin/phpunit-watcher watch
 ```
 
 ### Static Analysis
 
 ```bash
-# Run PHPStan
+# Run PHPStan (Level 5)
 composer analyse
 
-# Or directly
-./vendor/bin/phpstan analyse src tests
+# Check specific directory
+./vendor/bin/phpstan analyse src/Controllers
+
+# Generate baseline (ignore existing issues)
+./vendor/bin/phpstan analyse --generate-baseline
 ```
 
----
+### Code Quality Tools
 
-## 📊 Database Schema
-
-### Main Tables
-
-- **users** - User accounts with roles
-- **submissions** - Research article submissions
-- **reviews** - Peer review records
-- **categories** - Article categories
-- **submission_categories** - Article-category relationships
-- **user_sessions** - Active sessions
-- **migrations** - Database migration history
-
-### Database Diagram
-
-See `database/schema.sql` for complete schema definition.
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Coding Standards
-
-- Follow PSR-12 coding standard
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation
-
----
-
-## 📝 Documentation
-
-All documentation is now consolidated in this README.md file. This comprehensive guide includes:
-
-- **Architecture Overview** - MVC framework structure and components
-- **Installation Guide** - Step-by-step setup instructions
-- **Usage Examples** - Code samples for controllers, models, and routes
-- **Security Guidelines** - Best practices for secure development
-- **API Reference** - Helper functions and core classes
-
-### Additional Resources
-
-- **Inline Code Documentation** - PHPDoc comments throughout the codebase
-- **Database Schema** - See `database/schema.sql` for complete table definitions
-- **Test Examples** - Reference `tests/` directory for testing patterns
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Issue: 404 on all routes**
 ```bash
-# Enable Apache rewrite module
+# PHP CodeSniffer (PSR-12)
+./vendor/bin/phpcs src/ --standard=PSR12
+
+# PHP CS Fixer (auto-fix)
+./vendor/bin/php-cs-fixer fix src/
+
+# Check security vulnerabilities
+composer audit
+```
+
+## Troubleshooting
+
+<details>
+<summary><b>404 Error on All Routes</b></summary>
+
+**Cause:** Apache mod_rewrite not enabled or .htaccess not working
+
+**Solution:**
+
+```bash
+# Enable mod_rewrite
 sudo a2enmod rewrite
 sudo systemctl restart apache2
 
-# Check .htaccess files exist
-ls -la public/.htaccess
-ls -la .htaccess
+# Verify .htaccess files exist
+ls -la .htaccess public/.htaccess
+
+# Check Apache config allows .htaccess
+# /etc/apache2/apache2.conf should have:
+<Directory /var/www/>
+    AllowOverride All  # Must be "All", not "None"
+</Directory>
 ```
 
-**Issue: Permission denied errors**
-```bash
-# Fix permissions
-chmod -R 775 uploads logs
-chown -R www-data:www-data uploads logs
-```
+</details>
 
-**Issue: Composer not found**
-```bash
-# Install Composer globally
-curl -sS https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
-```
+<details>
+<summary><b>Database Connection Failed</b></summary>
 
-**Issue: Database connection failed**
+**Solution:**
+
 ```bash
-# Check .env file
+# 1. Verify .env configuration
 cat .env | grep DB_
 
-# Test MySQL connection
-mysql -u root -p -e "SHOW DATABASES;"
+# 2. Test MySQL connection
+mysql -h localhost -u root -p -e "SHOW DATABASES;"
+
+# 3. Check if database exists
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rjdb;"
+
+# 4. Verify PHP PDO extension
+php -m | grep pdo_mysql
 ```
 
----
+</details>
 
-## 📈 Performance
+<details>
+<summary><b>Permission Denied Errors</b></summary>
 
-### Optimization Tips
+**Solution:**
 
-- Enable OPcache in production
-- Use query result caching
-- Implement lazy loading for relationships
-- Minify CSS/JS assets
-- Enable Gzip compression
-- Use CDN for static assets
+```bash
+# Set correct ownership (Linux/Mac)
+sudo chown -R www-data:www-data uploads/ logs/ storage/
 
----
+# Set correct permissions
+chmod -R 775 uploads/ logs/ storage/
 
-## 🔄 Changelog
+# For development (not production!)
+chmod -R 777 uploads/ logs/ storage/
+```
 
-### Version 2.0.0 (November 2025) - MVC Migration Complete ✅
-**Major Architecture Overhaul - Legacy to Modern MVC**
+</details>
 
-#### Framework & Architecture
-- ✅ **Custom MVC Framework** - Built Router, Controller, Model base classes from scratch
-- ✅ **PSR-4 Autoloading** - Composer autoloading with App\ namespace
-- ✅ **Front Controller Pattern** - Single entry point (public/index.php)
-- ✅ **Service Layer** - Separated business logic (AuthService)
-- ✅ **Middleware Architecture** - Extensible middleware support
+<details>
+<summary><b>CSRF Token Mismatch</b></summary>
 
-#### Controllers Implemented (6)
-- ✅ **HomeController** - Public pages (index, about, contact, FAQ, search, current-issues)
-- ✅ **AuthController** - Authentication (login, register, logout)
-- ✅ **AuthorController** - Author dashboard and submission management
-- ✅ **AdminController** - Admin panel (users, categories, publishing)
-- ✅ **EditorController** - Editor workflow and reviewer assignment
-- ✅ **ReviewerController** - Reviewer dashboard and review submission
+**Causes:**
 
-#### Models Created (4)
-- ✅ **User** - User authentication and role management
-- ✅ **Submission** - Article submission handling
-- ✅ **Review** - Peer review system
-- ✅ **Category** - Article categorization
+- Session not started
+- Cookie domain mismatch
+- Browser blocking cookies
 
-#### Views Migrated (28)
-- ✅ **Layouts** - main.php master layout
-- ✅ **Components** - header.php, navigation.php, footer.php
-- ✅ **Home** - 6 public pages
-- ✅ **Auth** - login.php, register.php
-- ✅ **Author** - 4 dashboard views
-- ✅ **Admin** - 4 management views
-- ✅ **Editor** - 3 editorial views
-- ✅ **Reviewer** - 4 reviewer views
-- ✅ **Errors** - 404.php
+**Solution:**
 
-#### Routing System
-- ✅ **50+ RESTful Routes** - Defined in routes/web.php
-- ✅ **Dynamic Parameters** - Support for {id}, {slug} in URLs
-- ✅ **Clean URLs** - Apache mod_rewrite configuration
+```php
+// Check session is started in bootstrap.php
+session_start();
 
-#### Security Enhancements
-- ✅ **CSRF Protection** - Token-based form security
-- ✅ **SQL Injection Prevention** - PDO prepared statements
-- ✅ **XSS Protection** - Output escaping helpers
-- ✅ **Password Hashing** - Bcrypt with cost factor 12
-- ✅ **Session Hardening** - Secure cookie configuration
-- ✅ **File Upload Security** - MIME type and size validation
-- ✅ **Role-based Access Control** - Authorization in controllers
+// Clear browser cache and cookies
+// Check .env session settings:
+SESSION_SECURE=false    # Set to false for local development
+SESSION_HTTP_ONLY=true
+```
 
-#### Developer Tools & Quality
-- ✅ **Composer Integration** - Modern dependency management
-- ✅ **Monolog Logging** - PSR-3 compliant logging
-- ✅ **PHPUnit Testing** - Unit and feature test framework
-- ✅ **PHPStan Analysis** - Static code analysis (Level 5)
-- ✅ **Helper Functions** - 20+ utility functions
-- ✅ **Form Validation** - Built-in validator with 10+ rules
-- ✅ **Flash Messages** - Session-based user feedback
+</details>
 
-#### Database
-- ✅ **6 Tables** - users, submissions, reviews, categories, submission_categories, user_sessions
-- ✅ **Migration System** - Version-controlled schema changes
-- ✅ **Optimized Indexes** - Performance-tuned queries
+<details>
+<summary><b>Composer Install Fails</b></summary>
 
-#### Features Completed
-- ✅ **Multi-role Dashboard** - Admin, Editor, Reviewer, Author
-- ✅ **Submission Workflow** - Complete article submission pipeline
-- ✅ **Peer Review System** - Assignment and review management
-- ✅ **Publication Management** - Publish/unpublish articles
-- ✅ **User Management** - CRUD operations for users
-- ✅ **Category Management** - Organize articles by category
-- ✅ **Search System** - Full-text search functionality
+**Solution:**
 
-#### Migration Process
-- ✅ **Legacy Code Removed** - Deleted _legacy directory after migration
-- ✅ **Documentation Updated** - Comprehensive README.md
-- ✅ **Code Organization** - Proper MVC structure with namespaces
-- ✅ **Testing** - All features tested and working
+```bash
+# Update Composer
+composer self-update
 
-**Total Files Migrated**: 50+ PHP files  
-**Lines of Code**: 10,000+ lines  
-**Migration Duration**: Complete modernization cycle  
-**Breaking Changes**: Yes (complete rewrite)
+# Clear cache
+composer clear-cache
 
----
+# Install with verbose output
+composer install -vvv
 
-### Version 1.0.0 (2024) - Initial Release (Legacy)
-- Basic journal management functionality
-- Flat file architecture
-- Role-based access
-- Submission workflow
-- ⚠️ **Deprecated** - Replaced by Version 2.0.0
+# Skip platform requirements (not recommended)
+composer install --ignore-platform-reqs
+```
 
----
+</details>
 
-## 👥 Authors
+## Database Schema
 
-- **Leodyver Semilla** - *Lead Developer & System Architect*
-  - Complete MVC framework implementation and migration
-  - Email: [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
-  - Role: Full-stack development, security implementation, database design
+### Entity Relationship Overview
 
----
+```
+┌─────────────┐         ┌──────────────┐         ┌─────────────┐
+│    users    │────1:N──│  submissions │──N:M────│ categories  │
+│             │         │              │         │             │
+│ - id        │         │ - id         │         │ - id        │
+│ - username  │         │ - title      │         │ - name      │
+│ - email     │         │ - abstract   │         │ - slug      │
+│ - password  │         │ - file_path  │         └─────────────┘
+│ - role      │         │ - status     │
+│ - created_at│         │ - author_id  │
+└─────────────┘         │ - created_at │
+       │                └──────────────┘
+       │                       │
+       │                      1:N
+       │                       │
+       │                ┌──────────────┐
+       └────────N:1─────│   reviews    │
+                        │              │
+                        │ - id         │
+                        │ - submission │
+                        │ - reviewer   │
+                        │ - rating     │
+                        │ - comments   │
+                        └──────────────┘
+```
 
-## 🙏 Acknowledgments
+### Core Tables
 
-- **Mindoro State University** - For the opportunity and project support
-- **PHP Community** - For excellent tools, libraries, and best practices
-- **Bootstrap Team** - For the responsive UI framework
-- **Monolog Contributors** - For robust logging capabilities
-- **PHPUnit & PHPStan Teams** - For testing and static analysis tools
-- All contributors, testers, and users of the RJMS platform
+**users** - User accounts and authentication
 
----
+- Roles: `admin`, `editor`, `reviewer`, `author`
+- Password hashing: Bcrypt (cost factor 12)
+- Indexes: email (unique), role
 
-## 📧 Support
+**submissions** - Research article submissions
 
-For support, questions, or feedback:
+- Statuses: `draft`, `submitted`, `under_review`, `accepted`, `rejected`, `published`
+- File storage: `uploads/submissions/`
+- Indexes: author_id, status, created_at
 
-- **Email**: [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
-- **Issues**: Open an issue in the repository
-- **Documentation**: Refer to this README and inline code documentation
+**reviews** - Peer review records
 
----
+- Ratings: 1-5 scale
+- Recommendations: `accept`, `minor_revision`, `major_revision`, `reject`
+- Indexes: submission_id, reviewer_id
 
-## 📄 License
+**categories** - Research article categories
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Hierarchical structure support
+- URL-friendly slugs
+- Indexes: slug (unique)
 
----
+See [`database/schema.sql`](database/schema.sql) for complete schema.
 
-## 🌟 Project Statistics
+## Contributing
 
-- **Total Files**: 100+
-- **PHP Code**: 10,000+ lines
-- **Controllers**: 6 (50+ methods)
-- **Models**: 4 (with ORM)
-- **Views**: 28 templates
-- **Routes**: 45+ RESTful endpoints
-- **Helper Functions**: 20+
-- **Database Tables**: 7
-- **Test Coverage**: Growing
-- **Development Time**: Complete modernization cycle
+We welcome contributions! Whether it's bug reports, feature requests, or code contributions, your help makes RJMS better.
 
----
+### How to Contribute
 
-## 🎯 Future Roadmap
+1. **Fork** the repository
+2. **Create** a feature branch
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make** your changes
+4. **Test** your changes
+   ```bash
+   composer test
+   composer analyse
+   ```
+5. **Commit** with clear messages
+   ```bash
+   git commit -m "feat: add amazing feature"
+   ```
+6. **Push** to your fork
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+7. **Open** a Pull Request
 
-### Planned Features
-- [ ] RESTful API with JWT authentication
-- [ ] Real-time notifications
-- [ ] Email notification system
+### Contribution Guidelines
+
+**Code Standards:**
+
+- Follow [PSR-12](https://www.php-fig.org/psr/psr-12/) coding style
+- Write meaningful variable and function names
+- Add PHPDoc comments for public methods
+- Keep functions small and focused (single responsibility)
+
+**Commit Messages:**
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` New features
+- `fix:` Bug fixes
+- `docs:` Documentation changes
+- `refactor:` Code refactoring
+- `test:` Test additions/changes
+- `chore:` Maintenance tasks
+
+**Testing:**
+
+- Add unit tests for new features
+- Ensure all tests pass before submitting PR
+- Aim for >80% code coverage on new code
+
+**Documentation:**
+
+- Update README.md if adding features
+- Add inline comments for complex logic
+- Update relevant documentation files
+
+### Development Workflow
+
+```bash
+# 1. Setup development environment
+git clone https://github.com/yourusername/rjms.git
+cd rjms
+composer install
+cp .env.example .env
+
+# 2. Create feature branch
+git checkout -b feature/my-feature
+
+# 3. Make changes and test
+composer test        # Run tests
+composer analyse     # Static analysis
+
+# 4. Commit and push
+git add .
+git commit -m "feat: description of changes"
+git push origin feature/my-feature
+```
+
+### Reporting Bugs
+
+**Before submitting:**
+
+- Check if the issue already exists
+- Test on the latest version
+- Gather relevant information (logs, screenshots, environment)
+
+**Include in your report:**
+
+- Clear description of the bug
+- Steps to reproduce
+- Expected vs actual behavior
+- Environment details (PHP version, OS, browser)
+- Error messages or logs
+
+**Create an issue:** [GitHub Issues](https://github.com/yourusername/rjms/issues)
+
+### Feature Requests
+
+We love hearing your ideas! Please:
+
+- Check if the feature has been requested
+- Describe the use case and benefits
+- Suggest implementation approach (optional)
+- Consider if it fits the project scope
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**What this means:**
+
+- Commercial use allowed
+- Modification allowed
+- Distribution allowed
+- Private use allowed
+- No liability or warranty
+
+## Support & Contact
+
+**Need help?**
+
+- **Documentation:** Start with this README
+- **Bug Reports:** [Open an issue](https://github.com/yourusername/rjms/issues)
+- **Questions:** [GitHub Discussions](https://github.com/yourusername/rjms/discussions)
+- **Email:** [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
+
+**Response times:**
+
+- Bug reports: 24-48 hours
+- Feature requests: 1-2 weeks
+- General questions: 1-3 days
+
+## Authors & Maintainers
+
+**Leodyver Semilla** - _Lead Developer & System Architect_
+
+- Framework design and implementation
+- Security architecture
+- Database design
+- Email: [leodyversemilla07@gmail.com](mailto:leodyversemilla07@gmail.com)
+- GitHub: [@leodyversemilla07](https://github.com/leodyversemilla07)
+
+## Project Statistics
+
+```
+📁 Total Files:        100+
+💻 PHP Code:           ~10,000 lines
+🎮 Controllers:        6 (50+ methods)
+📦 Models:             4 with ORM
+🎨 Views:              28 templates
+🛣️ Routes:             45+ RESTful endpoints
+🔧 Helper Functions:   20+
+🗄️ Database Tables:    7
+🧪 Test Coverage:      Growing
+⏱️ Development Time:   Complete modernization cycle
+```
+
+## Roadmap
+
+### Completed (v2.0)
+
+- [x] Custom MVC framework
+- [x] Docker development environment
+- [x] Complete security implementation
+- [x] Multi-role dashboard system
+- [x] Peer review workflow
+- [x] File upload system
+- [x] Testing & CI setup
+
+### In Progress (v2.1)
+
+- [ ] Email notification system (80% complete)
 - [ ] Advanced analytics dashboard
 - [ ] Export to PDF/LaTeX
+- [ ] RESTful API with JWT authentication
+
+### Future (v3.0+)
+
+- [ ] Real-time notifications (WebSockets)
 - [ ] Multi-language support (i18n)
-- [ ] Docker containerization
-- [ ] Mobile application
-
-### Technical Improvements
-- [ ] Redis caching layer
+- [ ] Mobile application (React Native)
 - [ ] Full-text search with Elasticsearch
-- [ ] Asset bundling with Webpack
-- [ ] CI/CD pipeline
-- [ ] Performance monitoring
+- [ ] Redis caching layer
+- [ ] GraphQL API
+- [ ] Microservices architecture (optional)
+
+**Want to contribute?** Check our [Contributing Guide](#contributing)
 
 ---
 
-**Built with ❤️ for Academic Excellence**
+<div align="center">
 
-*Advancing Knowledge Through Scientific Research*
+## Show Your Support
+
+If RJMS helps your research institution, please consider:
+
+- Starring this repository
+- Reporting bugs or suggesting features
+- Improving documentation
+- Contributing code
 
 ---
 
-**© 2025 Research Journal Management System | Mindoro State University**
+**Built for Academic Excellence**
+
+_Advancing Knowledge Through Scientific Research_
+
+---
+
+**[Back to Top](#research-journal-management-system)**
+
+**© 2025 Research Journal Management System | [MIT License](LICENSE)**
+
+</div>
