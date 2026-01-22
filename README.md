@@ -3,6 +3,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-8.3.27-blue.svg)](https://www.php.net/)
 [![MySQL Version](https://img.shields.io/badge/MySQL-8.0.43-orange.svg)](https://www.mysql.com/)
 [![Framework](https://img.shields.io/badge/Framework-Custom%20MVC-green.svg)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](DOCKER.md)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)]()
 
@@ -207,6 +208,41 @@ A modern, enterprise-grade web-based system for managing academic research journ
 ---
 
 ## ⚡ Quick Start
+
+### 🐳 Docker Installation (Recommended)
+
+The fastest way to get started! No need to install PHP, MySQL, or configure web servers manually.
+
+**Prerequisites:**
+- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
+- 4GB+ RAM, 5GB+ disk space
+
+**Windows:**
+```cmd
+docker-start-dev.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x docker-start-dev.sh
+./docker-start-dev.sh
+```
+
+**Access the application:**
+- Main App: http://localhost:8080
+- PHPMyAdmin: http://localhost:8081
+
+**Default credentials:**
+- Admin: `admin` / `admin123`
+- Editor: `editor` / `editor123`
+- Reviewer: `reviewer` / `reviewer123`
+- Author: `author` / `author123`
+
+📖 **Full Docker documentation**: See [DOCKER.md](DOCKER.md) for detailed setup, production deployment, and troubleshooting.
+
+---
+
+### 💻 Manual Installation
 
 ### Prerequisites
 
