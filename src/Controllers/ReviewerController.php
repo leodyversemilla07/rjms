@@ -19,8 +19,9 @@ class ReviewerController extends Controller
     public function __construct()
     {
         $this->requireRole('reviewer');
-        $this->reviewModel = new Review();
+        $this->layout = 'layouts/dashboard';
         $this->submissionModel = new Submission();
+        $this->reviewModel = new Review();
     }
 
     /**

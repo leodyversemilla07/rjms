@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Submission;
 use App\Models\Category;
 use App\Models\Review;
+use App\Services\EmailService;
 use App\Core\Logger;
 
 /**
@@ -19,14 +20,17 @@ class AdminController extends Controller
     private Submission $submissionModel;
     private Category $categoryModel;
     private Review $reviewModel;
+    private EmailService $emailService;
 
     public function __construct()
     {
         $this->requireRole('admin');
+        $this->layout = 'layouts/dashboard'; // Use dashboard layout instead of main
         $this->userModel = new User();
         $this->submissionModel = new Submission();
         $this->categoryModel = new Category();
         $this->reviewModel = new Review();
+        $this->emailService = new EmailService();
     }
 
     /**
@@ -100,6 +104,9 @@ class AdminController extends Controller
                 'new_user_id' => $userId,
                 'admin_id' => $this->user()['id']
             ]);
+
+            // Send welcome email
+            $this->emailService->sendWelcomeEmail($data['email'], $data['first_name']);
 
             $this->flash('success', 'User created successfully!');
             $this->redirect('/admin/users');
@@ -304,6 +311,20 @@ class AdminController extends Controller
 
             // Update submission status
             $this->submissionModel->updateStatus($submissionId, 'under_review');
+
+            // Send assignment email
+            $reviewer = $this->userModel->find($reviewerId);
+            $submission = $this->submissionModel->find($submissionId);
+            
+            if ($reviewer && $submission) {
+                $deadline = date('Y-m-d', strtotime('+2 weeks'));
+                $this->emailService->sendReviewAssignment(
+                    $reviewer['email'], 
+                    $reviewer['first_name'], 
+                    $submission['title'], 
+                    $deadline
+                );
+            }
 
             Logger::info('Reviewer assigned', [
                 'submission_id' => $submissionId,

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Submission;
+use App\Services\EmailService;
 use App\Core\Logger;
 
 /**
@@ -13,11 +14,14 @@ use App\Core\Logger;
 class AuthorController extends Controller
 {
     private Submission $submissionModel;
+    private EmailService $emailService;
 
     public function __construct()
     {
         $this->requireRole('author');
+        $this->layout = 'layouts/dashboard';
         $this->submissionModel = new Submission();
+        $this->emailService = new EmailService();
     }
 
     /**
@@ -122,6 +126,9 @@ class AuthorController extends Controller
                 'author_id' => $user['id'],
                 'title' => $data['title']
             ]);
+
+            // Send confirmation email
+            $this->emailService->sendSubmissionConfirmation($user['email'], $user['first_name'], $data['title']);
 
             $this->flash('success', 'Article submitted successfully!');
             $this->redirect('/author/dashboard');

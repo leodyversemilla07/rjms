@@ -209,7 +209,23 @@ class Controller
     protected function requireRole(string $role): void
     {
         $this->requireAuth();
-        if ($_SESSION['role'] ?? '' !== $role) {
+        
+        $currentRole = $_SESSION['role'] ?? '';
+        
+        // Debug logging
+        Logger::debug('requireRole check', [
+            'required_role' => $role,
+            'current_role' => $currentRole,
+            'session_data' => $_SESSION,
+            'match' => $currentRole === $role
+        ]);
+        
+        if ($currentRole !== $role) {
+            Logger::warning('Role check failed', [
+                'required' => $role,
+                'current' => $currentRole,
+                'user_id' => $_SESSION['user_id'] ?? null
+            ]);
             $this->flash('error', 'Unauthorized access.');
             $this->redirect('/');
         }

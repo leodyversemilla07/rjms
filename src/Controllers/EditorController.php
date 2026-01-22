@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Models\Submission;
 use App\Models\Review;
 use App\Models\User;
+use App\Services\EmailService;
 use App\Core\Logger;
 
 /**
@@ -17,13 +18,16 @@ class EditorController extends Controller
     private Submission $submissionModel;
     private Review $reviewModel;
     private User $userModel;
+    private EmailService $emailService;
 
     public function __construct()
     {
         $this->requireRole('editor');
+        $this->layout = 'layouts/dashboard';
         $this->submissionModel = new Submission();
         $this->reviewModel = new Review();
         $this->userModel = new User();
+        $this->emailService = new EmailService();
     }
 
     /**
@@ -116,6 +120,20 @@ class EditorController extends Controller
             // Update submission status to under review
             $this->submissionModel->updateStatus($submissionId, 'under_review');
 
+            // Send assignment email
+            $reviewer = $this->userModel->find($reviewerId);
+            $submission = $this->submissionModel->find($submissionId);
+            
+            if ($reviewer && $submission) {
+                $deadline = date('Y-m-d', strtotime('+2 weeks'));
+                $this->emailService->sendReviewAssignment(
+                    $reviewer['email'], 
+                    $reviewer['first_name'], 
+                    $submission['title'], 
+                    $deadline
+                );
+            }
+
             Logger::info('Reviewer assigned by editor', [
                 'submission_id' => $submissionId,
                 'reviewer_id' => $reviewerId,
@@ -166,6 +184,17 @@ class EditorController extends Controller
             } else {
                 $this->submissionModel->updateStatus($id, 'revision_required');
                 $message = 'Revision requested.';
+            }
+
+            // Send decision email
+            $author = $this->userModel->find($submission['author_id']);
+            if ($author) {
+                $this->emailService->sendDecisionNotification(
+                    $author['email'],
+                    $author['first_name'],
+                    $submission['title'],
+                    $decision
+                );
             }
 
             Logger::info('Publication decision made', [

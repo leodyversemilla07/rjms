@@ -46,6 +46,31 @@ class AuthService
     }
 
     /**
+     * Login user with user ID (after authentication)
+     */
+    public static function login(int $userId): bool
+    {
+        $user = Database::fetchOne('SELECT * FROM users WHERE id = ? AND is_active = 1', [$userId]);
+        
+        if (!$user) {
+            return false;
+        }
+        
+        Session::set('user_id', $user['id']);
+        Session::set('username', $user['username']);
+        Session::set('role', $user['role']);
+        Session::set('email', $user['email']);
+        
+        // Regenerate session ID for security
+        Session::regenerate();
+        
+        Logger::info('User logged in successfully', [
+            'user_id' => $user['id'],
+            'username' => $user['username']
+        ]);
+        
+        return true;
+    }    /**
      * Log out user
      */
     public static function logout(): void

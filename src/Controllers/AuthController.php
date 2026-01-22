@@ -3,8 +3,10 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\CSRF;
 use App\Models\User;
 use App\Services\AuthService;
+use App\Services\EmailService;
 use App\Core\Logger;
 
 /**
@@ -14,10 +16,12 @@ use App\Core\Logger;
 class AuthController extends Controller
 {
     private User $userModel;
+    private EmailService $emailService;
 
     public function __construct()
     {
         $this->userModel = new User();
+        $this->emailService = new EmailService();
     }
 
     /**
@@ -64,7 +68,7 @@ class AuthController extends Controller
             }
 
             // Find user
-            $user = $this->userModel->findByUsernameOrEmail($usernameEmail);
+            $user = $this->userModel->findByUsernameOrEmailWithPassword($usernameEmail);
 
             if (!$user) {
                 Logger::warning('Failed login attempt - user not found', [
@@ -79,10 +83,8 @@ class AuthController extends Controller
                 return;
             }
 
-            // Verify password (get full user data with password)
-            $userWithPassword = $this->userModel->find($user['id']);
-            
-            if (!password_verify($password, $userWithPassword['password'] ?? '')) {
+            // Verify password
+            if (!password_verify($password, $user['password'] ?? '')) {
                 Logger::warning('Failed login attempt - invalid password', [
                     'user_id' => $user['id'],
                     'ip' => $_SERVER['REMOTE_ADDR']
@@ -207,6 +209,9 @@ class AuthController extends Controller
                 'username' => $data['username'],
                 'email' => $data['email']
             ]);
+
+            // Send welcome email
+            $this->emailService->sendWelcomeEmail($data['email'], $data['first_name']);
 
             $this->json([
                 'success' => true,

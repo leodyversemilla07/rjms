@@ -2,6 +2,9 @@
 
 namespace App\Core;
 
+use App\Core\Session;
+use App\Core\Logger;
+
 class CSRF
 {
     private const TOKEN_NAME = 'csrf_token';

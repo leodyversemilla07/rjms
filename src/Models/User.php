@@ -56,6 +56,17 @@ class User extends Model
     }
 
     /**
+     * Find user by username or email with password (for authentication)
+     */
+    public function findByUsernameOrEmailWithPassword(string $identifier): ?array
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE username = ? OR email = ? LIMIT 1";
+        $stmt = self::$db->prepare($sql);
+        $stmt->execute([$identifier, $identifier]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+    }
+
+    /**
      * Get users by role
      */
     public function getByRole(string $role): array
