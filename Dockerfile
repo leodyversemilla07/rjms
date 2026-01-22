@@ -1,25 +1,4 @@
-# Multi-stage build for RJMS (Research Journal Management System)
-
-# Stage 1: Build CSS assets with Node.js
-FROM node:18-alpine AS asset-builder
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY build-css.js ./
-COPY postcss.config.js ./
-
-# Install Node.js dependencies
-RUN npm ci --only=production
-
-# Copy CSS source files
-COPY resources/css ./resources/css
-
-# Build production CSS
-RUN npm run build
-
-# Stage 2: PHP Application
+# Development Dockerfile with hot-reloading support
 FROM php:8.3-fpm-alpine
 
 # Install system dependencies and PHP extensions
@@ -33,12 +12,25 @@ RUN apk add --no-cache \
     zip \
     unzip \
     mysql-client \
+    nodejs \
+    npm \
     && docker-php-ext-install \
     pdo_mysql \
     mbstring \
     xml \
-    fileinfo \
-    opcache
+    fileinfo
+
+# Install Xdebug for development
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && apk del .build-deps
+
+# Configure Xdebug
+RUN echo "xdebug.mode=develop,debug" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -49,33 +41,14 @@ WORKDIR /var/www/html
 # Copy composer files
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+# Install PHP dependencies (including dev dependencies)
+RUN composer install --optimize-autoloader --no-interaction --no-progress
 
-# Copy application code
-COPY . .
+# Copy custom PHP configuration
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Copy built CSS from asset-builder stage
-COPY --from=asset-builder /app/public/css/tailwind.css ./public/css/tailwind.css
-
-# Create necessary directories and set permissions
-RUN mkdir -p uploads/submissions logs \
-    && chown -R www-data:www-data uploads logs public/css \
-    && chmod -R 775 uploads logs public/css
-
-# Configure PHP-FPM
-RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini
-
-# Configure OPcache for production
-RUN echo "opcache.enable=1" > /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.interned_strings_buffer=8" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.max_accelerated_files=10000" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
+# Create session directory
+RUN mkdir -p /var/www/html/storage/sessions && chmod 777 /var/www/html/storage/sessions
 
 # Expose PHP-FPM port
 EXPOSE 9000

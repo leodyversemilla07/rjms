@@ -2,22 +2,13 @@
 
 ## 🚀 Quick Start Commands
 
-### Development Mode
+### Start Docker Environment
 ```bash
 # Windows
-docker-start-dev.bat
+docker-start.bat
 
 # Linux/Mac
-./docker-start-dev.sh
-```
-
-### Production Mode
-```bash
-# Windows
-docker-start-prod.bat
-
-# Linux/Mac
-./docker-start-prod.sh
+./docker-start.sh
 ```
 
 ## 📍 Access Points
@@ -183,17 +174,12 @@ rm -rf docker/mysql/init/schema.sql
 
 ## 🔐 Security Checklist
 
-### Before Production
-- [ ] Copy `.env.docker.prod` to `.env`
+### Development Best Practices
+- [ ] Copy `.env.docker` to `.env` for Docker
 - [ ] Set strong `DB_PASSWORD`
 - [ ] Set strong `DB_ROOT_PASSWORD`
-- [ ] Generate random `APP_KEY` (32 chars)
-- [ ] Set `APP_DEBUG=false`
-- [ ] Set `SESSION_SECURE=true`
 - [ ] Change all default user passwords
-- [ ] Configure SSL/HTTPS
-- [ ] Remove PHPMyAdmin from production
-- [ ] Don't expose MySQL port (3307)
+- [ ] Don't commit `.env` to version control
 
 ## 📊 Monitoring
 
@@ -224,8 +210,8 @@ docker inspect --format='{{.State.Health.Status}}' rjms-mysql
 ### Live Code Reloading
 Code changes in `src/`, `resources/`, and `routes/` are automatically reflected - no rebuild needed!
 
-### Xdebug (Development only)
-Already configured! Just add VS Code configuration:
+### Xdebug
+Already configured for debugging! Just add VS Code configuration:
 
 ```json
 {

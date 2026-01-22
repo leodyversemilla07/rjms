@@ -219,13 +219,13 @@ The fastest way to get started! No need to install PHP, MySQL, or configure web 
 
 **Windows:**
 ```cmd
-docker-start-dev.bat
+docker-start.bat
 ```
 
 **Linux/Mac:**
 ```bash
-chmod +x docker-start-dev.sh
-./docker-start-dev.sh
+chmod +x docker-start.sh
+./docker-start.sh
 ```
 
 **Access the application:**
@@ -238,7 +238,7 @@ chmod +x docker-start-dev.sh
 - Reviewer: `reviewer` / `reviewer123`
 - Author: `author` / `author123`
 
-📖 **Full Docker documentation**: See [DOCKER.md](DOCKER.md) for detailed setup, production deployment, and troubleshooting.
+📖 **Full Docker documentation**: See [DOCKER.md](DOCKER.md) for detailed setup and troubleshooting.
 
 ---
 

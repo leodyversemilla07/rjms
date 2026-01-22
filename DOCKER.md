@@ -1,4 +1,4 @@
-# Docker Deployment Guide for RJMS
+# Docker Development Guide for RJMS
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -7,10 +7,9 @@
 4. [Architecture](#architecture)
 5. [Configuration](#configuration)
 6. [Development Setup](#development-setup)
-7. [Production Deployment](#production-deployment)
-8. [Common Tasks](#common-tasks)
-9. [Troubleshooting](#troubleshooting)
-10. [Security Considerations](#security-considerations)
+7. [Common Tasks](#common-tasks)
+8. [Troubleshooting](#troubleshooting)
+9. [Security Considerations](#security-considerations)
 
 ---
 
@@ -22,12 +21,12 @@ RJMS uses a multi-container Docker setup with the following services:
 - **MySQL 8.0** - Database
 - **PHPMyAdmin** - Database management interface
 
-### Benefits of Docker Deployment
-✅ Consistent environment across development and production  
+### Benefits of Docker for Development
+✅ Consistent development environment for all team members  
 ✅ Easy setup - no manual PHP/MySQL installation  
 ✅ Isolated services with proper networking  
-✅ Portable and reproducible deployments  
-✅ Easy scaling and maintenance  
+✅ Xdebug pre-configured for debugging  
+✅ Hot-reloading for rapid development
 
 ---
 
@@ -55,15 +54,15 @@ docker-compose --version
 
 ## Quick Start
 
-### Development Mode (Windows)
+### Windows
 ```cmd
-docker-start-dev.bat
+docker-start.bat
 ```
 
-### Development Mode (Linux/Mac)
+### Linux/Mac
 ```bash
-chmod +x docker-start-dev.sh
-./docker-start-dev.sh
+chmod +x docker-start.sh
+./docker-start.sh
 ```
 
 The application will be available at:
@@ -128,7 +127,12 @@ mysql-data/        → Database data (Docker volume)
 
 ### Environment Variables
 
-#### Development (.env.docker)
+Copy `.env.docker` to `.env` for Docker development:
+```bash
+cp .env.docker .env
+```
+
+Key configuration values:
 ```env
 DB_HOST=mysql
 DB_PORT=3306
@@ -138,29 +142,6 @@ DB_PASSWORD=rjmspassword
 APP_ENV=development
 APP_DEBUG=true
 APP_URL=http://localhost:8080
-```
-
-#### Production (.env.docker.prod)
-```env
-DB_HOST=mysql
-DB_PORT=3306
-DB_NAME=rjdb
-DB_USER=rjms
-DB_PASSWORD=CHANGE_THIS_TO_A_SECURE_PASSWORD
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://your-domain.com
-APP_KEY=CHANGE_THIS_TO_A_RANDOM_32_CHARACTER_STRING
-SESSION_SECURE=true
-```
-
-### Generate APP_KEY
-```bash
-# Linux/Mac
-openssl rand -base64 32
-
-# Windows (PowerShell)
-[Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 }))
 ```
 
 ---
@@ -176,13 +157,13 @@ cd rjms
 ### 2. Run Setup Script
 **Windows:**
 ```cmd
-docker-start-dev.bat
+docker-start.bat
 ```
 
 **Linux/Mac:**
 ```bash
-chmod +x docker-start-dev.sh
-./docker-start-dev.sh
+chmod +x docker-start.sh
+./docker-start.sh
 ```
 
 ### 3. Access Application
@@ -215,80 +196,15 @@ Add to `.vscode/launch.json`:
 
 ---
 
-## Production Deployment
-
-### 1. Prepare Environment
-```bash
-# Copy production environment template
-cp .env.docker.prod .env
-
-# Edit .env and set:
-# - Secure DB_PASSWORD
-# - Secure DB_ROOT_PASSWORD
-# - Random APP_KEY (32 characters)
-# - Your domain in APP_URL
-nano .env
-```
-
-### 2. Run Production Setup
-**Windows:**
-```cmd
-docker-start-prod.bat
-```
-
-**Linux/Mac:**
-```bash
-chmod +x docker-start-prod.sh
-./docker-start-prod.sh
-```
-
-### 3. Post-Deployment Checklist
-- [ ] Change all default user passwords
-- [ ] Configure SSL/TLS certificates
-- [ ] Set up automated backups
-- [ ] Configure firewall rules
-- [ ] Set up monitoring
-- [ ] Review and adjust MySQL configuration
-- [ ] Enable log rotation
-- [ ] Test file upload functionality
-
-### SSL/HTTPS Setup
-1. Obtain SSL certificate (Let's Encrypt recommended)
-2. Update `docker/nginx/nginx.conf`:
-```nginx
-server {
-    listen 443 ssl http2;
-    ssl_certificate /etc/nginx/ssl/cert.pem;
-    ssl_certificate_key /etc/nginx/ssl/key.pem;
-    # ... rest of config
-}
-```
-3. Mount certificates in `docker-compose.yml`:
-```yaml
-nginx:
-  volumes:
-    - ./ssl:/etc/nginx/ssl:ro
-```
-
----
-
 ## Common Tasks
 
 ### Start Containers
 ```bash
-# Development
-docker-compose -f docker-compose.dev.yml up -d
-
-# Production
 docker-compose up -d
 ```
 
 ### Stop Containers
 ```bash
-# Development
-docker-compose -f docker-compose.dev.yml down
-
-# Production
 docker-compose down
 ```
 

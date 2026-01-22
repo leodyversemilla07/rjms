@@ -1,29 +1,24 @@
 # Makefile for RJMS Docker Management
 # Usage: make [target]
 
-.PHONY: help dev prod stop restart logs shell build clean backup test
+.PHONY: help start stop restart logs shell build clean backup test
 
 # Default target
 help:
 	@echo "RJMS Docker Management Commands"
 	@echo "================================"
 	@echo ""
-	@echo "Development:"
-	@echo "  make dev         - Start development environment"
-	@echo "  make dev-stop    - Stop development environment"
-	@echo "  make dev-logs    - View development logs"
-	@echo ""
-	@echo "Production:"
-	@echo "  make prod        - Start production environment"
-	@echo "  make prod-stop   - Stop production environment"
-	@echo "  make prod-logs   - View production logs"
-	@echo ""
-	@echo "Common:"
-	@echo "  make stop        - Stop all containers"
+	@echo "Environment:"
+	@echo "  make start       - Start development environment"
+	@echo "  make stop        - Stop development environment"
 	@echo "  make restart     - Restart all containers"
 	@echo "  make logs        - View all logs"
+	@echo ""
+	@echo "Container Access:"
 	@echo "  make shell       - Access PHP container shell"
 	@echo "  make mysql       - Access MySQL shell"
+	@echo ""
+	@echo "Build & Clean:"
 	@echo "  make build       - Rebuild all images"
 	@echo "  make clean       - Remove all containers and volumes"
 	@echo ""
@@ -36,49 +31,26 @@ help:
 	@echo "  make test        - Run PHPUnit tests"
 	@echo "  make analyse     - Run PHPStan analysis"
 	@echo "  make composer    - Run composer commands (CMD=install)"
+	@echo "  make install     - Install PHP dependencies"
+	@echo "  make css         - Build CSS assets"
+	@echo "  make status      - Check container status"
 	@echo ""
 
-# Development environment
-dev:
+# Start development environment
+start:
 	@echo "Starting development environment..."
 	@cp -n .env.docker .env 2>/dev/null || true
 	@mkdir -p docker/mysql/init
 	@cp database/schema.sql docker/mysql/init/schema.sql
-	@docker-compose -f docker-compose.dev.yml up -d
+	@docker-compose up -d
 	@echo "✓ Development environment started!"
 	@echo ""
 	@echo "Access points:"
 	@echo "  Main App:    http://localhost:8080"
 	@echo "  PHPMyAdmin:  http://localhost:8081"
-
-dev-stop:
-	@docker-compose -f docker-compose.dev.yml down
-
-dev-logs:
-	@docker-compose -f docker-compose.dev.yml logs -f
-
-# Production environment
-prod:
-	@echo "Starting production environment..."
-	@if [ ! -f .env ]; then \
-		echo "Error: .env file not found. Copy .env.docker.prod and configure it."; \
-		exit 1; \
-	fi
-	@mkdir -p docker/mysql/init
-	@cp database/schema.sql docker/mysql/init/schema.sql
-	@docker-compose up -d
-	@echo "✓ Production environment started!"
-
-prod-stop:
-	@docker-compose down
-
-prod-logs:
-	@docker-compose logs -f
-
-# Common commands
+# Stop and cleanup
 stop:
 	@docker-compose down
-	@docker-compose -f docker-compose.dev.yml down
 
 restart:
 	@docker-compose restart
@@ -101,7 +73,6 @@ clean:
 	@echo "⚠️  This will remove all containers, volumes, and data!"
 	@read -p "Are you sure? (y/N): " confirm && [ "$$confirm" = "y" ]
 	@docker-compose down -v
-	@docker-compose -f docker-compose.dev.yml down -v
 	@echo "✓ Cleaned up!"
 
 # Database operations
