@@ -1,0 +1,57 @@
+[mysqld]
+# Character set and collation
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+# Connection settings
+max_connections=200
+max_connect_errors=10000
+
+# Buffer pool and cache
+innodb_buffer_pool_size=512M
+innodb_log_file_size=128M
+innodb_log_buffer_size=16M
+innodb_flush_log_at_trx_commit=2
+innodb_flush_method=O_DIRECT
+
+# Query cache (for MySQL < 8.0, disabled by default in 8.0+)
+# query_cache_type=1
+# query_cache_size=32M
+# query_cache_limit=2M
+
+# Packet size (for file uploads)
+max_allowed_packet=16M
+
+# Slow query log
+slow_query_log=1
+slow_query_log_file=/var/log/mysql/slow-query.log
+long_query_time=2
+
+# General log (disable in production)
+# general_log=1
+# general_log_file=/var/log/mysql/general.log
+
+# Binary logging (for replication/backup)
+# log_bin=/var/log/mysql/mysql-bin.log
+# expire_logs_days=7
+# binlog_format=ROW
+
+# Temporary tables
+tmp_table_size=64M
+max_heap_table_size=64M
+
+# Thread cache
+thread_cache_size=8
+
+# Table cache
+table_open_cache=2000
+table_definition_cache=1000
+
+# Performance schema
+performance_schema=ON
+
+[client]
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4

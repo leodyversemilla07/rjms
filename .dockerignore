@@ -1,0 +1,71 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+vendor/
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Build artifacts
+public/css/tailwind.css
+
+# Testing
+tests/
+phpunit.xml
+.phpunit.result.cache
+coverage/
+
+# Documentation
+README.md
+CONVERSION_GUIDE.md
+LICENSE
+
+# Docker files (don't include in image)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Database files
+database/
+*.sql
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Package manager lock files (if not needed)
+# Uncomment if you want to exclude lock files
+# composer.lock
+# package-lock.json
