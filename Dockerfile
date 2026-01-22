@@ -6,7 +6,7 @@ LABEL description="RJMS Development Environment - PHP-FPM with Xdebug"
 LABEL version="2.0"
 
 # Set build arguments for flexibility
-ARG XDEBUG_VERSION=3.3.1
+ARG XDEBUG_VERSION=3.4.0
 
 # Install system dependencies and PHP extensions in one layer
 RUN apk add --no-cache \

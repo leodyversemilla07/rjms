@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
       target: development
       args:
-        XDEBUG_VERSION: 3.3.1
+        XDEBUG_VERSION: 3.4.0
       cache_from:
         - rjms-php:dev
     image: rjms-php:dev
