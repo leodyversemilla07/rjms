@@ -18,53 +18,49 @@ class AuthController extends Controller
     private User $userModel;
     private EmailService $emailService;
 
-    public function __construct()
+    public function __construct(User $userModel, EmailService $emailService)
     {
-        $this->userModel = new User();
-        $this->emailService = new EmailService();
+        $this->userModel = $userModel;
+        $this->emailService = $emailService;
     }
 
     /**
      * Show login form
      */
-    public function showLogin(): void
+    public function showLogin(Request $request): Response
     {
         // If already logged in, redirect to dashboard
         if (AuthService::check()) {
-            $this->redirectToDashboard();
+            return $this->redirectToDashboard();
         }
 
-        $this->view('auth/login', [], ''); // No layout
+        return $this->view('auth/login', [], ''); // No layout
     }
 
     /**
      * Handle login
      */
-    public function login(): void
+    public function login(Request $request): Response
     {
-        header('Content-Type: application/json');
-
         try {
             // Verify CSRF token
             if (!CSRF::verify()) {
-                $this->json([
+                return $this->json([
                     'success' => false,
                     'message' => 'Invalid request. Please refresh and try again.'
                 ]);
-                return;
             }
 
-            $usernameEmail = trim($_POST['username_email'] ?? '');
-            $password = $_POST['password'] ?? '';
-            $rememberMe = isset($_POST['remember_me']);
+            $usernameEmail = trim($request->input('username_email', ''));
+            $password = $request->input('password', '');
+            $rememberMe = $request->input('remember_me') !== null;
 
             // Validation
             if (empty($usernameEmail) || empty($password)) {
-                $this->json([
+                return $this->json([
                     'success' => false,
                     'message' => 'Please fill in all fields.'
                 ]);
-                return;
             }
 
             // Find user
@@ -76,54 +72,53 @@ class AuthController extends Controller
                     'ip' => $_SERVER['REMOTE_ADDR']
                 ]);
 
-                $this->json([
+                return $this->json([
                     'success' => false,
                     'message' => 'Invalid username or password.'
                 ]);
-                return;
             }
 
             // Verify password
-            if (!password_verify($password, $user['password'] ?? '')) {
+            // Note: $user is now an object, but we need to check if password property exists
+            // Since our Model returns objects, we access properties directly
+            if (!password_verify($password, $user->password ?? '')) {
                 Logger::warning('Failed login attempt - invalid password', [
-                    'user_id' => $user['id'],
+                    'user_id' => $user->id,
                     'ip' => $_SERVER['REMOTE_ADDR']
                 ]);
 
-                $this->json([
+                return $this->json([
                     'success' => false,
                     'message' => 'Invalid username or password.'
                 ]);
-                return;
             }
 
             // Check if account is active
-            if (!$user['is_active']) {
-                $this->json([
+            if (!$user->is_active) {
+                return $this->json([
                     'success' => false,
                     'message' => 'Your account has been deactivated. Please contact administrator.'
                 ]);
-                return;
             }
 
             // Login successful
-            AuthService::login($user['id']);
+            AuthService::login($user->id);
 
             // Handle remember me
             if ($rememberMe) {
-                $cookieValue = base64_encode($user['username'] . ':' . $user['id']);
+                $cookieValue = base64_encode($user->username . ':' . $user->id);
                 setcookie('remember_login', $cookieValue, time() + (86400 * 30), '/');
             }
 
             Logger::info('User logged in', [
-                'user_id' => $user['id'],
-                'username' => $user['username']
+                'user_id' => $user->id,
+                'username' => $user->username
             ]);
 
             // Determine redirect URL based on role
-            $redirectUrl = $this->getDashboardUrl($user['role']);
+            $redirectUrl = $this->getDashboardUrl($user->role);
 
-            $this->json([
+            return $this->json([
                 'success' => true,
                 'message' => 'Login successful! Redirecting to your dashboard...',
                 'redirect' => $redirectUrl
@@ -131,7 +126,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             Logger::error('Login error', ['error' => $e->getMessage()]);
-            $this->json([
+            return $this->json([
                 'success' => false,
                 'message' => 'An error occurred. Please try again.'
             ], 500);
@@ -141,66 +136,47 @@ class AuthController extends Controller
     /**
      * Show registration form
      */
-    public function showRegister(): void
+    public function showRegister(Request $request): Response
     {
         // If already logged in, redirect to dashboard
         if (AuthService::check()) {
-            $this->redirectToDashboard();
+            return $this->redirectToDashboard();
         }
 
-        $this->view('auth/register', [], ''); // No layout
+        return $this->view('auth/register', [], ''); // No layout
     }
 
     /**
      * Handle registration
      */
-    public function register(): void
+    public function register(Request $request): Response
     {
-        header('Content-Type: application/json');
-
         try {
             // Verify CSRF token
             if (!CSRF::verify()) {
-                $this->json([
+                return $this->json([
                     'success' => false,
                     'message' => 'Invalid request. Please refresh and try again.'
                 ]);
-                return;
             }
 
             // Validate input
+            // Using the new validate method which returns validated data
+            // We pass $request->all() as second arg to be explicit
             $data = $this->validate([
-                'username' => 'required|alphanumeric|min:3|max:50',
-                'email' => 'required|email',
+                'username' => 'required|alphanumeric|min:3|max:50|unique:users,username',
+                'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:6',
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
                 'country' => 'required|max:100'
-            ]);
-
-            // Check if username exists
-            if ($this->userModel->findByUsername($data['username'])) {
-                $this->json([
-                    'success' => false,
-                    'message' => 'Username already exists.'
-                ]);
-                return;
-            }
-
-            // Check if email exists
-            if ($this->userModel->findByEmail($data['email'])) {
-                $this->json([
-                    'success' => false,
-                    'message' => 'Email already exists.'
-                ]);
-                return;
-            }
+            ], $request->all());
 
             // Create user
             $data['role'] = 'author'; // Default role
             $data['is_active'] = 1;
-            $data['middle_name'] = $_POST['middle_name'] ?? null;
-            $data['affiliation'] = $_POST['affiliation'] ?? null;
+            $data['middle_name'] = $request->input('middle_name');
+            $data['affiliation'] = $request->input('affiliation');
 
             $userId = $this->userModel->createUser($data);
 
@@ -213,26 +189,19 @@ class AuthController extends Controller
             // Send welcome email
             $this->emailService->sendWelcomeEmail($data['email'], $data['first_name']);
 
-            $this->json([
+            return $this->json([
                 'success' => true,
                 'message' => 'Registration successful! Redirecting to login...',
                 'redirect' => '/login'
             ]);
 
         } catch (\Exception $e) {
+            // Validator throws no exception now (it returns response), so this catches other errors
             Logger::error('Registration error', ['error' => $e->getMessage()]);
             
-            $errors = $this->getFlash('errors', []);
-            if (!empty($errors)) {
-                $firstError = reset($errors);
-                $message = is_array($firstError) ? $firstError[0] : $firstError;
-            } else {
-                $message = 'An error occurred. Please try again.';
-            }
-
-            $this->json([
+            return $this->json([
                 'success' => false,
-                'message' => $message
+                'message' => 'An error occurred. Please try again.'
             ]);
         }
     }
@@ -240,7 +209,7 @@ class AuthController extends Controller
     /**
      * Handle logout
      */
-    public function logout(): void
+    public function logout(Request $request): Response
     {
         $userId = $_SESSION['user_id'] ?? null;
         
@@ -255,7 +224,7 @@ class AuthController extends Controller
             Logger::info('User logged out', ['user_id' => $userId]);
         }
 
-        $this->redirect('/');
+        return $this->redirect('/');
     }
 
     /**
@@ -276,10 +245,10 @@ class AuthController extends Controller
     /**
      * Redirect to appropriate dashboard
      */
-    private function redirectToDashboard(): void
+    private function redirectToDashboard(): Response
     {
         $role = $_SESSION['role'] ?? '';
         $url = $this->getDashboardUrl($role);
-        $this->redirect($url);
+        return $this->redirect($url);
     }
 }

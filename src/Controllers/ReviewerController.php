@@ -16,18 +16,18 @@ class ReviewerController extends Controller
     private Review $reviewModel;
     private Submission $submissionModel;
 
-    public function __construct()
+    public function __construct(Review $reviewModel, Submission $submissionModel)
     {
         $this->requireRole('reviewer');
         $this->layout = 'layouts/dashboard';
-        $this->submissionModel = new Submission();
-        $this->reviewModel = new Review();
+        $this->submissionModel = $submissionModel;
+        $this->reviewModel = $reviewModel;
     }
 
     /**
      * Reviewer dashboard
      */
-    public function dashboard(): void
+    public function dashboard(Request $request): Response
     {
         $user = $this->user();
         $userId = $user['id'];
@@ -41,7 +41,7 @@ class ReviewerController extends Controller
             'total' => count($pendingReviews) + count($completedReviews)
         ];
 
-        $this->view('reviewer/dashboard', [
+        return $this->view('reviewer/dashboard', [
             'user' => $user,
             'stats' => $stats,
             'pending_reviews' => $pendingReviews,
@@ -52,7 +52,7 @@ class ReviewerController extends Controller
     /**
      * View all assignments
      */
-    public function submissions(): void
+    public function submissions(Request $request): Response
     {
         $user = $this->user();
         $reviews = $this->reviewModel->getByReviewer($user['id']);
@@ -60,14 +60,14 @@ class ReviewerController extends Controller
         // Get submission details for each review
         $reviewsWithDetails = [];
         foreach ($reviews as $review) {
-            $submission = $this->submissionModel->find($review['submission_id']);
+            $submission = $this->submissionModel->find($review->submission_id);
             if ($submission) {
-                $review['submission'] = $submission;
+                $review->submission = $submission;
                 $reviewsWithDetails[] = $review;
             }
         }
 
-        $this->view('reviewer/submissions', [
+        return $this->view('reviewer/submissions', [
             'reviews' => $reviewsWithDetails
         ]);
     }
@@ -75,7 +75,7 @@ class ReviewerController extends Controller
     /**
      * View submission for review
      */
-    public function viewSubmission(int $id): void
+    public function viewSubmission(Request $request, int $id): Response
     {
         $user = $this->user();
         
@@ -84,27 +84,24 @@ class ReviewerController extends Controller
         
         if (!$review) {
             $this->flash('error', 'Review assignment not found.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
         // Verify this reviewer is assigned
-        if ($review['reviewer_id'] != $user['id']) {
+        if ($review->reviewer_id != $user['id']) {
             $this->flash('error', 'Unauthorized access.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
         // Get submission details
-        $submission = $this->submissionModel->getWithAuthor($review['submission_id']);
+        $submission = $this->submissionModel->getWithAuthor($review->submission_id);
 
         if (!$submission) {
             $this->flash('error', 'Submission not found.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
-        $this->view('reviewer/view-submission', [
+        return $this->view('reviewer/view-submission', [
             'review' => $review,
             'submission' => $submission
         ]);
@@ -113,7 +110,7 @@ class ReviewerController extends Controller
     /**
      * Submit review
      */
-    public function submitReview(int $id): void
+    public function submitReview(Request $request, int $id): Response
     {
         $user = $this->user();
         
@@ -121,15 +118,13 @@ class ReviewerController extends Controller
         
         if (!$review) {
             $this->flash('error', 'Review not found.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
         // Verify reviewer
-        if ($review['reviewer_id'] != $user['id']) {
+        if ($review->reviewer_id != $user['id']) {
             $this->flash('error', 'Unauthorized access.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
         try {
@@ -137,39 +132,38 @@ class ReviewerController extends Controller
                 'recommendation' => 'required',
                 'comments' => 'required',
                 'rating' => 'required|numeric'
-            ]);
+            ], $request->all());
 
             $this->reviewModel->submitReview($id, $data);
 
             Logger::info('Review submitted', [
                 'review_id' => $id,
                 'reviewer_id' => $user['id'],
-                'submission_id' => $review['submission_id']
+                'submission_id' => $review->submission_id
             ]);
 
             $this->flash('success', 'Review submitted successfully!');
-            $this->redirect('/reviewer/dashboard');
+            return $this->redirect('/reviewer/dashboard');
 
         } catch (\Exception $e) {
             Logger::error('Review submission failed', ['error' => $e->getMessage()]);
             $this->flash('error', 'Failed to submit review.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Update review
      */
-    public function updateReview(int $id): void
+    public function updateReview(Request $request, int $id): Response
     {
         $user = $this->user();
         
         $review = $this->reviewModel->find($id);
         
-        if (!$review || $review['reviewer_id'] != $user['id']) {
+        if (!$review || $review->reviewer_id != $user['id']) {
             $this->flash('error', 'Unauthorized access.');
-            $this->redirect('/reviewer/dashboard');
-            return;
+            return $this->redirect('/reviewer/dashboard');
         }
 
         try {
@@ -177,7 +171,7 @@ class ReviewerController extends Controller
                 'recommendation' => 'required',
                 'comments' => 'required',
                 'rating' => 'required|numeric'
-            ]);
+            ], $request->all());
 
             $this->reviewModel->update($id, $data);
 
@@ -187,18 +181,18 @@ class ReviewerController extends Controller
             ]);
 
             $this->flash('success', 'Review updated successfully!');
-            $this->redirect('/reviewer/submission/' . $id);
+            return $this->redirect('/reviewer/submission/' . $id);
 
         } catch (\Exception $e) {
             $this->flash('error', 'Failed to update review.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * View review history
      */
-    public function history(): void
+    public function history(Request $request): Response
     {
         $user = $this->user();
         $completedReviews = $this->reviewModel->getCompletedByReviewer($user['id']);
@@ -206,14 +200,14 @@ class ReviewerController extends Controller
         // Get submission details
         $reviewsWithDetails = [];
         foreach ($completedReviews as $review) {
-            $submission = $this->submissionModel->find($review['submission_id']);
+            $submission = $this->submissionModel->find($review->submission_id);
             if ($submission) {
-                $review['submission'] = $submission;
+                $review->submission = $submission;
                 $reviewsWithDetails[] = $review;
             }
         }
 
-        $this->view('reviewer/history', [
+        return $this->view('reviewer/history', [
             'reviews' => $reviewsWithDetails
         ]);
     }

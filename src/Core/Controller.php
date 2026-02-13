@@ -14,7 +14,7 @@ class Controller
     /**
      * Load a view file
      */
-    protected function view(string $view, array $data = [], ?string $layout = null): void
+    protected function view(string $view, array $data = [], ?string $layout = null): Response
     {
         // Merge data
         $this->data = array_merge($this->data, $data);
@@ -32,32 +32,36 @@ class Controller
             throw new \Exception("View not found: {$view}");
         }
 
+        ob_start();
         // If layout is specified and exists, use it
         if ($layoutFile && file_exists($layoutPath)) {
-            // Start output buffering for content
-            ob_start();
             require $viewPath;
             $content = ob_get_clean();
             
-            // Now render layout with content
+            ob_start();
             require $layoutPath;
+            $finalContent = ob_get_clean();
         } else {
-            // Just render the view
             require $viewPath;
+            $finalContent = ob_get_clean();
         }
+
+        return new Response($finalContent);
     }
 
     /**
      * Render a partial view (no layout)
      */
-    protected function partial(string $view, array $data = []): void
+    protected function partial(string $view, array $data = []): Response
     {
         $this->data = array_merge($this->data, $data);
         extract($this->data);
 
         $viewPath = __DIR__ . '/../../resources/views/' . $view . '.php';
         if (file_exists($viewPath)) {
+            ob_start();
             require $viewPath;
+            return new Response(ob_get_clean());
         } else {
             throw new \Exception("Partial view not found: {$view}");
         }
@@ -66,30 +70,26 @@ class Controller
     /**
      * Return JSON response
      */
-    protected function json($data, int $statusCode = 200): void
+    protected function json($data, int $statusCode = 200): Response
     {
-        http_response_code($statusCode);
-        header('Content-Type: application/json');
-        echo json_encode($data);
-        exit();
+        return Response::json($data, $statusCode);
     }
 
     /**
      * Redirect to URL
      */
-    protected function redirect(string $url, int $code = 302): void
+    protected function redirect(string $url, int $code = 302): Response
     {
-        header("Location: {$url}", true, $code);
-        exit();
+        return Response::redirect($url, $code);
     }
 
     /**
      * Redirect back to previous page
      */
-    protected function back(): void
+    protected function back(): Response
     {
         $referer = $_SERVER['HTTP_REFERER'] ?? '/';
-        $this->redirect($referer);
+        return $this->redirect($referer);
     }
 
     /**
@@ -111,76 +111,43 @@ class Controller
     /**
      * Validate request data
      */
-    protected function validate(array $rules): array
+    protected function validate(array $rules, ?array $data = null): array
     {
-        $errors = [];
-        $data = $_POST;
+        // For now, if validation fails it still handles its own redirection 
+        // because it's a "stopping" action. But we can return data if successful.
+        $data = $data ?? $_POST;
+        $validator = new Validator($data);
 
-        foreach ($rules as $field => $fieldRules) {
-            $value = $data[$field] ?? null;
-            $rulesArray = explode('|', $fieldRules);
-
-            foreach ($rulesArray as $rule) {
-                // Parse rule parameters (e.g., "max:255")
-                $params = [];
-                if (strpos($rule, ':') !== false) {
-                    [$rule, $paramString] = explode(':', $rule, 2);
-                    $params = explode(',', $paramString);
-                }
-
-                switch ($rule) {
-                    case 'required':
-                        if (empty($value)) {
-                            $errors[$field][] = ucfirst($field) . ' is required.';
-                        }
-                        break;
-
-                    case 'email':
-                        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                            $errors[$field][] = ucfirst($field) . ' must be a valid email.';
-                        }
-                        break;
-
-                    case 'min':
-                        if (strlen($value) < $params[0]) {
-                            $errors[$field][] = ucfirst($field) . " must be at least {$params[0]} characters.";
-                        }
-                        break;
-
-                    case 'max':
-                        if (strlen($value) > $params[0]) {
-                            $errors[$field][] = ucfirst($field) . " must not exceed {$params[0]} characters.";
-                        }
-                        break;
-
-                    case 'numeric':
-                        if (!is_numeric($value)) {
-                            $errors[$field][] = ucfirst($field) . ' must be numeric.';
-                        }
-                        break;
-
-                    case 'alpha':
-                        if (!ctype_alpha($value)) {
-                            $errors[$field][] = ucfirst($field) . ' must contain only letters.';
-                        }
-                        break;
-
-                    case 'alphanumeric':
-                        if (!ctype_alnum($value)) {
-                            $errors[$field][] = ucfirst($field) . ' must contain only letters and numbers.';
-                        }
-                        break;
-                }
+        if (!$validator->validate($rules)) {
+            $errors = $validator->getErrors();
+            
+            // If AJAX, we return a JSON response object and send it immediately
+            if ($this->isAjax()) {
+                Response::json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $errors
+                ], 422)->send();
+                exit();
             }
-        }
 
-        if (!empty($errors)) {
             $this->flash('errors', $errors);
-            $this->flash('old', $_POST);
-            throw new \Exception('Validation failed');
+            $this->flash('old', $data);
+            
+            $this->back()->send();
+            exit();
         }
 
-        return $data;
+        return $validator->validated($rules);
+    }
+
+    /**
+     * Check if request is AJAX
+     */
+    protected function isAjax(): bool
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     /**

@@ -29,6 +29,35 @@ class Submission extends Model
     ];
 
     /**
+     * Get status badge HTML
+     */
+    public function getStatusBadge(): string
+    {
+        $colors = [
+            'pending' => 'bg-warning text-dark',
+            'reviewing' => 'bg-info text-dark',
+            'revision_requested' => 'bg-primary',
+            'accepted' => 'bg-success',
+            'rejected' => 'bg-danger',
+            'published' => 'bg-success'
+        ];
+        
+        $status = $this->status ?? 'pending';
+        $color = $colors[$status] ?? 'bg-secondary';
+        $label = ucfirst(str_replace('_', ' ', $status));
+        
+        return "<span class=\"badge {$color}\">{$label}</span>";
+    }
+
+    /**
+     * Check if submission is published
+     */
+    public function isPublished(): bool
+    {
+        return (bool) $this->is_published;
+    }
+
+    /**
      * Get submissions by author
      */
     public function getByAuthor(int $authorId): array
@@ -79,7 +108,7 @@ class Submission extends Model
     /**
      * Get submission with author details
      */
-    public function getWithAuthor(int $id): ?array
+    public function getWithAuthor(int $id): ?static
     {
         $sql = "SELECT s.*, u.username, u.first_name, u.last_name, u.email, u.affiliation
                 FROM {$this->table} s
@@ -95,7 +124,8 @@ class Submission extends Model
     public function incrementViews(int $id): bool
     {
         $sql = "UPDATE {$this->table} SET views_count = views_count + 1 WHERE id = ?";
-        return $this->query($sql, [$id]) !== false;
+        // Using static database call since query() now returns objects
+        return Database::execute($sql, [$id]);
     }
 
     /**
@@ -104,7 +134,7 @@ class Submission extends Model
     public function incrementDownloads(int $id): bool
     {
         $sql = "UPDATE {$this->table} SET downloads_count = downloads_count + 1 WHERE id = ?";
-        return $this->query($sql, [$id]) !== false;
+        return Database::execute($sql, [$id]);
     }
 
     /**

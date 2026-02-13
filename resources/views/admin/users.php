@@ -71,55 +71,55 @@ ob_start();
                     <tbody>
                         <?php foreach ($users as $user): ?>
                             <tr>
-                                <td><?= $user['id'] ?></td>
+                                <td><?= $user->id ?></td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar bg-primary text-white rounded-circle me-2" 
                                              style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
-                                            <?= strtoupper(substr($user['first_name'], 0, 1)) ?>
+                                            <?= strtoupper(substr($user->first_name, 0, 1)) ?>
                                         </div>
                                         <div>
-                                            <strong><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></strong>
-                                            <?php if (!empty($user['affiliation'])): ?>
-                                                <br><small class="text-muted"><?= htmlspecialchars($user['affiliation']) ?></small>
+                                            <strong><?= htmlspecialchars($user->getFullName()) ?></strong>
+                                            <?php if (!empty($user->affiliation)): ?>
+                                                <br><small class="text-muted"><?= htmlspecialchars($user->affiliation) ?></small>
                                             <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= htmlspecialchars($user['email']) ?></td>
-                                <td><?= htmlspecialchars($user['username']) ?></td>
+                                <td><?= htmlspecialchars($user->email) ?></td>
+                                <td><?= htmlspecialchars($user->username) ?></td>
                                 <td>
-                                    <span class="role-badge bg-<?= getRoleColor($user['role']) ?>">
-                                        <?= ucfirst($user['role']) ?>
+                                    <span class="role-badge <?= getRoleColor($user->role) ?>">
+                                        <?= ucfirst($user->role) ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <?php if ($user['is_active']): ?>
+                                    <?php if ($user->is_active): ?>
                                         <span class="badge bg-success">Active</span>
                                     <?php else: ?>
                                         <span class="badge bg-danger">Inactive</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= date('M d, Y', strtotime($user['created_at'])) ?></td>
+                                <td><?= date('M d, Y', strtotime($user->created_at)) ?></td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button onclick="viewUser(<?= $user['id'] ?>)" 
+                                        <button onclick="viewUser(<?= $user->id ?>)" 
                                                 class="btn btn-sm btn-outline-primary action-btn" 
                                                 title="View">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button onclick="editUser(<?= $user['id'] ?>)" 
+                                        <button onclick="editUser(<?= $user->id ?>)" 
                                                 class="btn btn-sm btn-outline-secondary action-btn" 
                                                 title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button onclick="toggleUserStatus(<?= $user['id'] ?>, <?= $user['is_active'] ? 'false' : 'true' ?>)" 
+                                        <button onclick="toggleUserStatus(<?= $user->id ?>, <?= $user->is_active ? 'false' : 'true' ?>)" 
                                                 class="btn btn-sm btn-outline-warning action-btn" 
-                                                title="<?= $user['is_active'] ? 'Deactivate' : 'Activate' ?>">
-                                            <i class="fas fa-<?= $user['is_active'] ? 'ban' : 'check' ?>"></i>
+                                                title="<?= $user->is_active ? 'Deactivate' : 'Activate' ?>">
+                                            <i class="fas fa-<?= $user->is_active ? 'ban' : 'check' ?>"></i>
                                         </button>
-                                        <?php if ($user['role'] !== 'admin'): ?>
-                                            <button onclick="deleteUser(<?= $user['id'] ?>)" 
+                                        <?php if (!$user->isAdmin()): ?>
+                                            <button onclick="deleteUser(<?= $user->id ?>)" 
                                                     class="btn btn-sm btn-outline-danger action-btn" 
                                                     title="Delete">
                                                 <i class="fas fa-trash"></i>

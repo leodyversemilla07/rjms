@@ -130,18 +130,16 @@ ob_start();
                                         </small>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= htmlspecialchars($submission['author_name'] ?? 'Unknown') ?></td>
+                                <td><?= htmlspecialchars($submission->author_name ?? 'Unknown') ?></td>
                                 <td>
                                     <span class="badge bg-info">
-                                        <?= htmlspecialchars($submission['category_name'] ?? 'N/A') ?>
+                                        <?= htmlspecialchars($submission->category_name ?? 'N/A') ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="status-badge bg-<?= getStatusColor($submission['status']) ?>">
-                                        <?= getStatusLabel($submission['status']) ?>
-                                    </span>
+                                    <?= $submission->getStatusBadge() ?>
                                 </td>
-                                <td><?= date('M d, Y', strtotime($submission['submission_date'])) ?></td>
+                                <td><?= date('M d, Y', strtotime($submission->submission_date)) ?></td>
                                 <td>
                                     <?php $reviewCount = $submission['review_count'] ?? 0; ?>
                                     <span class="badge bg-<?= $reviewCount > 0 ? 'success' : 'secondary' ?>">

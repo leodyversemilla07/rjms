@@ -22,21 +22,27 @@ class AdminController extends Controller
     private Review $reviewModel;
     private EmailService $emailService;
 
-    public function __construct()
-    {
+    public function __construct(
+        User $userModel,
+        Submission $submissionModel,
+        Category $categoryModel,
+        Review $reviewModel,
+        EmailService $emailService
+    ) {
         $this->requireRole('admin');
         $this->layout = 'layouts/dashboard'; // Use dashboard layout instead of main
-        $this->userModel = new User();
-        $this->submissionModel = new Submission();
-        $this->categoryModel = new Category();
-        $this->reviewModel = new Review();
-        $this->emailService = new EmailService();
+        
+        $this->userModel = $userModel;
+        $this->submissionModel = $submissionModel;
+        $this->categoryModel = $categoryModel;
+        $this->reviewModel = $reviewModel;
+        $this->emailService = $emailService;
     }
 
     /**
      * Admin dashboard
      */
-    public function dashboard(): void
+    public function dashboard(Request $request): Response
     {
         $stats = [
             'total_users' => $this->userModel->count(),
@@ -49,7 +55,7 @@ class AdminController extends Controller
         $recentSubmissions = $this->submissionModel->orderBy('submission_date', 'DESC');
         array_splice($recentSubmissions, 5); // Limit to 5
 
-        $this->view('admin/dashboard', [
+        return $this->view('admin/dashboard', [
             'user' => $this->user(),
             'stats' => $stats,
             'recent_submissions' => $recentSubmissions
@@ -59,11 +65,11 @@ class AdminController extends Controller
     /**
      * Manage users
      */
-    public function users(): void
+    public function users(Request $request): Response
     {
         $users = $this->userModel->all();
         
-        $this->view('admin/users', [
+        return $this->view('admin/users', [
             'users' => $users
         ]);
     }
@@ -71,7 +77,7 @@ class AdminController extends Controller
     /**
      * Create user
      */
-    public function createUser(): void
+    public function createUser(Request $request): Response
     {
         try {
             $data = $this->validate([
@@ -82,19 +88,17 @@ class AdminController extends Controller
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
                 'country' => 'required|max:100'
-            ]);
+            ], $request->all());
 
             // Check if username or email exists
             if ($this->userModel->findByUsername($data['username'])) {
                 $this->flash('error', 'Username already exists.');
-                $this->back();
-                return;
+                return $this->back();
             }
 
             if ($this->userModel->findByEmail($data['email'])) {
                 $this->flash('error', 'Email already exists.');
-                $this->back();
-                return;
+                return $this->back();
             }
 
             $data['is_active'] = 1;
@@ -109,25 +113,24 @@ class AdminController extends Controller
             $this->emailService->sendWelcomeEmail($data['email'], $data['first_name']);
 
             $this->flash('success', 'User created successfully!');
-            $this->redirect('/admin/users');
+            return $this->redirect('/admin/users');
 
         } catch (\Exception $e) {
             Logger::error('User creation failed', ['error' => $e->getMessage()]);
             $this->flash('error', 'Failed to create user.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Update user
      */
-    public function updateUser(int $id): void
+    public function updateUser(Request $request, int $id): Response
     {
         $user = $this->userModel->find($id);
         if (!$user) {
             $this->flash('error', 'User not found.');
-            $this->redirect('/admin/users');
-            return;
+            return $this->redirect('/admin/users');
         }
 
         try {
@@ -136,7 +139,7 @@ class AdminController extends Controller
                 'role' => 'required',
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100'
-            ]);
+            ], $request->all());
 
             $this->userModel->update($id, $data);
 
@@ -146,23 +149,22 @@ class AdminController extends Controller
             ]);
 
             $this->flash('success', 'User updated successfully!');
-            $this->redirect('/admin/users');
+            return $this->redirect('/admin/users');
 
         } catch (\Exception $e) {
             $this->flash('error', 'Failed to update user.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Delete user
      */
-    public function deleteUser(int $id): void
+    public function deleteUser(Request $request, int $id): Response
     {
         if ($id == $this->user()['id']) {
             $this->flash('error', 'You cannot delete your own account.');
-            $this->redirect('/admin/users');
-            return;
+            return $this->redirect('/admin/users');
         }
 
         $this->userModel->delete($id);
@@ -173,13 +175,13 @@ class AdminController extends Controller
         ]);
 
         $this->flash('success', 'User deleted successfully!');
-        $this->redirect('/admin/users');
+        return $this->redirect('/admin/users');
     }
 
     /**
      * Manage submissions
      */
-    public function submissions(): void
+    public function submissions(Request $request): Response
     {
         $submissions = $this->submissionModel->query(
             "SELECT s.*, u.username as author_name 
@@ -188,7 +190,7 @@ class AdminController extends Controller
              ORDER BY s.submission_date DESC"
         );
 
-        $this->view('admin/submissions', [
+        return $this->view('admin/submissions', [
             'submissions' => $submissions
         ]);
     }
@@ -196,13 +198,12 @@ class AdminController extends Controller
     /**
      * Publish article
      */
-    public function publishArticle(int $id): void
+    public function publishArticle(Request $request, int $id): Response
     {
         $submission = $this->submissionModel->find($id);
         if (!$submission) {
             $this->flash('error', 'Submission not found.');
-            $this->redirect('/admin/submissions');
-            return;
+            return $this->redirect('/admin/submissions');
         }
 
         $this->submissionModel->publish($id);
@@ -213,13 +214,13 @@ class AdminController extends Controller
         ]);
 
         $this->flash('success', 'Article published successfully!');
-        $this->redirect('/admin/submissions');
+        return $this->redirect('/admin/submissions');
     }
 
     /**
      * Unpublish article
      */
-    public function unpublishArticle(int $id): void
+    public function unpublishArticle(Request $request, int $id): Response
     {
         $this->submissionModel->unpublish($id);
 
@@ -229,17 +230,17 @@ class AdminController extends Controller
         ]);
 
         $this->flash('success', 'Article unpublished successfully!');
-        $this->redirect('/admin/submissions');
+        return $this->redirect('/admin/submissions');
     }
 
     /**
      * Manage categories
      */
-    public function categories(): void
+    public function categories(Request $request): Response
     {
         $categories = $this->categoryModel->getWithSubmissionCount();
 
-        $this->view('admin/categories', [
+        return $this->view('admin/categories', [
             'categories' => $categories
         ]);
     }
@@ -247,13 +248,13 @@ class AdminController extends Controller
     /**
      * Create category
      */
-    public function createCategory(): void
+    public function createCategory(Request $request): Response
     {
         try {
             $data = $this->validate([
                 'name' => 'required|max:255',
                 'description' => 'required'
-            ]);
+            ], $request->all());
 
             $data['is_active'] = 1;
             $categoryId = $this->categoryModel->create($data);
@@ -264,18 +265,18 @@ class AdminController extends Controller
             ]);
 
             $this->flash('success', 'Category created successfully!');
-            $this->redirect('/admin/categories');
+            return $this->redirect('/admin/categories');
 
         } catch (\Exception $e) {
             $this->flash('error', 'Failed to create category.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Delete category
      */
-    public function deleteCategory(int $id): void
+    public function deleteCategory(Request $request, int $id): Response
     {
         $this->categoryModel->delete($id);
 
@@ -285,20 +286,19 @@ class AdminController extends Controller
         ]);
 
         $this->flash('success', 'Category deleted successfully!');
-        $this->redirect('/admin/categories');
+        return $this->redirect('/admin/categories');
     }
 
     /**
      * Assign reviewer to submission
      */
-    public function assignReviewer(): void
+    public function assignReviewer(Request $request): Response
     {
-        $submissionId = $_POST['submission_id'] ?? 0;
-        $reviewerId = $_POST['reviewer_id'] ?? 0;
+        $submissionId = $request->input('submission_id', 0);
+        $reviewerId = $request->input('reviewer_id', 0);
 
         if (!$submissionId || !$reviewerId) {
-            $this->json(['success' => false, 'message' => 'Invalid data'], 400);
-            return;
+            return $this->json(['success' => false, 'message' => 'Invalid data'], 400);
         }
 
         try {
@@ -319,9 +319,9 @@ class AdminController extends Controller
             if ($reviewer && $submission) {
                 $deadline = date('Y-m-d', strtotime('+2 weeks'));
                 $this->emailService->sendReviewAssignment(
-                    $reviewer['email'], 
-                    $reviewer['first_name'], 
-                    $submission['title'], 
+                    $reviewer->email, 
+                    $reviewer->first_name, 
+                    $submission->title, 
                     $deadline
                 );
             }
@@ -332,11 +332,11 @@ class AdminController extends Controller
                 'admin_id' => $this->user()['id']
             ]);
 
-            $this->json(['success' => true, 'message' => 'Reviewer assigned successfully!']);
+            return $this->json(['success' => true, 'message' => 'Reviewer assigned successfully!']);
 
         } catch (\Exception $e) {
             Logger::error('Reviewer assignment failed', ['error' => $e->getMessage()]);
-            $this->json(['success' => false, 'message' => 'Failed to assign reviewer'], 500);
+            return $this->json(['success' => false, 'message' => 'Failed to assign reviewer'], 500);
         }
     }
 }

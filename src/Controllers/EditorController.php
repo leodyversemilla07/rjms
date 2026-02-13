@@ -20,20 +20,24 @@ class EditorController extends Controller
     private User $userModel;
     private EmailService $emailService;
 
-    public function __construct()
-    {
+    public function __construct(
+        Submission $submissionModel, 
+        Review $reviewModel, 
+        User $userModel, 
+        EmailService $emailService
+    ) {
         $this->requireRole('editor');
         $this->layout = 'layouts/dashboard';
-        $this->submissionModel = new Submission();
-        $this->reviewModel = new Review();
-        $this->userModel = new User();
-        $this->emailService = new EmailService();
+        $this->submissionModel = $submissionModel;
+        $this->reviewModel = $reviewModel;
+        $this->userModel = $userModel;
+        $this->emailService = $emailService;
     }
 
     /**
      * Editor dashboard
      */
-    public function dashboard(): void
+    public function dashboard(Request $request): Response
     {
         $stats = [
             'total_submissions' => $this->submissionModel->count(),
@@ -45,7 +49,7 @@ class EditorController extends Controller
         $recentSubmissions = $this->submissionModel->orderBy('submission_date', 'DESC');
         array_splice($recentSubmissions, 10);
 
-        $this->view('editor/dashboard', [
+        return $this->view('editor/dashboard', [
             'user' => $this->user(),
             'stats' => $stats,
             'submissions' => $recentSubmissions
@@ -55,7 +59,7 @@ class EditorController extends Controller
     /**
      * View all submissions
      */
-    public function submissions(): void
+    public function submissions(Request $request): Response
     {
         $submissions = $this->submissionModel->query(
             "SELECT s.*, u.username as author_name,
@@ -67,7 +71,7 @@ class EditorController extends Controller
              ORDER BY s.submission_date DESC"
         );
 
-        $this->view('editor/submissions', [
+        return $this->view('editor/submissions', [
             'submissions' => $submissions
         ]);
     }
@@ -75,21 +79,20 @@ class EditorController extends Controller
     /**
      * View single submission details
      */
-    public function viewSubmission(int $id): void
+    public function viewSubmission(Request $request, int $id): Response
     {
         $submission = $this->submissionModel->getWithAuthor($id);
         
         if (!$submission) {
             $this->flash('error', 'Submission not found.');
-            $this->redirect('/editor/dashboard');
-            return;
+            return $this->redirect('/editor/dashboard');
         }
 
         $reviews = $this->reviewModel->getBySubmission($id);
         $reviewStats = $this->reviewModel->getSubmissionStats($id);
         $reviewers = $this->userModel->getByRole('reviewer');
 
-        $this->view('editor/view-submission', [
+        return $this->view('editor/view-submission', [
             'submission' => $submission,
             'reviews' => $reviews,
             'review_stats' => $reviewStats,
@@ -100,14 +103,13 @@ class EditorController extends Controller
     /**
      * Assign reviewer
      */
-    public function assignReviewer(): void
+    public function assignReviewer(Request $request): Response
     {
-        $submissionId = $_POST['submission_id'] ?? 0;
-        $reviewerId = $_POST['reviewer_id'] ?? 0;
+        $submissionId = $request->input('submission_id', 0);
+        $reviewerId = $request->input('reviewer_id', 0);
 
         if (!$submissionId || !$reviewerId) {
-            $this->json(['success' => false, 'message' => 'Invalid data'], 400);
-            return;
+            return $this->json(['success' => false, 'message' => 'Invalid data'], 400);
         }
 
         try {
@@ -127,9 +129,9 @@ class EditorController extends Controller
             if ($reviewer && $submission) {
                 $deadline = date('Y-m-d', strtotime('+2 weeks'));
                 $this->emailService->sendReviewAssignment(
-                    $reviewer['email'], 
-                    $reviewer['first_name'], 
-                    $submission['title'], 
+                    $reviewer->email, 
+                    $reviewer->first_name, 
+                    $submission->title, 
                     $deadline
                 );
             }
@@ -140,14 +142,14 @@ class EditorController extends Controller
                 'editor_id' => $this->user()['id']
             ]);
 
-            $this->json([
+            return $this->json([
                 'success' => true,
                 'message' => 'Reviewer assigned successfully!'
             ]);
 
         } catch (\Exception $e) {
             Logger::error('Reviewer assignment failed', ['error' => $e->getMessage()]);
-            $this->json([
+            return $this->json([
                 'success' => false,
                 'message' => 'Failed to assign reviewer'
             ], 500);
@@ -157,21 +159,19 @@ class EditorController extends Controller
     /**
      * Make publication decision
      */
-    public function publishDecision(int $id): void
+    public function publishDecision(Request $request, int $id): Response
     {
-        $decision = $_POST['decision'] ?? '';
+        $decision = $request->input('decision', '');
         
         if (!in_array($decision, ['accept', 'reject', 'revise'])) {
             $this->flash('error', 'Invalid decision.');
-            $this->back();
-            return;
+            return $this->back();
         }
 
         $submission = $this->submissionModel->find($id);
         if (!$submission) {
             $this->flash('error', 'Submission not found.');
-            $this->redirect('/editor/submissions');
-            return;
+            return $this->redirect('/editor/submissions');
         }
 
         try {
@@ -187,12 +187,12 @@ class EditorController extends Controller
             }
 
             // Send decision email
-            $author = $this->userModel->find($submission['author_id']);
+            $author = $this->userModel->find($submission->author_id);
             if ($author) {
                 $this->emailService->sendDecisionNotification(
-                    $author['email'],
-                    $author['first_name'],
-                    $submission['title'],
+                    $author->email,
+                    $author->first_name,
+                    $submission->title,
                     $decision
                 );
             }
@@ -204,21 +204,21 @@ class EditorController extends Controller
             ]);
 
             $this->flash('success', $message);
-            $this->redirect('/editor/submission/' . $id);
+            return $this->redirect('/editor/submission/' . $id);
 
         } catch (\Exception $e) {
             Logger::error('Publication decision failed', ['error' => $e->getMessage()]);
             $this->flash('error', 'Failed to process decision.');
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Get reviewers list (for AJAX)
      */
-    public function getReviewers(): void
+    public function getReviewers(Request $request): Response
     {
         $reviewers = $this->userModel->getByRole('reviewer');
-        $this->json(['success' => true, 'reviewers' => $reviewers]);
+        return $this->json(['success' => true, 'reviewers' => $reviewers]);
     }
 }

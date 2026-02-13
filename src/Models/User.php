@@ -30,9 +30,25 @@ class User extends Model
     protected array $hidden = ['password'];
 
     /**
+     * Get user's full name
+     */
+    public function getFullName(): string
+    {
+        return trim("{$this->first_name} {$this->middle_name} {$this->last_name}");
+    }
+
+    /**
+     * Check if user is an admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
      * Find user by username
      */
-    public function findByUsername(string $username): ?array
+    public function findByUsername(string $username): ?static
     {
         return $this->firstWhere('username', $username);
     }
@@ -40,7 +56,7 @@ class User extends Model
     /**
      * Find user by email
      */
-    public function findByEmail(string $email): ?array
+    public function findByEmail(string $email): ?static
     {
         return $this->firstWhere('email', $email);
     }
@@ -48,7 +64,7 @@ class User extends Model
     /**
      * Find user by username or email
      */
-    public function findByUsernameOrEmail(string $identifier): ?array
+    public function findByUsernameOrEmail(string $identifier): ?static
     {
         $sql = "SELECT * FROM {$this->table} WHERE username = ? OR email = ? LIMIT 1";
         $result = $this->query($sql, [$identifier, $identifier]);
@@ -58,12 +74,11 @@ class User extends Model
     /**
      * Find user by username or email with password (for authentication)
      */
-    public function findByUsernameOrEmailWithPassword(string $identifier): ?array
+    public function findByUsernameOrEmailWithPassword(string $identifier): ?static
     {
         $sql = "SELECT * FROM {$this->table} WHERE username = ? OR email = ? LIMIT 1";
-        $stmt = self::$db->prepare($sql);
-        $stmt->execute([$identifier, $identifier]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+        $result = Database::fetchOne($sql, [$identifier, $identifier]);
+        return $result ? new static($result) : null;
     }
 
     /**

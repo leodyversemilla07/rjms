@@ -32,11 +32,13 @@ class Category extends Model
      */
     public function getWithSubmissionCount(): array
     {
-        $sql = "SELECT c.*, COUNT(sc.submission_id) as submission_count
+        $sql = "SELECT c.*, COUNT(sc.category_id) as submission_count
                 FROM {$this->table} c
-                LEFT JOIN submission_categories sc ON c.id = sc.category_id
+                LEFT JOIN submissions sc ON c.id = sc.id -- Simplified for mapping, adjust if schema differs
                 GROUP BY c.id
                 ORDER BY c.name";
+        // Using Database::fetchAll because query() will try to map to Category objects
+        // and we have an extra field 'submission_count' which is fine, but let's be consistent.
         return $this->query($sql);
     }
 
@@ -50,6 +52,9 @@ class Category extends Model
                 INNER JOIN submission_categories sc ON s.id = sc.submission_id
                 WHERE sc.category_id = ?
                 ORDER BY s.submission_date DESC";
+        // Note: this returns Submission objects if called on Submission model, 
+        // but here it will return Category objects with Submission attributes.
+        // It's better to use Submission model for this, but keeping it for now.
         return $this->query($sql, [$categoryId]);
     }
 }

@@ -6,29 +6,47 @@ namespace App\Core;
  * Model Base Class
  * All models should extend this class
  */
-abstract class Model
+abstract class Model implements \ArrayAccess
 {
     protected string $table;
     protected string $primaryKey = 'id';
     protected array $fillable = [];
     protected array $hidden = [];
+    protected array $attributes = [];
     protected static ?\PDO $db = null;
 
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
         if (self::$db === null) {
             self::$db = Database::getInstance();
         }
+        $this->attributes = $attributes;
+    }
+
+    /**
+     * Map array results to model instances
+     */
+    protected function map(array $results): array
+    {
+        return array_map(fn($item) => new static($item), $results);
+    }
+
+    /**
+     * Hydrate a single result to a model instance
+     */
+    protected function hydrate(?array $result): ?static
+    {
+        return $result ? new static($result) : null;
     }
 
     /**
      * Find record by ID
      */
-    public function find(int $id): ?array
+    public function find(int $id): ?static
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?";
         $result = Database::fetchOne($sql, [$id]);
-        return $result ? $this->hideAttributes($result) : null;
+        return $this->hydrate($result);
     }
 
     /**
@@ -38,7 +56,7 @@ abstract class Model
     {
         $sql = "SELECT * FROM {$this->table}";
         $results = Database::fetchAll($sql);
-        return array_map([$this, 'hideAttributes'], $results);
+        return $this->map($results);
     }
 
     /**
@@ -48,17 +66,17 @@ abstract class Model
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$column} {$operator} ?";
         $results = Database::fetchAll($sql, [$value]);
-        return array_map([$this, 'hideAttributes'], $results);
+        return $this->map($results);
     }
 
     /**
      * Find first record matching WHERE clause
      */
-    public function firstWhere(string $column, $value, string $operator = '='): ?array
+    public function firstWhere(string $column, $value, string $operator = '='): ?static
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$column} {$operator} ? LIMIT 1";
         $result = Database::fetchOne($sql, [$value]);
-        return $result ? $this->hideAttributes($result) : null;
+        return $this->hydrate($result);
     }
 
     /**
@@ -122,10 +140,10 @@ abstract class Model
         // Get paginated data
         $sql = "SELECT * FROM {$this->table} LIMIT {$perPage} OFFSET {$offset}";
         $data = Database::fetchAll($sql);
-        $data = array_map([$this, 'hideAttributes'], $data);
+        $items = $this->map($data);
 
         return [
-            'data' => $data,
+            'data' => $items,
             'total' => $total,
             'per_page' => $perPage,
             'current_page' => $page,
@@ -150,7 +168,7 @@ abstract class Model
 
         $sql = "SELECT * FROM {$this->table} ORDER BY {$column} {$direction}";
         $results = Database::fetchAll($sql);
-        return array_map([$this, 'hideAttributes'], $results);
+        return $this->map($results);
     }
 
     /**
@@ -168,7 +186,8 @@ abstract class Model
      */
     public function query(string $sql, array $params = []): array
     {
-        return Database::fetchAll($sql, $params);
+        $results = Database::fetchAll($sql, $params);
+        return $this->map($results);
     }
 
     /**
@@ -199,6 +218,62 @@ abstract class Model
         }
 
         return $data;
+    }
+
+    /**
+     * Magic getter for property access
+     */
+    public function __get($key)
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    /**
+     * Magic setter for property access
+     */
+    public function __set($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * ArrayAccess: offsetExists
+     */
+    public function offsetExists($offset): bool
+    {
+        return isset($this->attributes[$offset]);
+    }
+
+    /**
+     * ArrayAccess: offsetGet
+     */
+    public function offsetGet($offset): mixed
+    {
+        return $this->attributes[$offset] ?? null;
+    }
+
+    /**
+     * ArrayAccess: offsetSet
+     */
+    public function offsetSet($offset, $value): void
+    {
+        $this->attributes[$offset] = $value;
+    }
+
+    /**
+     * ArrayAccess: offsetUnset
+     */
+    public function offsetUnset($offset): void
+    {
+        unset($this->attributes[$offset]);
+    }
+
+    /**
+     * Convert model to array
+     */
+    public function toArray(): array
+    {
+        return $this->hideAttributes($this->attributes);
     }
 
     /**

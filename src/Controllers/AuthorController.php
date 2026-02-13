@@ -16,18 +16,18 @@ class AuthorController extends Controller
     private Submission $submissionModel;
     private EmailService $emailService;
 
-    public function __construct()
+    public function __construct(Submission $submissionModel, EmailService $emailService)
     {
         $this->requireRole('author');
         $this->layout = 'layouts/dashboard';
-        $this->submissionModel = new Submission();
-        $this->emailService = new EmailService();
+        $this->submissionModel = $submissionModel;
+        $this->emailService = $emailService;
     }
 
     /**
      * Author dashboard
      */
-    public function dashboard(): void
+    public function dashboard(Request $request): Response
     {
         $user = $this->user();
         $userId = $user['id'];
@@ -38,12 +38,12 @@ class AuthorController extends Controller
         // Get statistics
         $stats = [
             'total' => count($submissions),
-            'pending' => count(array_filter($submissions, fn($s) => $s['status'] === 'pending')),
-            'under_review' => count(array_filter($submissions, fn($s) => $s['status'] === 'under_review')),
-            'published' => count(array_filter($submissions, fn($s) => $s['is_published'] == 1))
+            'pending' => count(array_filter($submissions, fn($s) => $s->status === 'pending')),
+            'under_review' => count(array_filter($submissions, fn($s) => $s->status === 'under_review')),
+            'published' => count(array_filter($submissions, fn($s) => $s->isPublished()))
         ];
 
-        $this->view('author/dashboard', [
+        return $this->view('author/dashboard', [
             'user' => $user,
             'submissions' => $submissions,
             'stats' => $stats
@@ -53,15 +53,15 @@ class AuthorController extends Controller
     /**
      * Show submit article form
      */
-    public function showSubmit(): void
+    public function showSubmit(Request $request): Response
     {
-        $this->view('author/submit');
+        return $this->view('author/submit');
     }
 
     /**
      * Handle article submission
      */
-    public function submit(): void
+    public function submit(Request $request): Response
     {
         try {
             // Verify CSRF token
@@ -73,15 +73,16 @@ class AuthorController extends Controller
                 'title' => 'required|max:255',
                 'abstract' => 'required',
                 'keywords' => 'required|max:255'
-            ]);
+            ], $request->all());
 
             // Handle file upload
-            if (isset($_FILES['manuscript']) && $_FILES['manuscript']['error'] === UPLOAD_ERR_OK) {
+            $file = $request->file('manuscript');
+            if ($file && $file['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . '/../../uploads/submissions/';
                 
                 // Validate file type
                 $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                $fileType = mime_content_type($_FILES['manuscript']['tmp_name']);
+                $fileType = mime_content_type($file['tmp_name']);
                 
                 if (!in_array($fileType, $allowedTypes)) {
                     throw new \Exception('Invalid file type. Only PDF, DOC, and DOCX files are allowed.');
@@ -89,7 +90,7 @@ class AuthorController extends Controller
                 
                 // Validate file size (10MB max)
                 $maxSize = 10 * 1024 * 1024; // 10MB in bytes
-                if ($_FILES['manuscript']['size'] > $maxSize) {
+                if ($file['size'] > $maxSize) {
                     throw new \Exception('File size exceeds maximum limit of 10MB.');
                 }
                 
@@ -99,13 +100,13 @@ class AuthorController extends Controller
                 }
 
                 // Sanitize filename and add unique prefix
-                $originalName = basename($_FILES['manuscript']['name']);
+                $originalName = basename($file['name']);
                 $extension = pathinfo($originalName, PATHINFO_EXTENSION);
                 $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '', pathinfo($originalName, PATHINFO_FILENAME));
                 $fileName = uniqid() . '_' . $safeName . '.' . $extension;
                 $uploadPath = $uploadDir . $fileName;
 
-                if (move_uploaded_file($_FILES['manuscript']['tmp_name'], $uploadPath)) {
+                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
                     $data['file_path'] = 'uploads/submissions/' . $fileName;
                 } else {
                     throw new \Exception('Failed to upload file');
@@ -131,24 +132,24 @@ class AuthorController extends Controller
             $this->emailService->sendSubmissionConfirmation($user['email'], $user['first_name'], $data['title']);
 
             $this->flash('success', 'Article submitted successfully!');
-            $this->redirect('/author/dashboard');
+            return $this->redirect('/author/dashboard');
 
         } catch (\Exception $e) {
             Logger::error('Article submission failed', ['error' => $e->getMessage()]);
             $this->flash('error', $e->getMessage());
-            $this->back();
+            return $this->back();
         }
     }
 
     /**
      * Show manage articles page
      */
-    public function manageArticles(): void
+    public function manageArticles(Request $request): Response
     {
         $user = $this->user();
         $submissions = $this->submissionModel->getByAuthor($user['id']);
 
-        $this->view('author/manage', [
+        return $this->view('author/manage', [
             'submissions' => $submissions
         ]);
     }
@@ -156,25 +157,23 @@ class AuthorController extends Controller
     /**
      * View article details
      */
-    public function viewArticle(int $id): void
+    public function viewArticle(Request $request, int $id): Response
     {
         $submission = $this->submissionModel->getWithAuthor($id);
 
         if (!$submission) {
             $this->flash('error', 'Article not found.');
-            $this->redirect('/author/dashboard');
-            return;
+            return $this->redirect('/author/dashboard');
         }
 
         // Check if user owns this submission
         $user = $this->user();
-        if ($submission['author_id'] != $user['id']) {
+        if ($submission->author_id != $user['id']) {
             $this->flash('error', 'Unauthorized access.');
-            $this->redirect('/author/dashboard');
-            return;
+            return $this->redirect('/author/dashboard');
         }
 
-        $this->view('author/view', [
+        return $this->view('author/view', [
             'submission' => $submission
         ]);
     }
@@ -182,27 +181,25 @@ class AuthorController extends Controller
     /**
      * Delete article
      */
-    public function deleteArticle(int $id): void
+    public function deleteArticle(Request $request, int $id): Response
     {
         $submission = $this->submissionModel->find($id);
 
         if (!$submission) {
             $this->flash('error', 'Article not found.');
-            $this->redirect('/author/dashboard');
-            return;
+            return $this->redirect('/author/dashboard');
         }
 
         // Check if user owns this submission
         $user = $this->user();
-        if ($submission['author_id'] != $user['id']) {
+        if ($submission->author_id != $user['id']) {
             $this->flash('error', 'Unauthorized access.');
-            $this->redirect('/author/dashboard');
-            return;
+            return $this->redirect('/author/dashboard');
         }
 
         // Delete file if exists
-        if (!empty($submission['file_path']) && file_exists($submission['file_path'])) {
-            unlink($submission['file_path']);
+        if (!empty($submission->file_path) && file_exists($submission->file_path)) {
+            unlink($submission->file_path);
         }
 
         $this->submissionModel->delete($id);
@@ -213,6 +210,6 @@ class AuthorController extends Controller
         ]);
 
         $this->flash('success', 'Article deleted successfully!');
-        $this->redirect('/author/dashboard');
+        return $this->redirect('/author/dashboard');
     }
 }

@@ -42,7 +42,7 @@ class Review extends Model
     /**
      * Get review with submission and reviewer details
      */
-    public function getWithDetails(int $id): ?array
+    public function getWithDetails(int $id): ?static
     {
         $sql = "SELECT r.*, 
                        s.title as submission_title,
@@ -101,7 +101,7 @@ class Review extends Model
                     SUM(CASE WHEN recommendation = 'revise' THEN 1 ELSE 0 END) as revise_count
                 FROM {$this->table}
                 WHERE submission_id = ? AND status = 'completed'";
-        $result = $this->query($sql, [$submissionId]);
-        return !empty($result) ? $result[0] : [];
+        $result = Database::fetchOne($sql, [$submissionId]);
+        return $result ?: [];
     }
 }

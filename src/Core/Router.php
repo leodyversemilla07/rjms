@@ -80,9 +80,9 @@ class Router
      */
     public function dispatch(): void
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $uri = $this->normalizePath($uri);
+        $request = new Request();
+        $method = $request->method();
+        $uri = $this->normalizePath($request->uri());
 
         // Remove base path if running in subdirectory
         $basePath = $this->getBasePath();
@@ -99,15 +99,29 @@ class Router
                     array_shift($matches); // Remove full match
                     $this->currentRoute = $path;
                     
-                    // Execute middlewares
-                    if (!empty($route['middlewares'])) {
-                        foreach ($route['middlewares'] as $middleware) {
-                            $this->executeMiddleware($middleware);
-                        }
-                    }
+                    // Create the final core task: executing the handler
+                    $coreHandler = function($req) use ($route, $matches) {
+                        return $this->executeHandler($route['handler'], $matches, $req);
+                    };
 
-                    // Execute handler
-                    $this->executeHandler($route['handler'], $matches);
+                    // Wrap the core task with middlewares (Onion style)
+                    $pipeline = array_reduce(
+                        array_reverse($route['middlewares']),
+                        function ($next, $middleware) {
+                            return function ($req) use ($next, $middleware) {
+                                return $this->resolveMiddleware($middleware)->handle($req, $next);
+                            };
+                        },
+                        $coreHandler
+                    );
+
+                    // Execute the pipeline and get response
+                    $response = $pipeline($request);
+
+                    // If the handler returned a Response object, send it
+                    if ($response instanceof Response) {
+                        $response->send();
+                    }
                     return;
                 }
             }
@@ -115,6 +129,35 @@ class Router
 
         // 404 Not Found
         $this->notFound();
+    }
+
+    /**
+     * Resolve middleware instance
+     */
+    private function resolveMiddleware($middleware)
+    {
+        $container = Container::getInstance();
+
+        if (is_string($middleware)) {
+            $middlewareClass = "App\\Middleware\\{$middleware}";
+            if (class_exists($middlewareClass)) {
+                return $container->resolve($middlewareClass);
+            }
+            throw new \Exception("Middleware class [$middlewareClass] not found.");
+        }
+
+        if (is_callable($middleware)) {
+            // If it's a closure, we wrap it to satisfy the Middleware interface
+            return new class($middleware) implements \App\Middleware\Middleware {
+                private $callback;
+                public function __construct($callback) { $this->callback = $callback; }
+                public function handle($request, \Closure $next) {
+                    return ($this->callback)($request, $next);
+                }
+            };
+        }
+
+        throw new \Exception("Invalid middleware type.");
     }
 
     /**
@@ -138,39 +181,63 @@ class Router
     }
 
     /**
-     * Execute middleware
-     */
-    private function executeMiddleware($middleware): void
-    {
-        if (is_string($middleware)) {
-            // Assume it's a class name
-            $middlewareClass = "App\\Middleware\\{$middleware}";
-            if (class_exists($middlewareClass)) {
-                $instance = new $middlewareClass();
-                $instance->handle();
-            }
-        } elseif (is_callable($middleware)) {
-            call_user_func($middleware);
-        }
-    }
-
-    /**
      * Execute route handler
      */
-    private function executeHandler($handler, array $params = []): void
+    private function executeHandler($handler, array $params = [], ?Request $request = null): void
     {
         if (is_array($handler)) {
-            // Controller@method format
             [$controller, $method] = $handler;
             
             if (is_string($controller)) {
                 $controllerClass = "App\\Controllers\\{$controller}";
                 if (class_exists($controllerClass)) {
-                    $instance = new $controllerClass();
-                    if (method_exists($instance, $method)) {
-                        call_user_func_array([$instance, $method], $params);
-                    } else {
-                        $this->error("Method {$method} not found in controller {$controller}");
+                    try {
+                        // Resolve Controller
+                        $container = Container::getInstance();
+                        $instance = $container->resolve($controllerClass);
+                        
+                        if (method_exists($instance, $method)) {
+                            // Use Reflection to map parameters
+                            $reflector = new \ReflectionMethod($instance, $method);
+                            $methodParams = $reflector->getParameters();
+                            $dependencies = [];
+
+                            foreach ($methodParams as $param) {
+                                $type = $param->getType();
+                                $name = $param->getName();
+
+                                // Inject Request object if type-hinted
+                                if ($type && !$type->isBuiltin() && $type->getName() === Request::class) {
+                                    $dependencies[] = $request;
+                                } 
+                                // Inject route parameter by name (e.g., 'id')
+                                elseif (array_key_exists($name, $params)) {
+                                    $dependencies[] = $params[$name];
+                                }
+                                // Fallback: Inject route parameter by position (if unnamed in route regex)
+                                elseif (!empty($params)) {
+                                    $dependencies[] = array_shift($params);
+                                }
+                                // Check for default value
+                                elseif ($param->isDefaultValueAvailable()) {
+                                    $dependencies[] = $param->getDefaultValue();
+                                }
+                                else {
+                                    throw new \Exception("Cannot resolve argument \${$name} for {$controller}::{$method}");
+                                }
+                            }
+
+                            $response = $reflector->invokeArgs($instance, $dependencies);
+
+                            // Handle Response object return
+                            if ($response instanceof Response) {
+                                $response->send();
+                            }
+                        } else {
+                            $this->error("Method {$method} not found in controller {$controller}");
+                        }
+                    } catch (\Exception $e) {
+                        $this->error("Failed to execute {$controller}::{$method}: " . $e->getMessage());
                     }
                 } else {
                     $this->error("Controller {$controller} not found");
